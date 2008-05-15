@@ -1,0 +1,17 @@
+#defutf8 on
+#defkanji utf-8
+#encoding utf-8 utf-8
+#defencoding utf-8
+
+#password xxxx
+startup_message off
+defscrollback 5000
+autodetach on
+hardstatus alwayslastline "%-w%{=b bw}%n %t%{-}%+w"
+
+bind w windowlist -b
+bind r eval 'echo "Resize window"' 'command -c resize'
+bind -c resize ^]  command
+bind -c resize j eval 'resize +1' 'command -c resize'
+bind -c resize k eval 'resize -1' 'command -c resize'
+

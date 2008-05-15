@@ -1,0 +1,13 @@
+set visualbell
+"set guioptions=bmT
+set guioptions=b
+set verbose=9
+
+map <Right> gt
+map <Left>  gT
+map l gt
+map h gT
+
+map j 3<C-e>
+map k 3<C-y>
+

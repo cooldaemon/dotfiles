@@ -1,0 +1,48 @@
+# common
+alias -g lG='| grep'
+alias -g lM='| more'
+alias -g lX='| xargs'
+
+alias sc='screen -xR'
+alias vi='vim'
+alias svp='svk push -l --verbati'
+
+alias l='ls'
+alias la='ls -a'
+alias ll='ls -la'
+alias lt='ll -ct'
+
+alias cp='cp -i'
+alias mv='mv -i'
+alias rm='rm -i'
+
+alias h='history'
+alias ha='h -E 1'
+alias du='du -h'
+alias df='df -h'
+alias j='jobs'
+
+alias ack='ack --color'
+
+source ~/bin/cdd
+
+# mac
+if [ `uname` = 'Darwin' ]; then
+  alias fcd='source ~/bin/fcd.sh'
+  alias gv='gvim.sh'
+  alias ls='ls -F --color=auto'
+  chpwd () {
+      _reg_pwd_screennum
+      ls -F --color=auto -a;
+  }
+fi
+
+# FreeBSD
+if [ `uname` = 'FreeBSD' ]; then
+  alias ls='gnuls -F --color=auto'
+  chpwd () {
+      _reg_pwd_screennum
+      gnuls -F --color=auto -a;
+  }
+fi
+

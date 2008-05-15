@@ -1,0 +1,5 @@
+author:  Masahito Ikuta
+email:   cooldaemon@gmail.com
+builder: ExtUtils::MakeMaker Module::Build
+plugins: Module::Starter::PBP
+template_dir: /path/to/homedir/.module-starter/PBP
