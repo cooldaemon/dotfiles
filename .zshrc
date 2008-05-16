@@ -24,6 +24,7 @@ function chpwd () {
 }
 
 function preexec () {
+    _set_screen_tabline $1 $2
     _git_preexec_update_vars
 }
 
