@@ -280,3 +280,6 @@ autocmd FileType mxml let g:AutoComplPop_CompleteOption = '.,w,b,u,t,i,k~/.vim/d
 
 let g:AutoComplPop_IgnoreCaseOption = 1
 
+let git_diff_spawn_mode=2
+autocmd BufNewFile,BufRead COMMIT_EDITMSG set filetype=git
+
