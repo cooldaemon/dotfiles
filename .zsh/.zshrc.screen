@@ -17,7 +17,7 @@ function _set_screen_tabline() {
         %*) 
             cmd=(builtin jobs -l $cmd[1])
             ;;
-        (gnu|)ls|gvim(.sh|))
+        (gnu|g|)ls|gvim(.sh|))
             return
             ;; 
         cd)
