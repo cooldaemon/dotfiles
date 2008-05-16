@@ -28,21 +28,33 @@ source ~/bin/cdd
 
 # mac
 if [ `uname` = 'Darwin' ]; then
-  alias fcd='source ~/bin/fcd.sh'
-  alias gv='gvim.sh'
-  alias ls='ls -F --color=auto'
-  chpwd () {
-      _reg_pwd_screennum
-      ls -F --color=auto -a;
-  }
+    alias fcd='source ~/bin/fcd.sh'
+    alias gv='gvim.sh'
+    alias ls='ls -F --color=auto'
+
+    function _color_ls() {
+        ls -F --color=auto -a;
+    }
 fi
 
 # FreeBSD
 if [ `uname` = 'FreeBSD' ]; then
-  alias ls='gnuls -F --color=auto'
-  chpwd () {
-      _reg_pwd_screennum
-      gnuls -F --color=auto -a;
-  }
+    alias ls='gnuls -F --color=auto'
+
+    function _color_ls() {
+        gnuls -F --color=auto -a;
+    }
 fi
 
+# work
+alias cdsvk='cd ~/svk'
+alias cdw='cd ~/work'
+alias cdsrc='cd ~/work/source'
+alias cdt='cd ~/work/test'
+alias cdg='cd ~/svk/zero/gift/app/Gift/'
+alias cderp='cd ~/svk/zero/ERP/zeus/webapp/zeusdb'
+alias cdza='cd ~/svk/zero/manager/home/manager/cgi-bin/apply_zeus_merchant'
+alias cdssl='cd ~/svk/zero/corporate/zero/ssl/home/ssl.zeroweb.co.jp'
+alias cdyamd='cd ~/svk/miu/cooldaemon/erl/yamd'
+
+alias sg='~/bin/start_working_with_catalyst.pl ~/svk/zero/gift/app/Gift'

@@ -1,12 +1,61 @@
-function rprompt_dir {
+function _git_compute_vars() {
+    export __ZSH_GIT_STATE=
+    export __ZSH_GIT_DIR=
+
+    local git_dir state branch
+
+    git_dir=$(git rev-parse --git-dir 2> /dev/null) || return
+
+    if test -d "$git_dir/../.dotest"; then
+        if test -f "$git_dir/../.dotest/rebasing"; then
+            state="rebase"
+        elif test -f "$git_dir/../.dotest/applying"; then
+            state="am"
+        else
+            state="am/rebase"
+        fi
+        branch="$(git symbolic-ref HEAD 2>/dev/null)"
+    elif test -f "$git_dir/.dotest-merge/interactive"; then
+        state="rebase-i"
+        branch="$(cat "$git_dir/.dotest-merge/head-name")"
+    elif test -d "$git_dir/.dotest-merge"; then
+        state="rebase-m"
+        branch="$(cat "$git_dir/.dotest-merge/head-name")"
+    elif test -f "$git_dir/MERGE_HEAD"; then
+        state="merge"
+        branch="$(git symbolic-ref HEAD 2>/dev/null)"
+    else
+        test -f "$git_dir/BISECT_LOG" && state="bisect"
+        branch="$(git symbolic-ref HEAD 2>/dev/null)" || \
+            branch="$(git describe --exact-match HEAD 2>/dev/null)" || \
+            branch="$(cut -c1-7 "$git_dir/HEAD")..."
+    fi
+
+    branch="${branch#refs/heads/}"
+
+    if test "$state" ; then
+        state=":$state"
+    fi
+
+    case $git_dir in 
+        .git) git_dir="$(pwd)/.git";;
+    esac 
+
+    export __ZSH_GIT_STATE="%{$fg[cyan]%}(${branch}${state})"
+    export __ZSH_GIT_DIR="${${git_dir:h}/$HOME/~}"
+}
+
+function _prompt_compute_vars() {
+    _git_compute_vars
+
     local git_dir
-    git_dir=${$(git_top_dir)%% }
+    git_dir=${${__ZSH_GIT_DIR}%% }
 
     local short
     short="${PWD/$HOME/~}"
 
     if test -z "$git_dir" ; then
-            echo -n "$short"
+            export __ZSH_RPROMPT_DIR="$short"
             return
     fi
 
@@ -14,23 +63,13 @@ function rprompt_dir {
     lead=$git_dir
     rest=${${short#$lead}#/}
 
-    echo -n "$lead%{$fg[cyan]%}/$rest"
+    export __ZSH_RPROMPT_DIR="$lead%{$fg[cyan]%}/$rest"
 }
 
-function lprompt_git_state {
-    local branch state
-    branch=$(git_branch)
-    state=$(git_state)
-
-    if test -z "$branch" ; then
-        return
-    fi
-
-    if test "$state" ; then
-        state=":$state"
-    fi
-
-    echo -n "%{$fg[cyan]%}(${branch}${state})"
+function _git_preexec_update_vars() {
+    case "$(history $HISTCMD)" in 
+        *git*) _git_compute_vars ;;
+    esac
 }
 
 setopt prompt_subst
@@ -38,5 +77,7 @@ setopt prompt_subst
 autoload -U colors
 colors
 
-PROMPT='${WINDOW:+"[$WINDOW]"}%{$fg[green]%}`whoami`%{$fg[blue]%}@%{$fg[red]%}`hostname -s``lprompt_git_state`%{$fg[green]%}%#%{$reset_color%} '
-RPROMPT='%{$fg[yellow]%}[`rprompt_dir`%{$fg[red]%}:%!%{$fg[yellow]%}]%{$reset_color%}'
+_prompt_compute_vars
+
+PROMPT='${WINDOW:+"[$WINDOW]"}%{$fg[green]%}${USER}%{$fg[blue]%}@%{$fg[red]%}`hostname -s`${__ZSH_GIT_STATE}%{$fg[green]%}%#%{$reset_color%} '
+RPROMPT='%{$fg[yellow]%}[${__ZSH_RPROMPT_DIR}%{$fg[red]%}:%!%{$fg[yellow]%}]%{$reset_color%}'
