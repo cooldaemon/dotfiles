@@ -30,10 +30,10 @@ source ~/bin/cdd
 if [ `uname` = 'Darwin' ]; then
     alias fcd='source ~/bin/fcd.sh'
     alias gv='gvim.sh'
-    alias ls='ls -F --color=auto'
+    alias ls='gls -F --color=auto'
 
     function _color_ls() {
-        ls -F --color=auto -a;
+        gls -F --color=auto -a;
     }
 fi
 
