@@ -1,7 +1,42 @@
+function rprompt_dir {
+    local git_dir
+    git_dir=${$(git_top_dir)%% }
+
+    local short
+    short="${PWD/$HOME/~}"
+
+    if test -z "$git_dir" ; then
+            echo -n "$short"
+            return
+    fi
+
+    local lead rest
+    lead=$git_dir
+    rest=${${short#$lead}#/}
+
+    echo -n "$lead%{$fg[cyan]%}/$rest"
+}
+
+function lprompt_git_state {
+    local branch state
+    branch=$(git_branch)
+    state=$(git_state)
+
+    if test -z "$branch" ; then
+        return
+    fi
+
+    if test "$state" ; then
+        state=":$state"
+    fi
+
+    echo -n "%{$fg[cyan]%}(${branch}${state})"
+}
+
 setopt prompt_subst
 
 autoload -U colors
 colors
 
-PROMPT='${WINDOW:+"[$WINDOW]"}%{$fg[green]%}`whoami`%{$fg[blue]%}@%{$fg[red]%}`hostname`%{$fg[green]%}%#%{$reset_color%} '
-RPROMPT='%{$fg[yellow]%}[%(4~,%-1~/.../%2~,%~)%{$fg[red]%}:%!%{$fg[yellow]%}]%{$reset_color%}'
+PROMPT='${WINDOW:+"[$WINDOW]"}%{$fg[green]%}`whoami`%{$fg[blue]%}@%{$fg[red]%}`hostname -s``lprompt_git_state`%{$fg[green]%}%#%{$reset_color%} '
+RPROMPT='%{$fg[yellow]%}[`rprompt_dir`%{$fg[red]%}:%!%{$fg[yellow]%}]%{$reset_color%}'

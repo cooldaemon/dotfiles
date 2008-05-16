@@ -10,7 +10,7 @@ setopt PUSHD_IGNORE_DUPS
 setopt AUTO_CD
 setopt CDABLEVARS
 
-for file in env bindkey prompt complete history screen alias; do
+for file in env bindkey git prompt complete history screen alias; do
   [ -f ~/.zsh/.zshrc.$file ]; source ~/.zsh/.zshrc.$file
 done
 
