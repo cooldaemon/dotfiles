@@ -282,3 +282,6 @@ autocmd FileType scheme let g:AutoComplPop_CompleteOption = '.,w,b,u,t,i,k~/.vim
 
 let g:AutoComplPop_IgnoreCaseOption = 1
 
+let git_diff_spawn_mode=1
+autocmd BufNewFile,BufRead COMMIT_EDITMSG set filetype=git
+
