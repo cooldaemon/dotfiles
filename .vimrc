@@ -133,6 +133,7 @@ autocmd FileType ruby set complete+=k~/.vim/dict/ruby.dict
 autocmd FileType javascript set complete+=k~/.vim/dict/javascript.dict
 autocmd FileType erlang set complete+=k~/.vim/dict/erlang.dict
 autocmd FileType mxml set complete+=k~/.vim/dict/mxml.dict
+autocmd FileType scheme set complete+=k~/.vim/dict/gauche.dict
 
 set omnifunc=syntaxcomplete#Complete
 autocmd FileType tt2html set omnifunc=htmlcomplete#CompleteTags
@@ -277,6 +278,7 @@ autocmd FileType ruby let g:AutoComplPop_CompleteOption = '.,w,b,u,t,i,k~/.vim/d
 autocmd FileType javascript let g:AutoComplPop_CompleteOption = '.,w,b,u,t,i,k~/.vim/dict/javascript.dict'
 autocmd FileType erlang let g:AutoComplPop_CompleteOption = '.,w,b,u,t,i,k~/.vim/dict/erlang.dict'
 autocmd FileType mxml let g:AutoComplPop_CompleteOption = '.,w,b,u,t,i,k~/.vim/dict/mxml.dict'
+autocmd FileType scheme let g:AutoComplPop_CompleteOption = '.,w,b,u,t,i,k~/.vim/dict/gauche.dict'
 
 let g:AutoComplPop_IgnoreCaseOption = 1
 
