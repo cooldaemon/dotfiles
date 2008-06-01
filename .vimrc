@@ -279,9 +279,36 @@ autocmd FileType javascript let g:AutoComplPop_CompleteOption = '.,w,b,u,t,i,k~/
 autocmd FileType erlang let g:AutoComplPop_CompleteOption = '.,w,b,u,t,i,k~/.vim/dict/erlang.dict'
 autocmd FileType mxml let g:AutoComplPop_CompleteOption = '.,w,b,u,t,i,k~/.vim/dict/mxml.dict'
 autocmd FileType scheme let g:AutoComplPop_CompleteOption = '.,w,b,u,t,i,k~/.vim/dict/gauche.dict'
+autocmd FileType haskell let g:AutoComplPop_CompleteOption = '.,w,b,u,t,i'
+
+let g:AutoComplPop_Behavior = {
+  \   'haskell' : [
+  \     {
+  \       'command'  : "\<C-n>",
+  \       'pattern'  : '\k\k$',
+  \       'excluded' : '^$',
+  \       'repeat'   : 0,
+  \     },
+  \     {
+  \       'command'  : "\<C-x>\<C-o>",
+  \       'pattern'  : '\k$',
+  \       'excluded' : '^$',
+  \       'repeat'   : 0,
+  \     },
+  \     {
+  \       'command'  : "\<C-x>\<C-f>",
+  \       'pattern'  : (has('win32') || has('win64') ? '\f[/\\]\f*$' : '\f[/]\f*$'),
+  \       'excluded' : '[*/\\][/\\]\f*$\|[^[:print:]]\f*$',
+  \       'repeat'   : 1,
+  \     },
+  \   ], 
+  \ }
 
 let g:AutoComplPop_IgnoreCaseOption = 1
 
 let git_diff_spawn_mode=1
 autocmd BufNewFile,BufRead COMMIT_EDITMSG set filetype=git
+
+autocmd Bufenter *.hs compiler ghc
+let g:haddock_browser = "open -a firefox"
 
