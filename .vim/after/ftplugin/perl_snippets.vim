@@ -13,9 +13,10 @@ exec "Snippet phead package ".st.et.";<CR><CR>".perl_header
 exec "Snippet shead #!/usr/bin/env perl<CR>\<BS><CR>".perl_header.st.et
 
 " sub
-exec "Snippet sub sub ".st.et." {<CR>    ".st.et."<CR>}<CR>"
-exec "Snippet suba sub ".st.et." {<CR>    my (".st.et.") = @_;<CR><CR><CR>}<CR>"
-exec "Snippet subc sub ".st.et." {<CR>    my \$self = shift;<CR>    my (".st.et.") = @_;<CR><CR><CR>}<CR>"
+exec "Snippet sub sub ".st.et." {\<CR>".st.et."\<CR>}\<CR>"
+exec "Snippet suba sub ".st.et." {\<CR>my (".st.et.") = @_;\<CR>\<CR>\<CR>}\<CR>"
+exec "Snippet subc sub ".st.et." {\<CR>my \$self = shift;\<CR>\<CR>".st.et."\<CR>}\<CR>"
+exec "Snippet subca sub ".st.et." {\<CR>my \$self = shift;\<CR>my (".st.et.") = @_;\<CR>\<CR>\<CR>}\<CR>"
 
 " loop
 exec "Snippet for for my \$".st.et." (".st.et.") {<CR><CR>}<CR>"
@@ -36,7 +37,8 @@ exec "Snippet ife if (".st.et.") {<CR><CR>} else {<CR><CR>}<CR>"
 exec "Snippet gv given (".st.et.") {<CR>when (".st.et.") {}<CR>default {}<CR>}"
 
 " catalyst
-exec "Snippet csub sub ".st.et." : ".st.et." {<CR>    my (\$self, \$c,) = @_;<CR><CR>    ".st.et."<CR>}<CR>"
+exec "Snippet csub sub ".st.et." : ".st.et." {\<CR>my (\$self, \$c,) = @_;\<CR>\<CR>".st.et."\<CR>}\<CR>"
+exec "Snippet csuba sub ".st.et." : ".st.et." {\<CR>my (\$self, \$c,) = @_;\<CR>my (".st.et.") = @{\$c->req->args};\<CR>\<CR>\<CR>}\<CR>"
 
 exec "Snippet param $c->req->param(".st.et.")"
 exec "Snippet stash $c->stash->{".st.et."}"
