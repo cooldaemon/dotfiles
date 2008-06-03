@@ -54,7 +54,7 @@ nnoremap # g#N
 
 "==<status line>============================================================
 set laststatus=2
-set wildmenu
+set wildmode=list:full
 set ruler
 set statusline=%<%f\ %m%r%h%w%{'['.(&fenc!=''?&fenc:&enc).']['.&ff.']'}%=%l,%c%V%8P
 
