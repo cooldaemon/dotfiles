@@ -63,11 +63,6 @@ colorscheme desert
 
 set listchars=tab:>_
 set list
-highlight SpecialKey guifg=#555555
-
-highlight Pmenu      ctermbg=DarkGreen
-highlight PmenuSel   ctermbg=DarkBlue
-highlight PmenuSbar  ctermbg=DarkRed
 
 "==<encode>=================================================================
 if &encoding !=# 'utf-8'

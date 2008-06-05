@@ -10,12 +10,9 @@ else
   set columns=87
 endif
 
-set transparency=200
+"set transparency=200
+set transparency=235
+set guioptions=egmtT
 
 gui
-colorscheme desert
-highlight SpecialKey guifg=#555555
-
-highlight Pmenu      guibg=DarkGray
-highlight PmenuSel   guibg=DarkBlue
-highlight PmenuSbar  guibg=DarkRed
+colorscheme xoria256

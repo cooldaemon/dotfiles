@@ -104,5 +104,11 @@ hi Ignore	cterm=bold ctermfg=7
 hi Ignore	ctermfg=darkgrey
 hi Error	cterm=bold ctermfg=7 ctermbg=1
 
+hi SpecialKey guifg=#555555
+if version > 700
+  hi Pmenu      ctermbg=DarkGreen
+  hi PmenuSel   ctermbg=DarkBlue
+  hi PmenuSbar  ctermbg=DarkRed
+endif
 
 "vim: sw=4
