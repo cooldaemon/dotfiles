@@ -1,31 +1,45 @@
+/**
+ * bookmarklet wo command ni suru plugin
+ *
+ * @author halt feits <halt.feits@gmail.com>
+ * @version 0.6.0
+ */
+
 (function(){
   var filter = "javascript:";
-  var items = vimperator.completion.bookmark(filter);
+  var items  = liberator.bookmarks.get(filter);
 
   if (items.length == 0) {
     if (filter.length > 0) {
-      vimperator.echoerr("E283: No bookmarks matching \"" + filter + "\"");
+      liberator.echoerr('E283: No bookmarks matching "' + filter + '"');
     } else {
-      vimperator.echoerr("No bookmarks set");
-    }  
+      liberator.echoerr("No bookmarks set");
+    }
   }
 
-  for (var i = 0; i < items.length; i++) {
-    var title = vimperator.util.escapeHTML(items[i][1]);
-    if (title.length > 50) {
-      title = title.substr(0, 47) + "...";
-    }  
+  items.forEach(function(item) {
+    var [url, title] = item;
+    if (width(title) > 50) {
+      while (width(title) > 47) {
+        title = title.slice(0, -2);
+      }
+      title += "...";
+    }
+    title = liberator.util.escapeHTML(title);
 
-    var url = vimperator.util.escapeHTML(items[i][0]);
-    var command = new Function('', 'vimperator.open("' + url + '");');
-    vimperator.commands.add(new vimperator.Command(
-        [title],
-        command,
-        {  
-            shortHelp: 'bookmarklet',
-            help: title + '<br>' + url
-        }  
-    ));
-  }
+    url = liberator.util.escapeHTML(url);
+    var command = new Function("", 'liberator.open("' + url + '");');
+    liberator.commands.addUserCommand(
+      [title],
+      "bookmarklet",
+      command,
+      {
+        shortHelp: "Bookmarklet",
+      }
+    );
+  });
+
+  function width(str) str.replace(/[^\x20-\xFF]/g, "  ").length;
 })();
+// vim:sw=2 ts=2 et:
 
