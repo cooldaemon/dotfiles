@@ -58,6 +58,9 @@ function _prompt_compute_vars() {
     if test $right_line_size -lt 0 ; then 
         right_line_size=$((${right_line_size} + ${COLUMNS}))
     fi
+    if test "$git_dir" = "$short" ; then
+        right_line_size=$((${right_line_size} - 1))
+    fi
     right_line=${(l.${right_line_size}..-.)}
     export __ZSH_RPROMPT_DIR_RIGHT_LINE="$right_line"
 
