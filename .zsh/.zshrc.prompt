@@ -54,9 +54,16 @@ function _prompt_compute_vars() {
     local short
     short="${PWD/$HOME/~}"
 
+    right_line_size=$((${COLUMNS} - ${#short} - 4))
+    if test $right_line_size -lt 0 ; then 
+        right_line_size=$((${right_line_size} + ${COLUMNS}))
+    fi
+    right_line=${(l.${right_line_size}..-.)}
+    export __ZSH_RPROMPT_DIR_RIGHT_LINE="$right_line"
+
     if test -z "$git_dir" ; then
-            export __ZSH_RPROMPT_DIR="$short"
-            return
+        export __ZSH_RPROMPT_DIR="$short"
+        return
     fi
 
     local lead rest
@@ -79,5 +86,6 @@ colors
 
 _prompt_compute_vars
 
-PROMPT='${WINDOW:+"[$WINDOW]"}%{$fg[green]%}${USER}%{$fg[blue]%}@%{$fg[red]%}`hostname -s`${__ZSH_GIT_STATE}%{$fg[green]%}%#%{$reset_color%} '
-RPROMPT='%{$fg[yellow]%}[${__ZSH_RPROMPT_DIR}%{$fg[red]%}:%!%{$fg[yellow]%}]%{$reset_color%}'
+PROMPT='%{$fg[magenta]%}-<%{$fg[yellow]%}${__ZSH_RPROMPT_DIR}%{$fg[magenta]%}>-${__ZSH_RPROMPT_DIR_RIGHT_LINE}%{$reset_color%}
+${WINDOW:+"[$WINDOW]"}%{$fg[green]%}${USER}%{$fg[blue]%}@%{$fg[red]%}`hostname -s`${__ZSH_GIT_STATE}%{$fg[green]%}%#%{$reset_color%} '
+RPROMPT='%{$fg[yellow]%}[%{$fg[red]%}%!%{$fg[yellow]%}]%{$reset_color%}'
