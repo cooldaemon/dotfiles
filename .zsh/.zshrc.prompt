@@ -90,5 +90,7 @@ colors
 _prompt_compute_vars
 
 PROMPT='%{$fg[magenta]%}-<%{$fg[yellow]%}${__ZSH_RPROMPT_DIR}%{$fg[magenta]%}>-${__ZSH_RPROMPT_DIR_RIGHT_LINE}%{$reset_color%}
-${WINDOW:+"[$WINDOW]"}%{$fg[green]%}${USER}%{$fg[blue]%}@%{$fg[red]%}`hostname -s`${__ZSH_GIT_STATE}%{$fg[green]%}%#%{$reset_color%} '
-RPROMPT='%{$fg[yellow]%}[%{$fg[red]%}%!%{$fg[yellow]%}]%{$reset_color%}'
+%{$fg[green]%}%#%{$reset_color%} '
+
+RPROMPT='${WINDOW:+"[$WINDOW]"}%{$fg[green]%}${USER}%{$fg[blue]%}@%{$fg[red]%}`hostname -s`${__ZSH_GIT_STATE}%{$fg[yellow]%}[%{$fg[red]%}%!%{$fg[yellow]%}]%{$reset_color%}'
+
