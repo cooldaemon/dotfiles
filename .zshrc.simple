@@ -192,7 +192,6 @@ fi
 
 # etc
 function chpwd () {
-    _reg_pwd_screennum
     _prompt_compute_vars
     _color_ls
 }
