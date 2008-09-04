@@ -8,10 +8,16 @@
 	interactive = auto
 [alias]
 	lg = log
+	di = diff
 	st = status
 	ad = add
-	co = commit
-	di = diff
+	ci = commit
+	co = checkout
 	ps = push origin master
 	pl = pull origin master
+	br = branch
+	sv = svn
+	svr = svn rebase
+	svci = svn dcommit
+	svf = svn fetch svn
 
