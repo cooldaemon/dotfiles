@@ -6,3 +6,12 @@
 	status = auto
 	branch = auto
 	interactive = auto
+[alias]
+	lg = log
+	st = status
+	ad = add
+	co = commit
+	di = diff
+	ps = push origin master
+	pl = pull origin master
+
