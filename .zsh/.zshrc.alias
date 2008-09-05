@@ -28,10 +28,10 @@ source ~/bin/cdd
 if [ `uname` = 'Darwin' ]; then
     alias fcd='source ~/bin/fcd.sh'
     alias gv='gvim.sh'
-    alias ls='ls -F --color=auto'
+    alias ls='gls -F --color=auto'
 
     function _color_ls() {
-        ls -F --color=auto -a;
+        gls -F --color=auto -a;
     }
 fi
 
@@ -43,13 +43,4 @@ if [ `uname` = 'FreeBSD' ]; then
         gnuls -F --color=auto -a;
     }
 fi
-
-# work
-alias cdw='cd ~/work'
-alias cdsrc='cd ~/work/source'
-alias cdt='cd ~/work/test'
-alias cdg='cd ~/git/work/gift/app/Gift/'
-alias cderp='cd ~/git/work/ERP/zeus/webapp/zeusdb/'
-alias cdza='cd ~/git/work/Manager/home/manager/cgi-bin/apply_zeus_merchant/'
-alias cdssl='cd ~/git/work/corporate/zero/ssl/home/ssl.zeroweb.co.jp/'
 
