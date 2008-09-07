@@ -76,6 +76,10 @@ if !exists("g:manpageview_pgm_pl")
  let g:manpageview_pgm_pl     = "perldoc"
  let g:manpageview_options_pl = ";-f;-q"
 endif
+if !exists("g:manpageview_pgm_erl")
+ let g:manpageview_pgm_erl     = "erl"
+ let g:manpageview_options_erl = "-man"
+endif
 if !exists("g:manpageview_pgm_php") && executable("links")
  let g:manpageview_pgm_php     = "links -dump http://www.php.net/"
  let g:manpageview_syntax_php  = "manphp"
@@ -276,6 +280,10 @@ fun! s:ManPageView(viamap,bknum,...) range
    " filetype: perl
    elseif &ft == "perl"
    	let ext = "pl"
+
+   " filetype: erl
+   elseif &ft == "erlang"
+   	let ext = "erl"
 
    " filetype:  php
    elseif &ft == "php"
