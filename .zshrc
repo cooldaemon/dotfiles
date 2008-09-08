@@ -14,7 +14,7 @@ setopt CDABLEVARS
 #typeset -ga preexec_functions
 
 for file in env bindkey prompt complete history screen alias; do
-  [ -f ~/.zsh/.zshrc.$file ]; source ~/.zsh/.zshrc.$file
+  [ -f ~/.zsh/$file.zsh ]; source ~/.zsh/$file.zsh
 done
 
 function chpwd () {
