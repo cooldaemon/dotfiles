@@ -1,6 +1,6 @@
 // Vimperator plugin: 'Cooperation LDRize Mappings'
 // Version: 0.21
-// Last Change: 18-Jun-2008. Jan 2008
+// Last Change: 29-Sep-2008. Jan 2008
 // License: Creative Commons
 // Maintainer: Trapezoid <trapezoid.g@gmail.com> - http://unsigned.g.hatena.ne.jp/Trapezoid
 //
@@ -114,7 +114,7 @@
         initialize: function(){
             var self = this;
             this.LDRize = {getSiteinfo: function(){return undefined;}};
-            this.Minibuffer = null;
+//            this.Minibuffer = null;
             this.handlerInfo = handlerInfo;
 
             this.LDRizeCooperationPanel = this.setupStatusbarPanel();
@@ -161,12 +161,14 @@
             this.addAfter(GreasemonkeyService,'evalInSandbox',function(code,codebase,sandbox){
                 if(sandbox.window.LDRize != undefined && sandbox.window.Minibuffer != undefined){
                     sandbox.window.addEventListener("focus",function(){
-                        self.LDRize = window.eval("self",sandbox.LDRize.getSiteinfo);
-                        self.Minibuffer = window.eval("command",sandbox.Minibuffer.addCommand);
+//                        self.LDRize = window.eval("self",sandbox.LDRize.getSiteinfo);
+//                        self.Minibuffer = window.eval("command",sandbox.Minibuffer.addCommand);
+                        self.LDRize = sandbox.LDRize;
                     },false);
                     if(window.content.wrappedJSObject == sandbox.unsafeWindow){
-                        self.LDRize = window.eval("self",sandbox.LDRize.getSiteinfo);
-                        self.Minibuffer = window.eval("command",sandbox.Minibuffer.addCommand);
+//                        self.LDRize = window.eval("self",sandbox.LDRize.getSiteinfo);
+//                        self.Minibuffer = window.eval("command",sandbox.Minibuffer.addCommand);
+                        self.LDRize = sandbox.LDRize;
                     }
                 }
             });
@@ -263,6 +265,7 @@
                     });
                     liberator.commandline.echo(showString, liberator.commandline.HL_NORMAL, liberator.commandline.FORCE_MULTILINE);
                 } ,{});
+/*
             liberator.commands.addUserCommand(["mb","m","minibuffer"], "Execute Minibuffer",
                 function(arg){self.Minibuffer.execute(arg)},
                 {
@@ -277,6 +280,7 @@
                         return [0,completionList];
                     }
                 });
+*/
             liberator.commands.addUserCommand(["pindownload"], "Download pinned links by any software",
                 function(arg){ self.downloadLinksByProgram(self.getPinnedItems());} ,{});
             liberator.commands.addUserCommand(["toggleldrizecooperation","toggleldrc"], "Toggle LDRize Cooperation",
