@@ -1,0 +1,27 @@
+#!/usr/bin/env escript
+
+main([]) ->
+  usage();
+main(["-h"]) ->
+  usage();
+main(["--help"]) ->
+  usage();
+main([File]) ->
+  say_error(file:eval(File)).
+
+say_error(ok) ->
+  ok;
+say_error({error, enoent}) ->
+  io:format("Can't open erlang script file.~n");
+say_error({error, {Line, erl_scan, scan}}) ->
+  say_error({error, {Line - 1, erl_scan, "syntax error."}});
+say_error({error, {Line, Module, Term}}) when is_list(Term) ->
+  io:format("~s:~B: ~s~n", [Module, Line, Term]);
+say_error({error, {Line, Module, Term}}) ->
+  io:format("~s:~B: ~p~n", [Module, Line - 1, Term]);
+say_error({error, Reason}) ->
+  io:format("~p~n", [Reason]).
+
+usage() ->
+  io:format("Usage: erle file.erl~n").
+
