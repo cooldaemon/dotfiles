@@ -28,15 +28,9 @@ nmap ,u :w<CR>:!~/bin/deploy.pl %<CR>
 set cindent
 set expandtab
 
-autocmd BufEnter * call SetTab()
-
-function SetTab()
-  if &syntax == 'javascript' || &syntax == 'ruby' || &syntax == 'html' || &syntax == 'xhtml' || &syntax == 'css' || &syntax == 'tt2html' || &syntax == 'eruby' || &syntax == 'yaml' || &syntax == 'vim'
-    execute 'set softtabstop=2 | set shiftwidth=2 | set tabstop=2'
-  else
-    execute 'set softtabstop=4 | set shiftwidth=4 | set tabstop=4'
-  endif
-endf
+set softtabstop=4
+set shiftwidth=4
+set tabstop=4
 
 "==<search>=================================================================
 set magic
@@ -117,21 +111,14 @@ autocmd BufReadPost * call AU_ReCheck_FENC()
 set fileformats=unix,dos,mac
 set ambiwidth=double
 
-autocmd FileType cvs :set fileencoding=euc-jp
-autocmd FileType svn :set fileencoding=utf-8
+autocmd FileType cvs :setlocal fileencoding=euc-jp
+autocmd FileType svn :setlocal fileencoding=utf-8
 
 "==<complete>===============================================================
 set iskeyword+=:
-autocmd FileType * set complete=.,w,b,u,t,i
-autocmd FileType perl set complete-=i | set complete+=k~/.vim/dict/perl.dict
-autocmd FileType ruby set complete+=k~/.vim/dict/ruby.dict
-autocmd FileType javascript set complete+=k~/.vim/dict/javascript.dict
-autocmd FileType erlang set complete+=k~/.vim/dict/erlang.dict
-autocmd FileType mxml set complete+=k~/.vim/dict/mxml.dict
-autocmd FileType scheme set complete+=k~/.vim/dict/gauche.dict
+set complete=.,w,b,u,t,i
 
 set omnifunc=syntaxcomplete#Complete
-autocmd FileType tt2html set omnifunc=htmlcomplete#CompleteTags
 
 imap <C-o> <C-x><C-o>
 imap <C-l> <C-x><C-l>
@@ -267,14 +254,15 @@ let g:rails_devalut_database = 'mysql'
 
 nmap <silent>,p <Plug>ToggleProject
 
-autocmd FileType * let g:AutoComplPop_CompleteOption = '.,w,b,u,t'
-autocmd FileType perl let g:AutoComplPop_CompleteOption = '.,w,b,u,t,k~/.vim/dict/perl.dict'
-autocmd FileType ruby let g:AutoComplPop_CompleteOption = '.,w,b,u,t,i,k~/.vim/dict/ruby.dict'
-autocmd FileType javascript let g:AutoComplPop_CompleteOption = '.,w,b,u,t,i,k~/.vim/dict/javascript.dict'
-autocmd FileType erlang let g:AutoComplPop_CompleteOption = '.,w,b,u,t,i,k~/.vim/dict/erlang.dict'
-autocmd FileType mxml let g:AutoComplPop_CompleteOption = '.,w,b,u,t,i,k~/.vim/dict/mxml.dict'
-autocmd FileType scheme let g:AutoComplPop_CompleteOption = '.,w,b,u,t,i,k~/.vim/dict/gauche.dict'
-autocmd FileType haskell let g:AutoComplPop_CompleteOption = '.,w,b,u,t,i'
+autocmd BufNewFile,BufRead * call SetAutoComplOption()
+
+function SetAutoComplOption()
+  if &syntax == 'perl'
+    let g:AutoComplPop_CompleteOption = '.,w,b,u,t,k'
+  else
+    let g:AutoComplPop_CompleteOption = '.,w,b,u,t,i,k'
+  endif
+endf
 
 let g:AutoComplPop_Behavior = {
   \   'haskell' : [
