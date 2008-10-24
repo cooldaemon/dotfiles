@@ -27,7 +27,7 @@ source ~/bin/cdd
 # mac
 if [ `uname` = 'Darwin' ]; then
     alias fcd='source ~/bin/fcd.sh'
-    alias gv='gvim.sh'
+    alias gv='mvim'
     alias ls='gls -F --color=auto'
 
     function _color_ls() {

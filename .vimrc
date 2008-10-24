@@ -20,8 +20,6 @@ syntax on
 filetype plugin on
 filetype indent on
 
-autocmd FileType perl set isfname-=-
-
 nmap ,u :w<CR>:!~/bin/deploy.pl %<CR>
 
 "==<tabkey>=================================================================
@@ -104,7 +102,7 @@ function! AU_ReCheck_FENC()
   if &fileencoding =~# 'iso-2022-jp' && search("[^\x01-\x7e]", 'n') == 0
     let &fileencoding=&encoding
   endif
-endfunction
+endf
 
 autocmd BufReadPost * call AU_ReCheck_FENC()
 
@@ -124,20 +122,20 @@ imap <C-o> <C-x><C-o>
 imap <C-l> <C-x><C-l>
 
 "==<buffer>=================================================================
-nmap <LEFT> :bp!<CR>
-nmap <RIGHT> :bn!<CR>
-nmap gh :bp!<CR>
-nmap gl :bn!<CR>
+nmap <DOWN> :bn!<CR>
+nmap <UP> :bp!<CR>
+nmap gj :bn!<CR>
+nmap gk :bp!<CR>
 
 nmap gb :FuzzyFinderBuffer<CR>
 
 "==<tab>====================================================================
 nmap ,t :tabnew<CR>
 nmap ,T :tabclose<CR>
-nmap <DOWN> :tabn<CR>
-nmap <UP> :tabp<CR>
-nmap gj :tabn<CR>
-nmap gk :tabp<CR>
+nmap <RIGHT> :tabn<CR>
+nmap <LEFT> :tabp<CR>
+nmap gl :tabn<CR>
+nmap gh :tabp<CR>
 
 highlight TabLine term=reverse cterm=reverse ctermfg=white ctermbg=black
 highlight TabLineSel term=bold cterm=bold,underline ctermfg=5
@@ -146,7 +144,7 @@ highlight TabLineFill term=reverse cterm=reverse ctermfg=white ctermbg=black
 "==<syntax check>===========================================================
 nmap ,m :call SyntaxCheck()<CR>
 
-function SyntaxCheck()
+function! SyntaxCheck()
   if &syntax == 'perl'
     set makeprg=~/.vim/tools/perl_checker.sh\ %
   elseif &syntax == 'ruby'
@@ -184,7 +182,7 @@ inoremap { {}<ESC>i
 inoremap [ <C-R>=AddPair('[')<CR>
 inoremap < <C-R>=AddPair('<')<CR>
 
-function AddPair(char)
+function! AddPair(char)
   if a:char == '['
     if &syntax == 'tt2html'
       return "[%%]\<LEFT>\<LEFT>"
@@ -205,7 +203,7 @@ inoremap } <C-R>=ClosePair('}')<CR>
 inoremap ] <C-R>=ClosePair(']')<CR>
 inoremap > <C-R>=ClosePairHtml('>')<CR>
 
-function ClosePair(char)
+function! ClosePair(char)
   if getline('.')[col('.') - 1] == a:char
     return "\<RIGHT>"
   else
@@ -213,7 +211,7 @@ function ClosePair(char)
   endif
 endf
 
-function ClosePairHtml(char)
+function! ClosePairHtml(char)
   if &syntax == 'html' || &syntax == 'xhtml' || &syntax == 'tt2html' || &syntax == 'eruby' || &syntax == 'vim'
     return ClosePair(a:char)
   else
@@ -231,7 +229,7 @@ nmap " csw"
 "==<comment out>============================================================
 nmap ,c :call CommentOut()<CR>
 
-function CommentOut()
+function! CommentOut()
   if &syntax == 'perl' || &syntax == 'ruby' || &syntax == 'sh' || &syntax == 'yaml'
     execute ':s/^/#/'
   elseif &syntax == 'javascript'
@@ -256,7 +254,7 @@ nmap <silent>,p <Plug>ToggleProject
 
 autocmd BufNewFile,BufRead * call SetAutoComplOption()
 
-function SetAutoComplOption()
+function! SetAutoComplOption()
   if &syntax == 'perl'
     let g:AutoComplPop_CompleteOption = '.,w,b,u,t,k'
   else
