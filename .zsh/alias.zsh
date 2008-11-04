@@ -11,7 +11,6 @@ alias l='ls'
 alias la='ls -A'
 alias ll='ls -lA'
 alias lt='ll -ct'
-alias tr='tree'
 
 alias cp='cp -i'
 alias mv='mv -i'
