@@ -8,9 +8,10 @@ alias v='vim'
 alias g='git'
 
 alias l='ls'
-alias la='ls -a'
-alias ll='ls -la'
+alias la='ls -A'
+alias ll='ls -lA'
 alias lt='ll -ct'
+alias tr='tree'
 
 alias cp='cp -i'
 alias mv='mv -i'
@@ -28,10 +29,10 @@ source ~/bin/cdd
 if [ `uname` = 'Darwin' ]; then
     alias fcd='source ~/bin/fcd.sh'
     alias gv='mvim'
-    alias ls='gls -F --color=auto'
+    alias ls='ls -F --color=auto'
 
     function _color_ls() {
-        gls -F --color=auto -a;
+        ls -F --color=auto -A;
     }
 fi
 
@@ -40,7 +41,7 @@ if [ `uname` = 'FreeBSD' ]; then
     alias ls='gnuls -F --color=auto'
 
     function _color_ls() {
-        gnuls -F --color=auto -a;
+        gnuls -F --color=auto -A;
     }
 fi
 

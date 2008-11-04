@@ -160,9 +160,13 @@ if test `uname` != 'Linux' ; then
 fi
 
 alias l='ls'
-alias la='ls -a'
-alias ll='ls -la'
+alias la='ls -A'
+alias ll='ls -lA'
 alias lt='ll -ct'
+
+function tr() {
+  ls -R $1 | grep ':$' | sed -e 's/:$//' -e 's/[^-][^\/]*\//- /g' -e 's/^/ /' -e 's/-/|/'
+}
 
 alias cp='cp -i'
 alias mv='mv -i'
@@ -180,13 +184,13 @@ if test `uname` = 'FreeBSD' ; then
     alias ls='gnuls -F --color=auto'
 
     function _color_ls() {
-        gnuls -F --color=auto -a;
+        gnuls -F --color=auto -A;
     }
 else
     alias ls='ls -F --color=auto'
 
     function _color_ls() {
-        ls -F --color=auto -a;
+        ls -F --color=auto -A;
     }
 fi
 
