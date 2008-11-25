@@ -11,6 +11,9 @@ map h gT
 map j 3<C-e>
 map k 3<C-y>
 
+" noscript.js
+let mapleader=','
+
 " copy.js
 javascript <<EOM
 liberator.globalVariables.copy_templates = [
