@@ -20,7 +20,8 @@ syntax on
 filetype plugin on
 filetype indent on
 
-nmap ,u :w<CR>:!~/bin/deploy.pl %<CR>
+let mapleader = ','
+"nmap ,u :w<CR>:!~/bin/deploy.pl %<CR>
 
 "==<tabkey>=================================================================
 set cindent
@@ -130,8 +131,8 @@ nmap gk :bp!<CR>
 nmap gb :FuzzyFinderBuffer<CR>
 
 "==<tab>====================================================================
-nmap ,t :tabnew<CR>
-nmap ,T :tabclose<CR>
+nmap <Leader>t :tabnew<CR>
+nmap <Leader>T :tabclose<CR>
 nmap <RIGHT> :tabn<CR>
 nmap <LEFT> :tabp<CR>
 nmap gl :tabn<CR>
@@ -142,7 +143,7 @@ highlight TabLineSel term=bold cterm=bold,underline ctermfg=5
 highlight TabLineFill term=reverse cterm=reverse ctermfg=white ctermbg=black
 
 "==<syntax check>===========================================================
-nmap ,m :call SyntaxCheck()<CR>
+nmap <Leader>m :call SyntaxCheck()<CR>
 
 function! SyntaxCheck()
   if &syntax == 'perl'
@@ -166,8 +167,8 @@ function! SyntaxCheck()
   execute ':cw5'
 endf
 
-nmap ,r :w<CR>:!~/bin/reload_firefox.sh<CR>
-nmap ,pt :%! perltidy -ce -pt=2 -sbt=2 -bt=2 -bbt=2 -nsfs -nolq<CR>
+"nmap ,r :w<CR>:!~/bin/reload_firefox.sh<CR>
+nmap <Leader>pt :%! perltidy -ce -pt=2 -sbt=2 -bt=2 -bbt=2 -nsfs -nolq<CR>
 
 "==<move>===================================================================
 noremap j gj
@@ -227,7 +228,7 @@ nmap ' csw'
 nmap " csw"
 
 "==<comment out>============================================================
-nmap ,c :call CommentOut()<CR>
+nmap <Leader>c :call CommentOut()<CR>
 
 function! CommentOut()
   if &syntax == 'perl' || &syntax == 'ruby' || &syntax == 'sh' || &syntax == 'yaml'
@@ -250,7 +251,7 @@ let g:rubycomplete_rails = 1
 let g:rails_level = 4
 let g:rails_devalut_database = 'mysql'
 
-nmap <silent>,p <Plug>ToggleProject
+nmap <silent><Leader>p <Plug>ToggleProject
 
 autocmd BufNewFile,BufRead * call SetAutoComplOption()
 
