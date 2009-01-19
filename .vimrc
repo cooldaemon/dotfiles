@@ -151,7 +151,7 @@ function! SyntaxCheck()
   elseif &syntax == 'ruby'
     set makeprg=ruby\ -cW\ %
   elseif &syntax == 'javascript'
-    set makeprg=/usr/local/bin/jslint\ --laxLineEnd\ %
+    set makeprg=~/bin/jslint.sh\ %
   elseif &syntax == 'erlang'
     set makeprg=erlc\ %
   elseif &syntax == 'yaml'
