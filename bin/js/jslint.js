@@ -10,19 +10,18 @@ if (!file || !source) {
 
 if (JSLINT(source, {passfail: false})) {
   print('All good.');
-} else {
-  for (var i = 0; i < JSLINT.errors.length; i += 1) {
-    var e = JSLINT.errors[i];
-    if (e) {
-      print(
-        file + ':' +
-        (e.line + 1) + ':' +
-        (e.character + 1) + ': ' +
-        e.reason
-      );
-//      print((e.evidence || '').replace(/^\s*(\S*(\s+\S+)*)\s*$/, "$1"));
-//      print('');
-    }
+  quit();
+}
+
+for (var i = 0; i < JSLINT.errors.length; i += 1) {
+  var e = JSLINT.errors[i];
+  if (e) {
+    print(
+      file + ':' +
+      (e.line + 1) + ':' +
+      (e.character + 1) + ': ' +
+      e.reason
+    );
   }
 }
-//print(JSLINT.report());
+

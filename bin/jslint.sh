@@ -5,6 +5,6 @@ if [ ! -f $1 -o  ! -r $1 ]; then
   exit 1
 fi
 
-js ~/bin/js/jslint.js $1 `cat $1`
+js ~/bin/js/jslint.js $1 "`cat $1`"
 exit 0
 
