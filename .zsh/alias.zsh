@@ -1,5 +1,7 @@
 # common
 alias -g lG='| grep'
+alias -g lT='| tail'
+alias -g lH='| head'
 alias -g lM='| more'
 alias -g lX='| xargs'
 

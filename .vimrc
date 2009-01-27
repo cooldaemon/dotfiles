@@ -114,7 +114,7 @@ autocmd FileType cvs :setlocal fileencoding=euc-jp
 autocmd FileType svn :setlocal fileencoding=utf-8
 
 "==<complete>===============================================================
-set iskeyword+=:
+set isfname-=-
 set complete=.,w,b,u,t,i
 
 set omnifunc=syntaxcomplete#Complete
