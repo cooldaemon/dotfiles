@@ -109,6 +109,14 @@ autocmd BufReadPost * call AU_ReCheck_FENC()
 set fileformats=unix,dos,mac
 set ambiwidth=double
 
+command! -nargs=? -complete=file -bang -bar Utf8 edit<bang> ++enc=utf-8 <args>
+command! -nargs=? -complete=file -bang -bar Cp932 edit<bang> ++enc=cp932 <args>
+command! -nargs=? -complete=file -bang -bar Sjis edit<bang> ++enc=sjis <args>
+command! -nargs=? -complete=file -bang -bar Eucjpms edit<bang> ++enc=eucjp-ms <args>
+command! -nargs=? -complete=file -bang -bar Eucjp edit<bang> ++enc=euc-jp <args>
+command! -nargs=? -complete=file -bang -bar Iso2022jp3 edit<bang> ++enc=iso-2022-jp-3 <args>
+command! -nargs=? -complete=file -bang -bar Iso2022jp edit<bang> ++enc=iso-2022-jp <args>
+
 "==<complete>===============================================================
 set isfname-=-
 set complete=.,w,b,u,t,i
