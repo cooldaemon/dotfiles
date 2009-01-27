@@ -6,3 +6,5 @@ setlocal iskeyword+=:
 setlocal complete=.,w,b,u,t,i,k
 setlocal dictionary=~/.vim/dict/erlang.dict
 
+setlocal makeprg=erlc\ %
+

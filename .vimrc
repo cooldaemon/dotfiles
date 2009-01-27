@@ -21,7 +21,6 @@ filetype plugin on
 filetype indent on
 
 let mapleader = ','
-"nmap ,u :w<CR>:!~/bin/deploy.pl %<CR>
 
 "==<tabkey>=================================================================
 set cindent
@@ -110,9 +109,6 @@ autocmd BufReadPost * call AU_ReCheck_FENC()
 set fileformats=unix,dos,mac
 set ambiwidth=double
 
-autocmd FileType cvs :setlocal fileencoding=euc-jp
-autocmd FileType svn :setlocal fileencoding=utf-8
-
 "==<complete>===============================================================
 set isfname-=-
 set complete=.,w,b,u,t,i
@@ -143,32 +139,7 @@ highlight TabLineSel term=bold cterm=bold,underline ctermfg=5
 highlight TabLineFill term=reverse cterm=reverse ctermfg=white ctermbg=black
 
 "==<syntax check>===========================================================
-nmap <Leader>m :call SyntaxCheck()<CR>
-
-function! SyntaxCheck()
-  if &syntax == 'perl'
-    set makeprg=~/.vim/tools/perl_checker.sh\ %
-  elseif &syntax == 'ruby'
-    set makeprg=ruby\ -cW\ %
-  elseif &syntax == 'javascript'
-    set makeprg=~/bin/jslint.sh\ %
-  elseif &syntax == 'erlang'
-    set makeprg=erlc\ %
-  elseif &syntax == 'yaml'
-    set makeprg=~/.vim/tools/yaml_checker.pl\ %
-  elseif &syntax == 'html'
-    set makeprg=tidy\ -quiet\ --errors\ --gnu-emacs\ yes\ %
-  elseif &syntax == 'css'
-    set makeprg=~/.vim/tools/css_checker.pl\ %
-  endif
-
-  execute ':w'
-  execute ':make'
-  execute ':cw5'
-endf
-
-"nmap ,r :w<CR>:!~/bin/reload_firefox.sh<CR>
-nmap <Leader>pt :%! perltidy -ce -pt=2 -sbt=2 -bt=2 -bbt=2 -nsfs -nolq<CR>
+nmap <Leader>m :w<CR>:make<CR>:cw5<CR>
 
 "==<move>===================================================================
 noremap j gj
@@ -176,7 +147,6 @@ noremap k gk
 
 "==<pair>===================================================================
 set showmatch
-set matchpairs+=<:>
 
 inoremap ( ()<ESC>i
 inoremap { {}<ESC>i
@@ -227,33 +197,17 @@ nmap [ csw[
 nmap ' csw'
 nmap " csw"
 
-"==<comment out>============================================================
-nmap <Leader>c :call CommentOut()<CR>
-
-function! CommentOut()
-  if &syntax == 'perl' || &syntax == 'ruby' || &syntax == 'sh' || &syntax == 'yaml'
-    execute ':s/^/#/'
-  elseif &syntax == 'javascript'
-    execute ':s/^/\/\//'
-  elseif &syntax == 'erlang'
-    execute ':s/^/%/'
-  elseif &syntax == 'vim'
-    execute ':s/^/"/'
-  elseif &syntax == 'html' || &syntax == 'xhtml' || &syntax == 'tt2html'
-    execute ':s/^\(.*\)$/<!-- \1 -->/'
-  endif
-
-  execute ':nohlsearch'
-endf
-
 "==<plugin>=================================================================
+"rails
 let g:rubycomplete_rails = 1
 let g:rails_level = 4
 let g:rails_devalut_database = 'mysql'
 
+"project
 nmap <silent><Leader>p <Plug>ToggleProject
 
-autocmd BufNewFile,BufRead * call SetAutoComplOption()
+"autocomplpop
+autocmd BufNewFile,BufRead,BufEnter * call SetAutoComplOption()
 
 function! SetAutoComplOption()
   if &syntax == 'perl'
@@ -288,9 +242,17 @@ let g:AutoComplPop_Behavior = {
 
 let g:AutoComplPop_IgnoreCaseOption = 1
 
+"git-commit
 let git_diff_spawn_mode=1
-autocmd BufNewFile,BufRead COMMIT_EDITMSG set filetype=git
+autocmd BufNewFile,BufRead,BufEnter COMMIT_EDITMSG set filetype=git
 
-autocmd Bufenter *.hs compiler ghc
+"haskell
+autocmd BufEnter *.hs compiler ghc
 let g:haddock_browser = "open -a firefox"
+
+"smartword
+map w  <Plug>(smartword-w)
+map b  <Plug>(smartword-b)
+map e  <Plug>(smartword-e)
+map ge <Plug>(smartword-ge)
 
