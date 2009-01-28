@@ -220,7 +220,7 @@ autocmd BufNewFile,BufRead,BufEnter * call SetAutoComplOption()
 function! SetAutoComplOption()
   if &syntax == 'perl'
     let g:AutoComplPop_CompleteOption = '.,w,b,u,t,k'
-  else
+  elseif &syntax != 'qf'
     let g:AutoComplPop_CompleteOption = '.,w,b,u,t,i,k'
   endif
 endf
