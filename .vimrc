@@ -132,8 +132,6 @@ nmap <UP> :bp!<CR>
 nmap gj :bn!<CR>
 nmap gk :bp!<CR>
 
-nmap gb :FuzzyFinderBuffer<CR>
-
 "==<tab>====================================================================
 nmap <Leader>t :tabnew<CR>
 nmap <Leader>T :tabclose<CR>
@@ -249,6 +247,13 @@ let g:AutoComplPop_Behavior = {
   \ }
 
 let g:AutoComplPop_IgnoreCaseOption = 1
+
+"fuzzyfinder
+nmap gb :FuzzyFinderBuffer<CR>
+nmap <Leader>fb :FuzzyFinderBuffer<CR>
+nmap <Leader>ff :FuzzyFinderFile<CR>
+nmap <Leader>fd :FuzzyFinderDir<CR>
+nmap <Leader>ft :FuzzyFinderTag<CR>
 
 "git-commit
 let git_diff_spawn_mode=1

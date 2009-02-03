@@ -20,9 +20,19 @@ alias rm='rm -i'
 
 alias h='history'
 alias ha='h -E 1'
+
 alias du='du -h'
 alias df='df -h'
+
 alias j='jobs'
+
+alias p='perl'
+alias pe='perl -e'
+alias pE='perl -E'
+alias pcw='perl -cw'
+
+alias e='erl'
+alias ec='erlc'
 
 source ~/bin/cdd
 
