@@ -4,5 +4,7 @@ setlocal tabstop=2
 
 setlocal matchpairs+=<:>
 
+setlocal makeprg=~/bin/ttlint.pl\ %
+
 setlocal omnifunc=htmlcomplete#CompleteTags
 
