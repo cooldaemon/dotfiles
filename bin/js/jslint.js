@@ -12,6 +12,9 @@ load(environment.HOME + '/bin/js/fulljslint.js');
 
   JSLINT.errors.forEach(function (error) {
     var message;
+    if (error === null) {
+      return;
+    }
     [
       file,
       error.line + 1,
