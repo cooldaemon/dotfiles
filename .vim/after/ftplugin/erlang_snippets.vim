@@ -20,6 +20,8 @@ exec "Snippet rec -record(".st."name".et.", {".st.et."}).<CR>"
 
 exec "Snippet fun fun (".st.et.") -> ".st.et." end"
 exec "Snippet func ".st.et."(".st.et.") -> ".st.et." end"
+exec "Snippet let (fun (".st."arg".et.") -> ".st.et." end)(".st."arg".et.")."
+
 exec "Snippet case case ".st.et." of<CR>".st.et." -> ".st.et.";<CR>_ -> ".st.et."<CR>end"
 exec "Snippet if if<CR>".st.et." -> ".st.et.";<CR>".st."true".et." -> ".st.et."<CR>end"
 exec "Snippet recv receive<CR>".st.et." -> ".st.et.";<CR>_ -> ".st.et."<CR>after<CR>".st."TIMEOUT".et." -> ".st.et."<CR>end"
