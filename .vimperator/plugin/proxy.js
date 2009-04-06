@@ -2,10 +2,10 @@
  * ==VimperatorPlugin==
  * @name           proxy.js
  * @description    proxy setting plugin
- * @description-ja ƒvƒƒNƒVÝ’è
+ * @description-ja ãƒ—ãƒ­ã‚¯ã‚·è¨­å®š
  * @minVersion     0.6pre
  * @author         cho45, halt feits
- * @version        0.6
+ * @version        0.6.2
  * ==/VimperatorPlugin==
  *
  * Usage:
@@ -88,10 +88,11 @@
 
     var proxy_settings = liberator.globalVariables.proxy_settings;
 
-    liberator.commands.addUserCommand(["proxy"], 'Proxy settings', function (args) {
+    commands.addUserCommand(["proxy"], 'Proxy settings', function (args) {
         const prefs = Components.classes["@mozilla.org/preferences-service;1"]
-                                .getService(Components.interfaces.nsIPrefService);
-        var name = args;
+                      .getService(Components.interfaces.nsIPrefService);
+        var name = (args.length > 1) ? args[0].toString() : args.string;
+
         if (!name) {
             liberator.echo("Usage: proxy {setting name}");
         }
@@ -107,7 +108,7 @@
             });
 
             proxy_setting.settings.forEach(function (conf) {
-                liberator.options.setPref('network.proxy.' + conf.label, conf.param);
+                options.setPref('network.proxy.' + conf.label, conf.param);
             });
 
             liberator.echo("Set config: " + name);
@@ -115,20 +116,12 @@
         });
     },
     {
-        completer: function (filter) {
+        completer: function (context, args) {
             var completions = [];
-            var exp = new RegExp("^" + filter);
-
-            for each (let { conf_name: name, conf_usage: usage } in proxy_settings) {
-                if (exp.test(name)) {
-                    completions.push([name, usage]);
-                }
-            }
-
-            return [0, completions];
+            context.title = ["Proxy Name", "Proxy Usage"];
+            context.completions = [[c.conf_name, c.conf_usage] for each (c in proxy_settings)];
         }
     });
 
 })();
 // vim: set sw=4 ts=4 et:
-

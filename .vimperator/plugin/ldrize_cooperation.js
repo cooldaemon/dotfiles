@@ -1,12 +1,12 @@
 // Vimperator plugin: 'Cooperation LDRize Mappings'
-// Version: 0.21
-// Last Change: 29-Sep-2008. Jan 2008
+// Version: 0.24
+// Last Change: 26-Dec-2008. Jan 2008
 // License: Creative Commons
 // Maintainer: Trapezoid <trapezoid.g@gmail.com> - http://unsigned.g.hatena.ne.jp/Trapezoid
 //
-// Cooperation LDRize Mappings for vimperator0.6.*
+// Cooperation LDRize Mappings for Vimperator
 //
-// Variable:
+// Variables:
 //  g:ldrc_captureMapping
 //      Specifies keys that capture by LDRize
 //      usage: let g:ldrc_captureMappings = "['j','k','p','o','?']"
@@ -29,8 +29,6 @@
 // Mappings:
 //      Mappings for LDRize
 //      default: 'j','k','p','o'
-//  ',f'
-//      Show hints that specified by LDRize's siteinfo
 // Commands:
 //  'm' or 'mb' or 'minibuffer':
 //      Execute args as Minibuffer Command
@@ -44,6 +42,11 @@
 //  'ldrc' or 'toggleldrizecooperation':
 //      Toggle LDRize Cooperation
 //      usage: :toggleldrizecooperation
+// Hints:
+//  ';l':
+//      narrow down the candidates to LDRize paragraphes
+//  ',L':
+//      narrow down the candidates to LDRize paragraphes (in a new tab)
 // Options:
 //  'ldrc'
 //      Enable LDRize Cooperation
@@ -61,60 +64,69 @@
 
 (function(){
     //pattern: wildcard
-    //include: [regexp, option] or regexp
-    //handler: [programPath, [args]] or programPath or function(url,title)
+    //include: [regexp,option] or regexp
+    //handler: [programPath,[args]] or programPath or function(url,title)
     var handlerInfo = [
         //{
-        //    pattern: 'http://www.nicovideo.jp/*',
-        //    handler: ['c:\\usr\\SmileDownloader\\SmileDownloader.exe',['%URL%']],
+        //    pattern: "http://www.nicovideo.jp/*",
+        //    handler: ["c:\\usr\\SmileDownloader\\SmileDownloader.exe",["%URL%"]],
         //    wait: 5000
         //},
         //{
-        //    handler: ['C:\\usr\\irvine\\irvine.exe',['%URL%']],
+        //    handler: ["C:\\usr\\irvine\\irvine.exe",["%URL%"]],
         //},
     ];
-    const DISABLE_ICON = 'data:image/png;base64,'
-        +'iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAIAAACQkWg2AAAACXBIWXMAAA7E'
-        +'AAAOxAGVKw4bAAACL0lEQVR4nF2Sy0tUYRjGf9+Z4/HMjJfjBUZEMM2MSDII'
-        +'REjSVtVecBFZi6Bdi4RW/SFBq2oR0R8gSaUJhVJIBkEEMZOWl5kuM+fqnPN9'
-        +'52sxQ4kPv837Pu+zel4xMjkz/3h5p87pbhyDw4o1mzUOkubYbvLo2kVx+4Pe'
-        +'rAKMdTGQ5YgiWK/8z+QT3yyVUTFAzaBXHQ0IONPKOxepAH65dUOGSB/pM9LC'
-        +'whjyy/sg4DB3TjGZbjVuVIihQhKfxGdzmzhhNBvGXhr7NDiRY+fr573ibmtC'
-        +'4pN4GNJDukiXusvbIuMnh9K9YujSYKKPl6vrZu+EI5EuyheG9JEe0qPusfSR'
-        +'4cGBbPA98og8LMlAPlor2ZEvVIT0kD6G9EhcEpfY58c+xbKYHBaRl4Ye432s'
-        +'rqyo7pnQo/qTxEW62gy2CKoAbheu4mGGm5eHgsViOTh+5Sp37+2X4gJQC0gU'
-        +'Otb0j2hhaCG06NfC0K22/radzs6uTM3ojY1SobDcdHNaCC2Mimn2YZmQggEd'
-        +'kPJ0UczfyOzVWHr1xnVmrS5I0R6pgTC1mXdoUwB2Jj5QFvDsBc8fTCkpL82l'
-        +'uW6rWWEPQBoL07JwCgAaywbgd8ynIrultTB3wWk73LtWdS3OXtd/fBwH2+Yg'
-        +'xM4R14kqrzMZzM5pO9dcNlQrl832wTSoGiEok84eOrK0ZGB0+shTJYpyFUv7'
-        +'In/s/LlbTyq+/ufZFlkTK4MhAJKUMCGs6x473rg/9xe9wS0xVA1n/AAAAABJ'
-        +'RU5ErkJggg==';
-    const ENABLE_ICON = 'data:image/png;base64,'
-        +'iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAIAAACQkWg2AAAACXBIWXMAAAsT'
-        +'AAALEwEAmpwYAAACI0lEQVR4nGWSzU7yQBSGp84UKalDY0MkLsSdYWtCIok3'
-        +'4YKV7tx7MWy9A6/ABZDgHbhghdFqU9M0FpH57cyUcdFA8Pue3fl5T07Oe5zz'
-        +'8/PhcEgpbbfbtVoN7LBer9M01VpX4f7+/t3dnfP4+JimKQDg6OgIYwz+UpZl'
-        +'HMdbjbUWZVkmpQQAEEJc1wX/EYZhHMdlWQIAKKV7cgPG+PLy8uPjg/+l3+/7'
-        +'vl/1KKVQURRCCABAFEVa6yAIOOeO41Tjj4+PoyiK49h1XSkl53xPbOCcz+fz'
-        +'bre7WCzYhpOTk+l0GoYhhFAIIaXck1JuNc/Pz51OpyiKahkAAMb49fVVCKGU'
-        +'qgTw4uKCUqq1RggZY05PT8uyTJJEa312dvby8rJcLq21y+WSUiqlhN1uN89z'
-        +'xpgxJs9zQkiv1xuNRlmWXV9f39/ff39/53meZRmllBCCZrNZkiTWWowxIWQ6'
-        +'nV5dXRFCGGOfn59PT0+MMWut67pa6/V6jZrNpjHGWus4TqPRsNaORqPBYCCE'
-        +'GI/Hvu/7vm+trc4KAEC+71dGQggrdyaTyXA4NMbc3NxsvW82mwCAoihQrVY7'
-        +'PDzctVYIEUXR29tbo9GAEO6WpJTO7e0tIQRjXK/XhRCe5ymlsiyDEAZB4Hle'
-        +'lawEX19fqNVqVS/kOE6r1fI8DyHU6XT++ShjzM/Pz8HBAXx/f+/3+9X2WmvO'
-        +'uVKq3GCMUUoxxlarVb1ef3h4+AWNW50eXTIBjgAAAABJRU5ErkJggg==';
+    const DISABLE_ICON = "data:image/png;base64,"
+        +"iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAIAAACQkWg2AAAACXBIWXMAAA7E"
+        +"AAAOxAGVKw4bAAACL0lEQVR4nF2Sy0tUYRjGf9+Z4/HMjJfjBUZEMM2MSDII"
+        +"REjSVtVecBFZi6Bdi4RW/SFBq2oR0R8gSaUJhVJIBkEEMZOWl5kuM+fqnPN9"
+        +"52sxQ4kPv837Pu+zel4xMjkz/3h5p87pbhyDw4o1mzUOkubYbvLo2kVx+4Pe"
+        +"rAKMdTGQ5YgiWK/8z+QT3yyVUTFAzaBXHQ0IONPKOxepAH65dUOGSB/pM9LC"
+        +"whjyy/sg4DB3TjGZbjVuVIihQhKfxGdzmzhhNBvGXhr7NDiRY+fr573ibmtC"
+        +"4pN4GNJDukiXusvbIuMnh9K9YujSYKKPl6vrZu+EI5EuyheG9JEe0qPusfSR"
+        +"4cGBbPA98og8LMlAPlor2ZEvVIT0kD6G9EhcEpfY58c+xbKYHBaRl4Ye432s"
+        +"rqyo7pnQo/qTxEW62gy2CKoAbheu4mGGm5eHgsViOTh+5Sp37+2X4gJQC0gU"
+        +"Otb0j2hhaCG06NfC0K22/radzs6uTM3ojY1SobDcdHNaCC2Mimn2YZmQggEd"
+        +"kPJ0UczfyOzVWHr1xnVmrS5I0R6pgTC1mXdoUwB2Jj5QFvDsBc8fTCkpL82l"
+        +"uW6rWWEPQBoL07JwCgAaywbgd8ynIrultTB3wWk73LtWdS3OXtd/fBwH2+Yg"
+        +"xM4R14kqrzMZzM5pO9dcNlQrl832wTSoGiEok84eOrK0ZGB0+shTJYpyFUv7"
+        +"In/s/LlbTyq+/ufZFlkTK4MhAJKUMCGs6x473rg/9xe9wS0xVA1n/AAAAABJ"
+        +"RU5ErkJggg==";
+    const ENABLE_ICON = "data:image/png;base64,"
+        +"iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAIAAACQkWg2AAAACXBIWXMAAAsT"
+        +"AAALEwEAmpwYAAACI0lEQVR4nGWSzU7yQBSGp84UKalDY0MkLsSdYWtCIok3"
+        +"4YKV7tx7MWy9A6/ABZDgHbhghdFqU9M0FpH57cyUcdFA8Pue3fl5T07Oe5zz"
+        +"8/PhcEgpbbfbtVoN7LBer9M01VpX4f7+/t3dnfP4+JimKQDg6OgIYwz+UpZl"
+        +"HMdbjbUWZVkmpQQAEEJc1wX/EYZhHMdlWQIAKKV7cgPG+PLy8uPjg/+l3+/7"
+        +"vl/1KKVQURRCCABAFEVa6yAIOOeO41Tjj4+PoyiK49h1XSkl53xPbOCcz+fz"
+        +"bre7WCzYhpOTk+l0GoYhhFAIIaXck1JuNc/Pz51OpyiKahkAAMb49fVVCKGU"
+        +"qgTw4uKCUqq1RggZY05PT8uyTJJEa312dvby8rJcLq21y+WSUiqlhN1uN89z"
+        +"xpgxJs9zQkiv1xuNRlmWXV9f39/ff39/53meZRmllBCCZrNZkiTWWowxIWQ6"
+        +"nV5dXRFCGGOfn59PT0+MMWut67pa6/V6jZrNpjHGWus4TqPRsNaORqPBYCCE"
+        +"GI/Hvu/7vm+trc4KAEC+71dGQggrdyaTyXA4NMbc3NxsvW82mwCAoihQrVY7"
+        +"PDzctVYIEUXR29tbo9GAEO6WpJTO7e0tIQRjXK/XhRCe5ymlsiyDEAZB4Hle"
+        +"lawEX19fqNVqVS/kOE6r1fI8DyHU6XT++ShjzM/Pz8HBAXx/f+/3+9X2WmvO"
+        +"uVKq3GCMUUoxxlarVb1ef3h4+AWNW50eXTIBjgAAAABJRU5ErkJggg==";
 
-    var Class = function(){return function(){this.initialize.apply(this,arguments)}}
+    var Class = function() function(){this.initialize.apply(this,arguments)};
 
     var _isEnable;
+
+    function replaceMap (mode,key,desc,aroundFunc,extra){
+      var old = liberator.modules.mappings.getDefault(mode,key);
+      var oldAction = old.action;
+      old.description = desc;
+      old.action = function()
+                      let (self = this,args = arguments)
+                        aroundFunc(function() oldAction.apply(self,args));
+    }
 
     var LDRizeCooperation = new Class();
     LDRizeCooperation.prototype = {
         initialize: function(){
             var self = this;
-            this.LDRize = {getSiteinfo: function(){return undefined;}};
-//            this.Minibuffer = null;
+            this.LDRize = {getSiteinfo: function() undefined};
+            this.Minibuffer = null;
             this.handlerInfo = handlerInfo;
 
             this.LDRizeCooperationPanel = this.setupStatusbarPanel();
@@ -125,7 +137,7 @@
                 window.eval(liberator.globalVariables.ldrc_intelligence_bind) : false ;
             this.isModHints = liberator.globalVariables.ldrc_hints != undefined ?
                 window.eval(liberator.globalVariables.ldrc_hints) : false ;
-            this.captureMappings = window.eval(liberator.globalVariables.ldrc_captureMappings) || ['j','k','p','o'];
+            this.captureMappings = window.eval(liberator.globalVariables.ldrc_captureMappings) || ["j","k","p","o"];
             this.skipHeight = liberator.globalVariables.ldrc_skip != undefined ?
                 window.eval(liberator.globalVariables.ldrc_skip) : 0.5 ;
 
@@ -144,44 +156,47 @@
         },
         setupStatusbarPanel: function(){
             var self = this;
-            var LDRizeCooperationPanel = document.createElement('statusbarpanel');
-            LDRizeCooperationPanel.setAttribute('id','ldrizecopperation-status');
-            LDRizeCooperationPanel.setAttribute('class','statusbarpanel-iconic');
-            LDRizeCooperationPanel.setAttribute('src',this.isEnable ? ENABLE_ICON : DISABLE_ICON);
+            var LDRizeCooperationPanel = document.createElement("statusbarpanel");
+            LDRizeCooperationPanel.setAttribute("id","ldrizecopperation-status");
+            LDRizeCooperationPanel.setAttribute("class","statusbarpanel-iconic");
+            LDRizeCooperationPanel.setAttribute("src",this.isEnable ? ENABLE_ICON : DISABLE_ICON);
             LDRizeCooperationPanel.addEventListener("click",function(e){
                     self.isEnable = !self.isEnable;
             },false);
-            document.getElementById('status-bar').insertBefore(LDRizeCooperationPanel,document.getElementById('security-button').nextSibling);
+            document.getElementById("status-bar").insertBefore(LDRizeCooperationPanel,document.getElementById("security-button").nextSibling);
 
             return LDRizeCooperationPanel;
         },
         hookGreasemonkey: function(){
             var self = this;
-            var GreasemonkeyService = Cc["@greasemonkey.mozdev.org/greasemonkey-service;1"].getService().wrappedJSObject;
-            this.addAfter(GreasemonkeyService,'evalInSandbox',function(code,codebase,sandbox){
-                if(sandbox.window.LDRize != undefined && sandbox.window.Minibuffer != undefined){
-                    sandbox.window.addEventListener("focus",function(){
-//                        self.LDRize = window.eval("self",sandbox.LDRize.getSiteinfo);
-//                        self.Minibuffer = window.eval("command",sandbox.Minibuffer.addCommand);
-                        self.LDRize = sandbox.LDRize;
-                    },false);
-                    if(window.content.wrappedJSObject == sandbox.unsafeWindow){
-//                        self.LDRize = window.eval("self",sandbox.LDRize.getSiteinfo);
-//                        self.Minibuffer = window.eval("command",sandbox.Minibuffer.addCommand);
-                        self.LDRize = sandbox.LDRize;
+            var GreasemonkeyService;
+            try{
+                GreasemonkeyService = Cc["@greasemonkey.mozdev.org/greasemonkey-service;1"].getService().wrappedJSObject;
+                this.addAfter(GreasemonkeyService,"evalInSandbox",function(code,codebase,sandbox){
+                    if(sandbox.window.LDRize != undefined && sandbox.window.Minibuffer != undefined){
+                        sandbox.window.addEventListener("focus",function(){
+                            self.LDRize = liberator.eval("self",sandbox.LDRize.getSiteinfo);
+                            self.Minibuffer = liberator.eval("command",sandbox.Minibuffer.addCommand);
+                        },false);
+                        if(window.content.wrappedJSObject == sandbox.unsafeWindow){
+                            self.LDRize = liberator.eval("self",sandbox.LDRize.getSiteinfo);
+                            self.Minibuffer = liberator.eval("command",sandbox.Minibuffer.addCommand);
+                        }
                     }
-                }
-            });
+                });
+            }catch(e){
+                liberator.log(e);
+            }
         },
         initLDRizeCaptureKeys: function(keys){
             var self = this;
             keys.forEach(function(x){
-                    var map = liberator.mappings.getDefault(null,x) || liberator.mappings.get(null,x);
+                    var map = liberator.modules.mappings.get(null,x) || liberator.modules.mappings.getDefault(null,x);
                     var oldAction = map.action;
                     var getter = "getPrev";
                     switch(x){
-                        case 'j':   getter = "getNext";
-                        case 'k':   map.action = function(){
+                        case "j":   getter = "getNext";
+                        case "k":   map.action = function(){
                                         self.isEnableLDRizeCooperation() ?
                                             self.isIntelligenceBind && self.isScrollOrBind(getter) ?
                                                 oldAction.apply(this,arguments)           // scroll
@@ -189,8 +204,17 @@
                                             : oldAction.apply(this,arguments);
                                     };
                                     break;
+                        case "J":
+                        case "K":   map.action = function(){
+                                        self.isEnableLDRizeCooperation()
+                                            ? self.sendRawKeyEvent(0,x.charCodeAt(0) + 32)
+                                            : oldAction.apply(this,arguments);
+                                    };
+                                    break;
                         default:    map.action = function(){
-                                        self.isEnableLDRizeCooperation() ? self.sendRawKeyEvent(0,x.charCodeAt(0)):oldAction.apply(this,arguments);
+                                        self.isEnableLDRizeCooperation()
+                                            ? self.sendRawKeyEvent(0,x.charCodeAt(0))
+                                            : oldAction.apply(this,arguments);
                                     };
                                     break;
                     }
@@ -199,103 +223,61 @@
         initLDRizeCooperationFuture: function(){
             var self = this;
 
-            var originalHinttags = liberator.options.hinttags;
-            var originalExtendedHinttags = liberator.options.hinttags;
+            //Hints
+            [
+                ["l","LDRize paragraphes",liberator.CURRENT_TAB],
+                ["L","LDRize paragraphes (in a new tab",liberator.NEW_TAB]
+            ].forEach(function([mode,prompt,target]){
+                liberator.modules.hints.addMode(mode,prompt,
+                        function(elem) liberator.modules.buffer.followLink(elem,target),
+                        function(){
+                            var siteinfo = self.LDRize.getSiteinfo();
+                            return siteinfo.paragraph + "/" + siteinfo.link;
+                        });
 
-            function setHinttags(enable){
-                if(enable){
-                    var siteinfo = self.LDRize.getSiteinfo();
-                    if(siteinfo.link && siteinfo.paragraph){
-                        liberator.options.hinttags = siteinfo.paragraph + "/" + siteinfo.link;
-                        liberator.options.extendedhinttags = siteinfo.paragraph + "/" + siteinfo.link;
-                    }else{
-                        liberator.options.hinttags = originalHinttags;
-                        liberator.options.extendedhinttags = originalExtendedHinttags;
-                    }
-                }else{
-                    liberator.options.hinttags = originalHinttags;
-                    liberator.options.extendedhinttags = originalExtendedHinttags;
-                }
-            }
+            });
 
-
-            //Mappings
-            liberator.mappings.addUserMap([liberator.modes.NORMAL], [",f"],
-                "Start QuickHint mode with LDRize",
-                function(){
-                    setHinttags(true);
-                    liberator.hints.show(liberator.modes.QUICK_HINT);
-                    setHinttags(self.isEnableLDRizeCooperation() && self.isModHints);
-                } ,{});
-
-            liberator.mappings.addUserMap([liberator.modes.NORMAL], ["f"],
-                "Start QuickHint mode",
-                function(){
-                    setHinttags(self.isEnableLDRizeCooperation() && self.isModHints);
-                    liberator.hints.show(liberator.modes.QUICK_HINT);
-                },{});
-
-            liberator.mappings.addUserMap([liberator.modes.NORMAL], ["F"],
-                "Start QuickHint mode, but open link in a new tab",
-                function(){
-                    setHinttags(self.isEnableLDRizeCooperation() && self.isModHints);
-                    liberator.hints.show(liberator.modes.QUICK_HINT, "t");
-                },{});
-
-            liberator.mappings.addUserMap([liberator.modes.NORMAL], [";"],
-                "Start an extended hint mode",
-                function(arg){
-                    setHinttags(self.isEnableLDRizeCooperation() && self.isModHints);
-
-                    if(arg == "f")
-                        liberator.hints.show(liberator.modes.ALWAYS_HINT, "o");
-                    else if(arg == "F")
-                        liberator.hints.show(liberator.modes.ALWAYS_HINT, "t");
-                    else
-                        liberator.hints.show(liberator.modes.EXTENDED_HINT, arg);
-                },
-                { flags: liberator.Mappings.flags.ARGUMENT });
             //Commands
-            liberator.commands.addUserCommand(["pin"], "LDRize Pinned Links",
+            liberator.modules.commands.addUserCommand(["pin"],"LDRize Pinned Links",
                 function(){
                     var links = self.getPinnedItems();
                     var showString = links.length + " Items<br/>";
                     links.forEach(function(link){
                         showString += link + "<br/>";
                     });
-                    liberator.commandline.echo(showString, liberator.commandline.HL_NORMAL, liberator.commandline.FORCE_MULTILINE);
-                } ,{});
-/*
-            liberator.commands.addUserCommand(["mb","m","minibuffer"], "Execute Minibuffer",
-                function(arg){self.Minibuffer.execute(arg)},
+                    liberator.modules.commandline.echo(showString,liberator.modules.commandline.HL_NORMAL,liberator.modules.commandline.FORCE_MULTILINE);
+                },{});
+            liberator.modules.commands.addUserCommand(["mb","m","minibuffer"],"Execute Minibuffer",
+                function(arg){ self.Minibuffer.execute(arg.string.replace(/\\+/g,"")) },
                 {
-                    completer: function(filter){
+                    completer: function(context,arg,special){
+                        var filter = context.filter;
                         var completionList = [];
                         var command = self.Minibuffer.command;
                         var alias = self.Minibuffer.alias_getter();
-                        var tokens = filter.split("|").map(function(str){return str.replace(/\s+/g,"")});
+                        var tokens = filter.split("|").map(function(str) str.replace(/\s+/g,""));
                         var exp = new RegExp("^" + tokens.pop());
                         for(let i in command) if(exp.test(i))completionList.push([tokens.concat(i).join(" | "),"MinibufferCommand"]);
                         for(let i in alias) if(exp.test(i))completionList.push([i,"MinibufferAlias"]);
-                        return [0,completionList];
+                        context.title = ["Minibuffer Command","Description"];
+                        context.completions = completionList;
                     }
                 });
-*/
-            liberator.commands.addUserCommand(["pindownload"], "Download pinned links by any software",
-                function(arg){ self.downloadLinksByProgram(self.getPinnedItems());} ,{});
-            liberator.commands.addUserCommand(["toggleldrizecooperation","toggleldrc"], "Toggle LDRize Cooperation",
-            function(arg){ self.isEnable = !self.isEnable}, {});
+            liberator.modules.commands.addUserCommand(["pindownload"],"Download pinned links by any software",
+                function(arg){ self.downloadLinksByProgram(self.getPinnedItems());},{});
+            liberator.modules.commands.addUserCommand(["toggleldrizecooperation","toggleldrc"],"Toggle LDRize Cooperation",
+            function(arg){ self.isEnable = !self.isEnable},{});
             //Options
-            liberator.options.add(['ldrc','ldrizecooperation'],'LDRize cooperation','boolean',this.isEnable,
+            liberator.modules.options.add(["ldrc","ldrizecooperation"],"LDRize cooperation","boolean",this.isEnable,
                 {
                     setter: function(value){ self.isEnable = value; },
-                    getter: function(){ return self.isEnable; }
+                    getter: function() self.isEnable
                 }
             );
-            liberator.options.add(['ldrchints'],'mod hinttags for LDRize','boolean',this.isModHints,
+            liberator.modules.options.add(["ldrchints"],"mod hinttags for LDRize","boolean",this.isModHints,
                 {
                     setter: function(value){ self.isModHints = value; },
-                    getter: function(){ return self.isModHints; }
+                    getter: function() self.isModHints
                 }
             );
         },
@@ -311,24 +293,22 @@
             });
         },
 
-        get isEnable(){
-            return _isEnable;
-        },
+        get isEnable() _isEnable,
         set isEnable(value){
             this.LDRizeCooperationPanel.setAttribute("src",value ? DISABLE_ICON : ENABLE_ICON);
             _isEnable = value;
         },
-        isEnableLDRize: function(){ return this.LDRize.getSiteinfo() != undefined; },
-        isEnableLDRizeCooperation: function(){ return this.isEnable && this.isEnableLDRize() },
+        isEnableLDRize: function() this.LDRize.getSiteinfo() != undefined,
+        isEnableLDRizeCooperation: function() /^https?:$/.test(content.location.protocol) && this.isEnable && this.isEnableLDRize(),
 
         //Pin
         getPinnedItems: function(){
-            var linkXpath = this.LDRize.getSiteinfo()['link'];
-            var viewXpath = this.LDRize.getSiteinfo()['view'] || linkXpath + "/text()";
+            var linkXpath = this.LDRize.getSiteinfo()["link"];
+            var viewXpath = this.LDRize.getSiteinfo()["view"] || linkXpath + "/text()";
             return this.LDRize.getPinnedItems().map(function(i){
-                let linkResult = i.XPath(linkXpath); let viewResult = i.XPath(viewXpath);
-                return [linkResult, viewResult ? viewResult.textContent : null]}
-            );
+                var linkResult = i.XPath(linkXpath),viewResult = i.XPath(viewXpath);
+                return [linkResult,viewResult ? viewResult.textContent : null];
+            });
         },
         downloadLinksByProgram: function(links){
             var self = this;
@@ -338,10 +318,10 @@
                     if(x.include.test(url)){
                         setTimeout(function(){
                             if(typeof x.handler == "object"){
-                                var args = x.handler[1].map(function(s){ return s.replace(/%URL%/g,url).replace(/%TITLE%/g,title); });
-                                liberator.io.run(x.handler[0],args,false);
+                                let args = x.handler[1].map(function(s) s.replace(/%URL%/g,url).replace(/%TITLE%/g,title));
+                                liberator.modules.io.run(x.handler[0],args,false);
                             }else if(typeof x.handler == "string"){
-                                liberator.io.run(x.handler,[url],false);
+                                liberator.modules.io.run(x.handler,[url],false);
                             }else if(typeof x.handler == "function"){
                                 x.handler(url.toString(),title);
                             }
@@ -353,28 +333,29 @@
             });
         },
         isScrollOrBind: function(getter){
+            var self = this;
+            var paragraphes,paragraph,current,next,innerHeight,scrollY,limit,p,np,cp;
             try{
-                var self = this;
-                var paragraphes = this.LDRize.getParagraphes();
-                var paragraph = paragraphes[getter]();
-                var current = paragraphes.current;
-                var next = paragraphes.getNext();
+                paragraphes = this.LDRize.getParagraphes();
+                paragraph = paragraphes[getter]();
+                current = paragraphes.current;
+                next = paragraphes.getNext();
 
-                var innerHeight = window.content.innerHeight;
-                var scrollY = window.content.scrollY;
+                innerHeight = window.content.innerHeight;
+                scrollY = window.content.scrollY;
 
-                var limit = window.content.innerHeight * (self.skipHeight + 0.5);
+                limit = window.content.innerHeight * (self.skipHeight + 0.5);
 
                 if(paragraph.paragraph == undefined) return true;                                 // scroll
                 if(current.paragraph == undefined) return false;                                  // bind
                 if(current.paragraph.y - window.content.scrollY == this.LDRize.getScrollHeight()
                         && getter == "getPrev") return false;                                     // bind
 
-                var p = this.getClientPosition(paragraph.paragraph.node);
-                var np = next && next.paragraph.node != undefined ?
+                p = this.getClientPosition(paragraph.paragraph.node);
+                np = next && next.paragraph.node != undefined ?
                     this.getClientPosition(next.paragraph.node) :
                     {top: window.content.scrollMaxY + window.content.innerHeight,left: 0};
-                var cp = this.getClientPosition(current.paragraph.node);
+                cp = this.getClientPosition(current.paragraph.node);
 
                 /*
                  *log(p);
@@ -383,43 +364,43 @@
                  */
 
                 //check current paragraph
-                if(!(scrollY < np.top && cp.top < scrollY + innerHeight)) return false;            // bind
+                if(!(scrollY < np.top && cp.top < scrollY + innerHeight)) return false;           // bind
                 //check next/prev paragraph
                 if(Math.abs(p.top - (scrollY + innerHeight/2)) < innerHeight * 0.5) return false; // bind
                 if(Math.abs(p.top - (scrollY + innerHeight/2)) > limit) return true;              // scroll
-                else return false;                                                                // bind
+                return false;                                                                     // bind
             }catch(e){
-                log(e);
+                liberator.log(e);
             }
         },
 
         //Utils
         addAfter: function(target,name,after){
             var original = target[name];
-            target[name] = function() {
+            target[name] = function(){
                 var tmp = original.apply(target,arguments);
                 after.apply(target,arguments);
                 return tmp;
             };
         },
         getClientPosition: function(elem){
+            var position;
             try{
-                var position = elem.getBoundingClientRect();
+                position = elem.getBoundingClientRect();
             }catch(e){
                 position = elem.parentNode.getBoundingClientRect();
             }
             return {
-                left:Math.round(window.content.scrollX+position.left),
-                top:Math.round(window.content.scrollY+position.top)
-            }
+                left: Math.round(window.content.scrollX+position.left),
+                top:  Math.round(window.content.scrollY+position.top)
+            };
         },
         sendRawKeyEvent: function(keyCode,charCode){
             var evt = window.content.wrappedJSObject.document.createEvent("KeyEvents");
             evt.initKeyEvent("keypress",true,true,window.content.wrappedJSObject,false,false,false,false,keyCode,charCode);
             window.content.wrappedJSObject.document.dispatchEvent(evt);
         },
-    }
+    };
 
     liberator.plugins.LDRizeCooperation = new LDRizeCooperation();
 })();
-
