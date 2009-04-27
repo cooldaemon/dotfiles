@@ -925,6 +925,8 @@ function s:SetUpForNewFiletype(filetype, forceReset)
         call s:MapDelimiters('(:',':)')
     elseif a:filetype == "z8a"
         call s:MapDelimiters(';', '')
+    elseif a:filetype == "tt2html"
+        call s:MapDelimitersWithAlternative('<!--', '-->', '[%#', '%]')
 
     elseif a:filetype == ""
         call s:MapDelimitersWithAlternative("","", "", "")
