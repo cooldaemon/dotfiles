@@ -7,6 +7,7 @@
 	branch = auto
 	interactive = auto
 [alias]
+	ls = ls-files
 	lg = log
 	di = diff
 	st = status
