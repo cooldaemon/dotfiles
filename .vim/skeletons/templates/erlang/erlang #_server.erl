@@ -1,5 +1,5 @@
 -module(<+FILE NAME ROOT+>).
--author("Masahito Ikuta <cooldaemon@gmail.com>").
+-author('cooldaemon@gmail.com>').
 
 -behaviour(gen_server).
 
@@ -38,6 +38,9 @@ handle_call(_Message, _From, State) ->
 %  {noreply, State};
 
 handle_cast(_Message, State) ->
+  {noreply, State}.
+
+handle_info(_Info, State) ->
   {noreply, State}.
 
 terminate(Reason, _State) ->
