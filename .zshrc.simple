@@ -8,7 +8,8 @@ setopt CDABLEVARS
 
 # env
 export SVN_EDITOR=vi
-export PATH=~/bin:/usr/local/bin:/sbin:/usr/sbin::$PATH
+path=(~/bin(N) /usr/local/bin(N) /sbin(N) /usr/sbin(N) $path)
+typeset -U path
 
 # bindkey
 bindkey -v
