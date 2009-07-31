@@ -18,7 +18,7 @@ alias cp='cp -i'
 alias mv='mv -i'
 alias rm='rm -i'
 
-alias h='history'
+alias h='fc -l'
 alias ha='h -E 1'
 
 alias du='du -h'
