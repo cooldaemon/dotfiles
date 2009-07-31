@@ -71,11 +71,17 @@ zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
 zstyle ':completion:*:cd:*' tag-order local-directories path-directories
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'
 zstyle ':completion:*:default' menu select=1
+zstyle ':completion:*' group-name ''
+zstyle ':completion:*:descriptions' format '%B%d%b'
+zstyle ':completion:*:(rm|cp|mv|vi|git):*' ignore-line true                     
 
 function  _cap () {
   `cap -T | grep '^cap ' | sed 's/^cap //' | sed 's/ .*//' | sed 's/^/compadd /'`
 }
 compdef _cap cap
+
+setopt MENU_COMPLETE
+setopt COMPLETE_IN_WORD
 
 # history
 HISTFILE=$HOME/.zsh-history
