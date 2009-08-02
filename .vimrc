@@ -22,6 +22,8 @@ filetype indent on
 
 let mapleader = ','
 
+autocmd BufNewFile,BufRead,BufEnter * exec ':lcd ' . expand("%:p:h")
+
 "==<tabkey>=================================================================
 set cindent
 set expandtab
