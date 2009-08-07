@@ -1,0 +1,94 @@
+# Function
+snippet sub
+abbr sub <name> {}
+	sub ${1:function_name} {
+		${2:#body ...}
+	}
+# Conditional
+snippet if
+abbr if () {}
+	if (${1}) {
+		${2:# body...}
+	}
+# Conditional if..else
+snippet ifelse
+abbr if () else {}
+	if (${1}) {
+		${2:# body...}
+	} else {
+		${3:# else...}
+	}
+# Conditional if..elsif..else
+snippet ifelsif
+abbr if () {} elsif () {} else {}
+	if (${1}) {
+		${3:# body...}
+	} elsif (${2}) {
+		${4:# elsif...}
+	} else {
+		${5:# else...}
+	}
+# Conditional One-line
+snippet xif
+abbr <expression> if <condition>;
+	${1:expression} if ${2:condition};${3}
+# Unless conditional
+snippet unless
+abbr unless () {}
+	unless (${1}) {
+		${2:# body...}
+	}
+# Unless conditional One-line
+snippet xunless
+abbr <expression> unless <condition>;
+	${1:expression} unless ${2:condition};${3}
+# Try/Except
+snippet eval
+abbr eval {}; if ($@) {}
+	eval {
+		${1:# do something risky...}
+	};
+	if ($@) {
+		${2:# handle failure...}
+	}
+# While Loop
+snippet while
+abbr while () {}
+	while (${1}) {
+		${2:# body...}
+	}
+# While Loop One-line
+snippet xwhile
+abbr <expression> while <condition>;
+	${1:expression} while ${2:condition};${3}
+# For Loop
+snippet for_seq
+abbr for (0..9) {}
+	for (0..${1:count}) {
+		${2:# body...}
+	}
+# Foreach Loop
+snippet for
+abbr for my <elem> (<list>) {}
+	for my $${1:x} (@${2:array}) {
+		${3:# body...}
+	}
+# Foreach Loop One-line
+snippet xfor
+abbr <expression> for <list>;
+	${1:expression} for @${2:array};${3}
+# Package
+snippet class
+abbr package <class>; use base; sub new {} 1;
+	package ${1:ClassName};
+	
+	use base qw(${2:ParentClass});
+	
+	sub new {
+		my $class = shift;
+		$class = ref $class if ref $class;
+		my $self = bless {}, $class;
+		$self;
+	}
+	
+	1;${3}

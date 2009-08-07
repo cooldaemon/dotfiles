@@ -1,0 +1,60 @@
+snippet if
+abbr if then; fi
+	if ${1:condition}; then
+		${2:# statements}
+	fi
+snippet ifelse
+abbr if then; else fi
+	if ${1:condition}; then
+		${2:# statements}
+	else
+		${3:# statements}
+	fi
+snippet elif
+abbr elif ; then
+	elif ${1:condition} ; then
+		${2:# statements}
+snippet for
+abbr for ((i=0; i < 99; i++)); do done
+	for (( ${2:i} = 0; $2 < ${1:count}; $2++ )); do
+		${3:# statements}
+	done
+snippet forin
+abbr for <item> in <list>; do done
+	for ${1:item} in ${2:list}; do
+		${3:# statements}
+	done
+snippet while
+abbr while ; do done
+	while ${1:condition}; do
+		${2:# statements}
+	done
+snippet until
+abbr until ; do done
+	until ${1:condition}; do
+		${2:# statements}
+	done
+snippet repeat
+abbr repeat ; do done
+	repeat ${1:integer}; do
+		${2:# statements}
+	done
+snippet case
+abbr case in ;; esac
+	case ${1:word} in
+		${2:pattern})
+			${3};;
+	esac
+snippet select
+abbr select in ; do done
+	select ${1:answer} in ${2:choices}; do
+		${3:# statements}
+	done
+snippet always
+abbr {} always {}
+	{ ${1:try} } always { ${2:always} }
+snippet function
+abbr function <name> () {}
+	function ${1:name} (${2:args}) {
+		${3:# body}
+	}

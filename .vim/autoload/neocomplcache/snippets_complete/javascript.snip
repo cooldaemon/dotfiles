@@ -1,0 +1,96 @@
+# Prototype
+snippet prototype
+abbr <class>.prototype.<method> = <function>
+	${1:class_name}.prototype.${2:method_name} =
+	function(${3:first_argument}) {
+		${4:// body...}
+	};
+# Function
+snippet function
+abbr function <name> () {}
+	function ${1:function_name} (${2:argument}) {
+		${3:// body...}
+	}
+# Anonymous Function
+snippet anonfunction
+abbr function () {};
+	function (${1}) {${2}};
+# if
+snippet if
+abbr if () {}
+	if (${1:true}) {
+		${2}
+	}
+# if ... else
+snippet ifelse
+abbr if () {} else {}
+	if (${1:true}) {
+		${2}
+	}
+	else {
+		${3}
+	}
+# tertiary conditional
+snippet tertiary
+abbr <condition> ? <true> : <false>;
+	${1:/* condition */} ? ${2:a} : ${3:b};
+# switch
+snippet switch
+abbr switch () {case default}
+	switch (${1:expression}) {
+		case '${3:case}':
+			${4:// code}
+			break;
+		${5}
+		default:
+			${2:// code}
+	}
+# case
+snippet case
+abbr case <value>: break;
+	case '${1:case}':
+		${2:// code}
+		break;
+	${3}
+# for (...) {...}
+snippet for
+abbr for (++) {}
+	for (var ${2:i} = 0; $2 < ${1:Things}.length; $2${3:++}) {
+		${4:$1[$2]}
+	}
+# for (...) {...} (Improved Native For-Loop)
+snippet forr
+abbr for (--) {}
+	for (var ${2:i} = ${1:Things}.length - 1; $2 >= 0; $2${3:--}) {
+		${4:$1[$2]}
+	};
+# while (...) {...}
+snippet while
+abbr while () {}
+	while (${1:/* condition */}) {
+		${2:/* code */}
+	}
+# do...while
+snippet do
+abbr do {} while ();
+	do {
+		${2:/* code */}
+	} while (${1:/* condition */});
+# Object Method
+snippet :f
+abbr <name>: function () {},
+	${1:method_name}: function (${2:attribute}) {
+		${4}
+	}${3:,}
+# setTimeout function
+snippet timeout
+abbr setTimeout(function () {}, <sec>);
+	setTimeout(function() {${3}}${2}, ${1:10});
+# Get Elements
+snippet get
+abbr getElementsBy<Target>()
+	getElementsBy${1:TagName}('${2}')${3}
+# Get Element
+snippet gett
+abbr getElementBy<Target>()
+	getElementBy${1:Id}('${2}')${3}
