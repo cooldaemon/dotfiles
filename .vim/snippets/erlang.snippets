@@ -1,0 +1,122 @@
+# header
+snippet head
+	-module(${1:module name}).
+	-author('cooldaemon@gmail.com').
+
+	-export([${2:function names}]).
+	${3}
+
+snippet moddule
+	-module(${1:module name}).
+	${2}
+
+snippet author
+	-author('cooldaemon@gmail.com').
+	${1}
+
+snippet behaviour
+	-behaviour(${1:behaviour name}).
+	${2}
+
+snippet export
+	-export([${1:function names}]).
+	${2}
+
+snippet export_all
+	-compile(export_all).
+	${1}
+
+snippet include
+	-include(${1:module name}).
+	${2}
+
+snippet include_lib
+	-include_lib(${1:module name}).
+	${2}
+
+snippet define 
+	-define(${1:name}, ${2:value}).
+	${3}
+
+snippet record
+	-record(${1:record name}, {${2:field name1}, ${3:field name2}}).
+
+# function
+snippet anonfunction
+	fun (${1}) -> ${2:code} end.
+
+snippet let
+	(fun (${1}) -> ${3:code} end)(${2}).
+
+snippet function
+	${1:function name} (${2}) ->
+		${3:code}.
+
+snippet gfunction
+	${1:function name} (${2}) when ${3:guard} ->
+		${4:code}.
+
+# conditional branch
+snippet case
+	case ${1:condition code} of
+		${2:value} -> ${3:code};
+		_ -> ${4:other code}
+	end.
+
+snippet if
+	if
+		${1:condition} -> ${2:code};
+		true -> ${3:other code}
+	end.
+
+snippet receive
+	receive
+		${1:condition} -> ${3:code};
+		_ -> ${4:other code}
+		after ${2:timeout} -> ${5:timeout code}
+	end.
+
+# list
+snippet forearch
+	lists:foreach(fun (${2:Elem}) -> ${3:code} end, ${1:List}).
+
+snippet map
+	lists:map(fun (${2:Elem}) -> ${3:code} end, ${1:List}).
+
+snippet any
+	lists:any(fun (${2:Elem}) -> ${3:code} end, ${1:List}).
+
+snippet filter
+	lists:filter(
+		fun
+			(${2:Elem}) when ${3:guard} -> true;
+			(_) -> false
+		end,
+		${1:List}
+	).
+
+snippet foldl
+	lists:foldl(fun (${3:Elem}, ${4:AccIn}) -> ${5:code} end, ${2:Acc0}, ${1:List}).
+
+snippet foldr
+	lists:foldr(fun (${3:Elem}, ${4:AccIn}) -> ${5:code} end, ${2:Acc0}, ${1::ist}).
+
+snippet list
+	[${1:Elem} || ${2:Elem} <- ${3:List}].
+
+# etc..
+snippet puts
+	io:fwrite("${2:~p}~n", [${1:value}]).
+
+snippet spawn
+	spawn(${1:module}, ${2:function}, [${3:arg}]).
+
+snippet spawn_link
+	spawn_link(${1:module}, ${2:function}, [${3:arg}]).
+
+snippet register
+	register(${1:name}, ${2:pid}).
+
+snippet trap_exit
+	process_flag(trap_exit, true).
+
