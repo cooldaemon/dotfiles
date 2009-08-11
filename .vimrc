@@ -50,7 +50,7 @@ nnoremap # g#N
 set laststatus=2
 set wildmode=list:full
 set ruler
-set statusline=%<%f\ %m%r%h%w%{'['.(&fenc!=''?&fenc:&enc).']['.&ff.']'}%=%l,%c%V%8P
+set statusline=%<%f\ %m%r%h%w%{'['.(&fenc!=''?&fenc:&enc).']['.&ff.']['.&ft.']'}%=%l,%c%V%8P
 
 "==<color>==================================================================
 colorscheme desert
@@ -241,9 +241,9 @@ map ge <Plug>(smartword-ge)
 
 "neocomplcache
 let g:NeoComplCache_EnableAtStartup = 1
+let g:NeoComplCache_KeywordCompletionStartLength = 1
 let g:NeoComplCache_MinKeywordLength = 3
 let g:NeoComplCache_MinSyntaxLength = 3
-let g:NeoComplCache_AlphabeticalOrder = 1
 let g:NeoComplCache_SmartCase = 1
 let g:NeoComplCache_DictionaryFileTypeLists = {
   \ 'default'    : '',
@@ -264,7 +264,4 @@ let g:NeoComplCache_KeywordPatterns = {
   \ 'perl'   : '\v\<\h\w*\>?|\h\w*(::\h\w*)*|[$@%&*]\h\w*|\h\w*%(\s*\(\)?)?',
   \ 'erlang' : '\v\h\w*(:\h\w*)*'
   \}
-
-imap <silent><C-l> <Plug>(neocomplcache_snippets_expand)
-smap <silent><C-l> <Plug>(neocomplcache_snippets_expand)
 
