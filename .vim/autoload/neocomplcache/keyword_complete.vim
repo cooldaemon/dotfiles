@@ -113,6 +113,10 @@ endfunction"}}}
 
 function! neocomplcache#keyword_complete#get_keyword_list(cur_keyword_str)"{{{
     let s:cur_keyword_len = len(a:cur_keyword_str)
+    if s:cur_keyword_len < g:NeoComplCache_KeywordCompletionStartLength + 1
+        return []
+    endif
+
     let l:keyword_escape = neocomplcache#keyword_escape(a:cur_keyword_str)
 
     " Keyword filter."{{{
