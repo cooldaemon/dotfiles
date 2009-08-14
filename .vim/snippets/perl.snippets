@@ -1,5 +1,5 @@
 # header
-snippet head
+snippet head Default
 	use strict;
 	use warnings;
 	
@@ -9,7 +9,7 @@ snippet head
 	
 	${1}
 
-snippet shead
+snippet head with Shebang
 	#!/usr/bin/env perl
 	
 	use strict;
@@ -21,7 +21,7 @@ snippet shead
 	
 	${1}
 
-snippet phead
+snippet head Package
 	package ${1:`Filename()`};
 	
 	use strict;
@@ -35,7 +35,7 @@ snippet phead
 	
 	1;
 
-snippet chead
+snippet head Old Style Class
 	package ${1:`Filename()`};
 	
 	use strict;
@@ -45,7 +45,7 @@ snippet chead
 	use version; our $VERSION = qv('0.0.1');
 	use Carp;
 	
-	use base qw(${2:ParentClass});
+	use base qw(${2:Parent});
 	
 	sub new {
 		my $class = shift;
@@ -57,36 +57,45 @@ snippet chead
 	1;
 
 # sub
-snippet sub
+snippet sub Default
 	sub ${1:function_name} {
 		${2:#body ...}
 		return;
 	}
 
-snippet sub_args
+snippet sub with Args
 	sub ${1:function_name} {
 		my ($${2:arg},) = @_;
-		
+	
 		${3:#body ...}
 		return;
 	}
 
-snippet sub_method
+snippet sub Class Method
 	sub ${1:function_name} {
 		my $self = shift;
-		
+	
 		${2:#body ...}
 		return;
 	}
 
-snippet sub_method_args
+snippet sub Class Method with Args
 	sub ${1:function_name} {
 		my $self = shift;
 		my ($${2:arg},) = @_;
-		
+	
 		${3:#body ...}
 		return;
 	}
+
+# params
+snippet args
+	my ($${1:},) = @_;
+	${2}
+
+snippet self
+	my $self = shift;
+	${1}
 
 # conditional
 snippet if
@@ -183,8 +192,125 @@ snippet sort
 		${2:# body...}
 	} @${1:array};
 
-# catalyst
-snippet sub_method_catalyst
+# Moose
+snippet head Moose
+	package ${1:`Filename()`};
+	
+	use feature qw(:5.10);
+	use version; our $VERSION = qv('0.0.1');
+	use Carp;
+	
+	use Any::Moose${2: qw(X::AttributeHelpers ::Util::TypeConstraints)};
+	
+	${3}
+	__PACKAGE__->meta->make_immutable;
+	no Any::Moose;
+	
+	
+	1;
+
+snippet head Moose Role
+	package ${1:`Filename()`};
+	
+	use feature qw(:5.10);
+	use version; our $VERSION = qv('0.0.1');
+	use Carp;
+	
+	use Any::Moose::Role;
+	
+	${2}
+	
+	no Any::Moose::Role;
+	
+	
+	1;
+
+snippet extends
+	extends '${1:Parent}'${2:;}
+
+snippet with
+	with '${1:Role}'${2:;}
+
+snippet requires
+	requires '${1:Method}'${2:;}
+
+snippet has Default
+	has '${1:name}' => (
+		is  => '${2:ro|rw|bare}',
+		isa => '${3:Type}',
+		${4:Attributes}
+	);
+
+snippet has Too many Attributes
+	has '${1:name}' => (
+		is         => '${2:ro|rw|bare}',
+		isa        => '${3:Type}',${4}
+	#	does       => 'Role',
+	#	coerce     => 1,
+	#	trigger    => sub {},
+	#	required   => 1,
+	#	lazy       => 1,
+	#	weak_ref   => 1,
+	#	auto_deref => 1,
+	#	lazy_build => 1,
+	#	init_arg   => '$1',
+	#	default    => 'default value', # or sub {}
+	#	builder    => '_build_$1',
+	#	clearer    => 'clear_$1',
+	#	reader     => 'get_$1',
+	#	writer     => 'set_$1',
+	#	handles    => [qw()], # {}, qr// or Role
+	#	predicate  => 'has_$1',
+	);
+	${5}
+
+snippet subtype
+	subtype '${1:NewType}' => as '${2:BaseType}' => where {
+		${3:# check $_}
+	};
+
+snippet coerce
+	coerce '${1:Type}'
+		=> from '${2:FromType}'
+		=> via { ${3:$2->new($_)} }${4:;}
+
+snippet before
+	before '${1:Method}'${2} => sub {
+		my $self = shift;
+	
+		${3:# body...}
+		return;
+	};
+
+snippet after
+	after '${1:Method}'${2} => sub {
+		my $self = shift;
+	
+		${3:# body...}
+		return;
+	};
+
+snippet around
+	around '${1:Method}'${2} => sub {
+		my ($method, $self, $args,) = @_;
+	
+		${3:# body...}
+		return $self->$method(@args,);
+	};
+
+snippet augment
+	augment '${1:Method}' => sub {
+		my $self = shift;
+	
+		${3:# header...}
+		inner();
+		${4:# footer...}
+		return;
+};
+
+
+# Catalyst
+snippet sub Catalyst Controller Method
 	sub ${1} : ${2} {
 		my ($self, $c,) = @_;
 		
@@ -192,7 +318,7 @@ snippet sub_method_catalyst
 		return;
 	}
 
-snippet sub_method_catalyst_args
+snippet sub Catalyst Controller Method with Args
 	sub ${1} : ${2} {
 		my ($self, $c,) = @_;
 		my ($${3:arg},) = @{$c->req->args};
@@ -201,7 +327,7 @@ snippet sub_method_catalyst_args
 		return;
 	}
 
-snippet sub_method_catalyst_begin
+snippet sub Catalyst Controller begin Method
 	sub begin : Private {
 		my ($self, $c,) = @_;
 		
@@ -209,7 +335,7 @@ snippet sub_method_catalyst_begin
 		return 1;
 	}
 
-snippet sub_method_catalyst_auto
+snippet sub Catalyst Controller auto Method
 	sub auto : Private {
 		my ($self, $c,) = @_;
 		
