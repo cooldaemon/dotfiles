@@ -30,8 +30,14 @@ function! neocomplcache#snipMate_complete#get_keyword_list(cur_keyword_str) "{{{
 
     let list = []
     for trig in keys(snips)
+      if type(snips[trig]) == type([])
+        let s:triger = 'multi snips - ' . snips[trig][0][1]
+      else
+        let s:triger = snips[trig]
+      endif
+
       let l:abbr = substitute(
-        \ substitute(snips[trig], '\n', '', 'g'),
+        \ substitute(s:triger, '\n', '', 'g'),
         \ '\s', ' ', 'g')
       let l:abbr =
         \ (len(l:abbr) > g:NeoComplCache_MaxKeywordWidth) ?

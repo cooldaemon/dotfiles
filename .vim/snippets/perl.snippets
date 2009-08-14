@@ -1,47 +1,137 @@
-# #!/usr/bin/perl
-snippet #!
-	#!/usr/bin/perl
+# header
+snippet head
+	use strict;
+	use warnings;
 	
-# Hash Pointer
-snippet .
-	 =>
-# Function
+	use feature qw(:5.10);
+	use version; our $VERSION = qv('0.0.1');
+	use Carp;
+	
+	${1}
+
+snippet shead
+	#!/usr/bin/env perl
+	
+	use strict;
+	use warnings;
+	
+	use feature qw(:5.10);
+	use version; our $VERSION = qv('0.0.1');
+	use Carp;
+	
+	${1}
+
+snippet phead
+	package ${1:`Filename()`};
+	
+	use strict;
+	use warnings;
+	
+	use feature qw(:5.10);
+	use version; our $VERSION = qv('0.0.1');
+	use Carp;
+	
+	${2}
+	
+	1;
+
+snippet chead
+	package ${1:`Filename()`};
+	
+	use strict;
+	use warnings;
+	
+	use feature qw(:5.10);
+	use version; our $VERSION = qv('0.0.1');
+	use Carp;
+	
+	use base qw(${2:ParentClass});
+	
+	sub new {
+		my $class = shift;
+		return bless {@_}, $class;
+	}
+	
+	${2}
+	
+	1;
+
+# sub
 snippet sub
 	sub ${1:function_name} {
 		${2:#body ...}
+		return;
 	}
-# Conditional
+
+snippet sub_args
+	sub ${1:function_name} {
+		my ($${2:arg},) = @_;
+		
+		${3:#body ...}
+		return;
+	}
+
+snippet sub_method
+	sub ${1:function_name} {
+		my $self = shift;
+		
+		${2:#body ...}
+		return;
+	}
+
+snippet sub_method_args
+	sub ${1:function_name} {
+		my $self = shift;
+		my ($${2:arg},) = @_;
+		
+		${3:#body ...}
+		return;
+	}
+
+# conditional
 snippet if
 	if (${1}) {
 		${2:# body...}
 	}
-# Conditional if..else
+
 snippet ife
 	if (${1}) {
 		${2:# body...}
 	} else {
 		${3:# else...}
 	}
+
 # Conditional if..elsif..else
 snippet ifee
 	if (${1}) {
-		${2:# body...}
-	} elsif (${3}) {
+		${3:# body...}
+	} elsif (${2}) {
 		${4:# elsif...}
 	} else {
 		${5:# else...}
 	}
-# Conditional One-line
+
 snippet xif
-	${1:expression} if ${2:condition};${3}
-# Unless conditional
+	${2:expression} if ${1:condition};${3}
+
 snippet unless
 	unless (${1}) {
 		${2:# body...}
 	}
-# Unless conditional One-line
+
 snippet xunless
-	${1:expression} unless ${2:condition};${3}
+	${2:expression} unless ${1:condition};${3}
+
+snippet given
+	given ($${1}) {
+		when (${2}) {
+			${3:# body...}
+		}
+		default {
+			${4:# default...}
+		}
+	}
+
 # Try/Except
 snippet eval
 	eval {
@@ -50,42 +140,137 @@ snippet eval
 	if ($@) {
 		${2:# handle failure...}
 	}
+
 # While Loop
-snippet wh
+snippet while
 	while (${1}) {
 		${2:# body...}
 	}
-# While Loop One-line
-snippet xwh
-	${1:expression} while ${2:condition};${3}
-# For Loop
+
+snippet xwhile
+	${2:expression} while ${1:condition};${3}
+
 snippet for
-	for (my $${2:var} = 0; $$2 < ${1:count}; $$2${3:++}) {
-		${4:# body...}
-	}
-# Foreach Loop
-snippet fore
-	foreach my $${1:x} (@${2:array}) {
+	for my $${2:elem} (@${1:array}) {
 		${3:# body...}
 	}
-# Foreach Loop One-line
-snippet xfore
-	${1:expression} foreach @${2:array};${3}
-# Package
-snippet cl
-	package ${1:ClassName};
-	
-	use base qw(${2:ParentClass});
-	
-	sub new {
-		my $class = shift;
-		$class = ref $class if ref $class;
-		my $self = bless {}, $class;
-		$self;
+
+snippet for_when
+	for my $${2:elem} (@${1:array}) {
+		when (${3}) {
+			${4:# body...}
+		}
+		default {
+			${5:# default...}
+		}
 	}
-	
-	1;${3}
-# Read File
-snippet slurp
-	my $${1:var};
-	{ local $/ = undef; local *FILE; open FILE, "<${2:file}"; $$1 = <FILE>; close FILE }${3}
+
+snippet xfor
+	${2:expression} for @${1:array};${3}
+
+snippet map
+	map {
+		${2:# body...}
+	} @${1:array};
+
+snippet grep
+	grep {
+		${2:# body...}
+	} @${1:array};
+
+snippet sort
+	sort {
+		${2:# body...}
+	} @${1:array};
+
+# catalyst
+snippet sub_method_catalyst
+	sub ${1} : ${2} {
+		my ($self, $c,) = @_;
+		
+		${3:# body...}
+		return;
+	}
+
+snippet sub_method_catalyst_args
+	sub ${1} : ${2} {
+		my ($self, $c,) = @_;
+		my ($${3:arg},) = @{$c->req->args};
+		
+		${4:# body...}
+		return;
+	}
+
+snippet sub_method_catalyst_begin
+	sub begin : Private {
+		my ($self, $c,) = @_;
+		
+		${1:# body...}
+		return 1;
+	}
+
+snippet sub_method_catalyst_auto
+	sub auto : Private {
+		my ($self, $c,) = @_;
+		
+		${1:# body...}
+		return 1;
+	}
+
+snippet param
+	$c->req->param(${1})${2:;}
+
+snippet stash
+	$c->stash->{${1}}${2:;}
+
+snippet flash
+	$c->flash->{${1}}${2:;}
+
+snippet config
+	$c->config->{${1}}${2:;}
+
+snippet session
+	$c->session->{${1}}${2:;}
+
+snippet haserr
+	$c->form->has_error${1}
+
+snippet seterr
+	$c->set_invalid_form(${1:target} => ${2:error},${3});
+
+snippet forward
+	$c->forward(${1});${2}
+
+snippet detach
+	$c->detach(${1});${2}
+
+snippet redirect
+	$c->res->redirect($c->uri_for('${1:uri}'));
+
+snippet model
+	$c->model(${1});${2}
+
+snippet find
+	$c->model(${1})->find(${2});${3}
+
+snippet search
+	$c->model(${1})->search({${2} => ${3},${4}},${5});${6}
+
+snippet count
+	$c->model(${1})->count({${2} => ${3},${4}},${5});${6}
+
+snippet create
+	$c->model(${1})->create({${2} => ${3},${4}});${5}
+
+snippet view
+	$c->view(${1});${2}
+
+snippet dumper
+	$c->log->dumper([$${1},${2}]);${3}
+
+snippet debug
+	$c->log->debug(${1});${2}
+
+snippet warn
+	$c->log->warn(${1});${2}
+
