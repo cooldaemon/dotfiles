@@ -154,8 +154,13 @@ highlight TabLineFill term=reverse cterm=reverse ctermfg=white ctermbg=black
 nmap <Leader>m :w<CR>:make<CR>:cw5<CR>
 
 "==<move>===================================================================
-noremap j gj
-noremap k gk
+nnoremap j gj
+onoremap j gj
+xnoremap j gj
+
+nnoremap k gk
+onoremap k gk
+xnoremap k gk
 
 "==<pair>===================================================================
 set showmatch

@@ -265,9 +265,14 @@ snippet has Too many Attributes
 	${5}
 
 snippet subtype
-	subtype '${1:NewType}' => as '${2:BaseType}' => where {
-		${3:# check $_}
-	};
+	subtype '${1:NewType}'
+		=> as '${2:BaseType}'
+		=> where {
+			${3:# check $_}
+		},
+		=> message {
+			${4:# error message}
+		};
 
 snippet coerce
 	coerce '${1:Type}'
