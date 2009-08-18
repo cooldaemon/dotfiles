@@ -253,6 +253,7 @@ let g:NeoComplCache_SmartCase = 1
 let g:NeoComplCache_DictionaryFileTypeLists = {
   \ 'default'    : '',
   \ 'erlang'     : $HOME . '/.vim/dict/erlang.dict',
+  \ 'objc'       : $HOME . '/.vim/dict/objc.dict',
   \ 'javascript' : $HOME . '/.vim/dict/javascript.dict',
   \ 'mxml'       : $HOME . '/.vim/dict/mxml.dict',
   \ 'ruby'       : $HOME . '/.vim/dict/ruby.dict',
