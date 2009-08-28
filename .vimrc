@@ -250,6 +250,11 @@ let g:NeoComplCache_KeywordCompletionStartLength = 1
 let g:NeoComplCache_MinKeywordLength = 3
 let g:NeoComplCache_MinSyntaxLength = 3
 let g:NeoComplCache_SmartCase = 1
+let g:NeoComplCache_PluginCompletionLength = {
+  \ 'snipMate_complete' : 1,
+  \ 'keyword_complete'  : 2,
+  \ 'syntax_complete'   : 2
+  \ }
 let g:NeoComplCache_DictionaryFileTypeLists = {
   \ 'default'    : '',
   \ 'erlang'     : $HOME . '/.vim/dict/erlang.dict',
