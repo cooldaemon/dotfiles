@@ -24,6 +24,8 @@ let mapleader = ','
 
 autocmd BufNewFile,BufRead,BufEnter * exec ':lcd ' . expand("%:p:h")
 
+nnoremap <expr> s* ':%substitute/\<' . expand('<cword>') . '\>/'
+
 "==<tabkey>=================================================================
 set cindent
 set expandtab
