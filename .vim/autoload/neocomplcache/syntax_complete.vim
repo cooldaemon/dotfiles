@@ -113,11 +113,6 @@ function! neocomplcache#syntax_complete#finalize()"{{{
 endfunction"}}}
 
 function! neocomplcache#syntax_complete#get_keyword_list(cur_keyword_str)"{{{
-    let s:cur_keyword_len = len(a:cur_keyword_str)
-    if s:cur_keyword_len < g:NeoComplCache_KeywordCompletionStartLength + 1
-        return []
-    endif
-
     if &filetype == '' || !has_key(s:syntax_list, &filetype)
         return []
     endif

@@ -24,6 +24,8 @@ let mapleader = ','
 
 autocmd BufNewFile,BufRead,BufEnter * exec ':lcd ' . expand("%:p:h")
 
+nnoremap <expr> s* ':%substitute/\<' . expand('<cword>') . '\>/'
+
 "==<tabkey>=================================================================
 set cindent
 set expandtab
@@ -154,8 +156,13 @@ highlight TabLineFill term=reverse cterm=reverse ctermfg=white ctermbg=black
 nmap <Leader>m :w<CR>:make<CR>:cw5<CR>
 
 "==<move>===================================================================
-noremap j gj
-noremap k gk
+nnoremap j gj
+onoremap j gj
+xnoremap j gj
+
+nnoremap k gk
+onoremap k gk
+xnoremap k gk
 
 "==<pair>===================================================================
 set showmatch
@@ -245,9 +252,15 @@ let g:NeoComplCache_KeywordCompletionStartLength = 1
 let g:NeoComplCache_MinKeywordLength = 3
 let g:NeoComplCache_MinSyntaxLength = 3
 let g:NeoComplCache_SmartCase = 1
+let g:NeoComplCache_PluginCompletionLength = {
+  \ 'snipMate_complete' : 1,
+  \ 'keyword_complete'  : 2,
+  \ 'syntax_complete'   : 2
+  \ }
 let g:NeoComplCache_DictionaryFileTypeLists = {
   \ 'default'    : '',
   \ 'erlang'     : $HOME . '/.vim/dict/erlang.dict',
+  \ 'objc'       : $HOME . '/.vim/dict/objc.dict',
   \ 'javascript' : $HOME . '/.vim/dict/javascript.dict',
   \ 'mxml'       : $HOME . '/.vim/dict/mxml.dict',
   \ 'ruby'       : $HOME . '/.vim/dict/ruby.dict',

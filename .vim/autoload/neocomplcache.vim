@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: neocomplcache.vim
 " AUTHOR:  Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 13 Aug 2009
+" Last Modified: 26 Aug 2009
 " Usage: Just source this file.
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
@@ -23,7 +23,7 @@
 "     TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 "     SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 " }}}
-" Version: 2.69, for Vim 7.0
+" Version: 2.72, for Vim 7.0
 "=============================================================================
 
 function! neocomplcache#enable() "{{{
@@ -31,7 +31,7 @@ function! neocomplcache#enable() "{{{
         autocmd!
         " Auto complete events
         autocmd CursorMovedI * call s:complete()
-        autocmd BufWinLeave * call s:remove_cache()
+        autocmd InsertLeave * call s:remove_cache()
     augroup END "}}}
 
     " Initialize"{{{
@@ -88,6 +88,10 @@ function! neocomplcache#enable() "{{{
                 \'\v^\s*#\s*\h\w*|\h\w*%(\s*\(\)?)?')
     call s:set_keyword_pattern('cpp',
                 \'\v^\s*#\s*\h\w*|\h\w*%(::\h\w*)*%(\s*\(\)?|\<\>?)?')
+    call s:set_keyword_pattern('objc',
+                \'\v^\s*#\s*\h\w*|\h\w*%(\s*\(\)?|\<\>?|:)?|\@\h\w*%(\s*\(\)?)?|\(\h\w*\s*\*?\)?')
+    call s:set_keyword_pattern('objcpp',
+                \'\v^\s*#\s*\h\w*|\h\w*%(::\h\w*)*%(\s*\(\)?|\<\>?|:)?|\@\h\w*%(\s*\(\)?)?|\(\s*\h\w*\s*\*?\s*\)?')
     call s:set_keyword_pattern('d',
                 \'\v\h\w*%(!?\s*\(\)?)?')
     call s:set_keyword_pattern('python',
@@ -217,8 +221,7 @@ endfunction"}}}
 function! neocomplcache#manual_complete(findstart, base)"{{{
     if a:findstart
         " Get cursor word.
-        let l:cur = col('.') - 1
-        let l:cur_text = strpart(getline('.'), 0, l:cur)
+        let l:cur_text = strpart(getline('.'), 0, col('.')-1)
 
         if !neocomplcache#keyword_complete#exists_current_source()
             let s:complete_words = []
@@ -389,9 +392,9 @@ function! neocomplcache#check_skip_time()"{{{
         return 0
     endif
 
-    "let l:end_time = split(reltimestr(reltime(l:start_time)))[0]
+    "let l:end_time = split(reltimestr(reltime(s:start_time)))[0]
+    "echomsg l:end_time
     if split(reltimestr(reltime(s:start_time)))[0] > g:NeoComplCache_SkipCompletionTime
-        "echo l:end_time
         return 1
     else
         return 0
@@ -421,11 +424,13 @@ function! s:complete()"{{{
     endif
 
     if pumvisible() || &paste || s:complete_lock || g:NeoComplCache_DisableAutoComplete
+                \||(&l:completefunc != 'neocomplcache#manual_complete'
+                    \&& &l:completefunc != 'neocomplcache#auto_complete')
         return
     endif
 
     " Get cursor word.
-    let l:cur_text = strpart(getline('.'), 0, col('.') - 1) 
+    let l:cur_text = strpart(getline('.'), 0, col('.')-1)
     " Prevent infinity loop.
     if l:cur_text == s:old_text || l:cur_text == ''
         return
@@ -468,6 +473,12 @@ function! s:complete()"{{{
             endif
             return
         endif
+
+        let &l:completefunc = 'neocomplcache#manual_complete'
+
+        if s:skipped
+            return
+        endif
     endif"}}}
 
     " Omni completion."{{{
@@ -504,6 +515,12 @@ function! s:complete()"{{{
                 call feedkeys("\<C-x>\<C-u>\<C-p>", 'n')
             endif
 
+            return
+        endif
+
+        let &l:completefunc = 'neocomplcache#manual_complete'
+
+        if s:skipped
             return
         endif
     endif
@@ -545,14 +562,6 @@ function! s:complete()"{{{
         else
             return
         endif
-    endif
-
-    if &l:completefunc != 'neocomplcache#manual_complete'
-                \&& &l:completefunc != 'neocomplcache#auto_complete'
-        " Call completefunc.
-        
-        call feedkeys("\<C-x>\<C-u>\<C-p>", 'n')
-        return
     endif
 
     " Save options.
@@ -619,7 +628,7 @@ function! s:check_wildcard(cur_text, pattern, cur_keyword_pos, cur_keyword_str)"
 
     if l:cur_keyword_str == ''
         " Get cursor word.
-        let l:cur_text = strpart(getline('.'), 0, col('.') - 1)
+        let l:cur_text = strpart(getline('.'), 0, col('.')-1)
         let l:pattern = '\%(^\|\W\)\S[*-]$'
         let [l:cur_keyword_pos, l:cur_keyword_str] = [match(l:cur_text, l:pattern), matchstr(l:cur_text, l:pattern)]
     endif
@@ -639,7 +648,14 @@ function! neocomplcache#get_complete_words(cur_keyword_pos, cur_keyword_str)"{{{
     let l:cache_keyword_lists = {}
     let l:is_empty = 1
     for l:plugin in keys(l:loaded_plugins)
-        let l:cache_keyword_lists[l:plugin] = call(l:loaded_plugins[l:plugin] . 'get_keyword_list', [a:cur_keyword_str])
+        if has_key(g:NeoComplCache_PluginCompletionLength, l:plugin)
+                    \&& len(a:cur_keyword_str) < g:NeoComplCache_PluginCompletionLength[l:plugin]
+            call remove(l:loaded_plugins, l:plugin)
+            let l:cache_keyword_lists[l:plugin] = []
+        else
+            let l:cache_keyword_lists[l:plugin] = call(l:loaded_plugins[l:plugin] . 'get_keyword_list', [a:cur_keyword_str])
+        endif
+
         if !empty(l:cache_keyword_lists[l:plugin])
             let l:is_empty = 0
         endif
@@ -740,12 +756,17 @@ function! neocomplcache#get_complete_words(cur_keyword_pos, cur_keyword_str)"{{{
                 \'\v^%(' . neocomplcache#keyword_complete#current_keyword_pattern() . ')')[1:]
     if l:next_keyword_str != ''
         let l:next_keyword_str = substitute(escape(l:next_keyword_str, '~" \.^$*[]'), "'", "''", 'g').'$'
+
+        " No ignorecase.
+        let l:save_ignorecase = &ignorecase
+        let &ignorecase = 0
         for r in l:cache_keyword_filtered
             if r.word =~ l:next_keyword_str
                 let r.word = strpart(r.word, 0, match(r.word, l:next_keyword_str))
                 let r.dup = 1
             endif
         endfor
+        let &ignorecase = l:save_ignorecase
     endif"}}}
 
     if g:NeoComplCache_EnableInfo"{{{
@@ -764,9 +785,10 @@ endfunction"}}}
 
 function! s:get_complete_files(cur_keyword_pos, cur_keyword_str)"{{{
     let l:PATH_SEPARATOR = (has('win32') || has('win64')) ? '/\\' : '/'
-    let l:cur_keyword_str = substitute(a:cur_keyword_str, '\\ ', ' ', 'g')
+    let l:cur_keyword_str = substitute(substitute(a:cur_keyword_str, '\\ ', ' ', 'g'),
+                \printf('\w\+\ze[%s]', l:PATH_SEPARATOR), '\0*', 'g')
     " Substitute ... -> ../..
-    while match(l:cur_keyword_str, '\.\.\.') >= 0
+    while l:cur_keyword_str =~ '\.\.\.'
         let l:cur_keyword_str = substitute(l:cur_keyword_str, '\.\.\zs\.', '/\.\.', 'g')
     endwhile
 
@@ -776,6 +798,11 @@ function! s:get_complete_files(cur_keyword_pos, cur_keyword_str)"{{{
 
     try
         let l:files = split(substitute(glob(l:cur_keyword_str . '*'), '\\', '/', 'g'), '\n')
+        if l:cur_keyword_str =~ printf('^\.\+[%s]', l:PATH_SEPARATOR)
+            let l:cdfiles = []
+        else
+            let l:cdfiles = split(substitute(globpath(&cdpath, l:cur_keyword_str . '*'), '\\', '/', 'g'), '\n')
+        endif
     catch /.*/
         return []
     endtry
@@ -787,29 +814,45 @@ function! s:get_complete_files(cur_keyword_pos, cur_keyword_str)"{{{
         return []
     endif"}}}
 
-    echo ''
-    redraw
-        
-    let l:num = 0
     let l:list = []
     for word in l:files
-        call add(list, {
+        let l:dict = {
                     \'word' : word, 'menu' : '[F]', 
-                    \'icase' : 1, 'rank' : 5 + isdirectory(word)
-                    \})
-        let l:num += 1
+                    \'icase' : 1, 'rank' : 6 + isdirectory(word)
+                    \}
+        if !filewritable(word)
+            let l:dict.menu .= ' [-]'
+        endif
+        call add(list, l:dict)
     endfor
+    for word in l:cdfiles
+        let l:dict = {
+                    \'word' : word, 'menu' : '[CD]', 
+                    \'icase' : 1, 'rank' : 5 + isdirectory(word)
+                    \}
+        if !filewritable(word)
+            let l:dict.menu .= ' [-]'
+        endif
+        call add(list, l:dict)
+    endfor
+    if exists('w:vimshell_directory_stack')
+        " Add directory stack.
+        for word in w:vimshell_directory_stack
+            let l:dict = {
+                        \'word' : word, 'menu' : '[Stack]', 
+                        \'icase' : 1, 'rank' : 4
+                        \}
+            if !filewritable(word)
+                let l:dict.menu .= ' [-]'
+            endif
+            call add(list, l:dict)
+        endfor 
+    endif
     call sort(l:list, 'neocomplcache#compare_rank')
     " Trunk many items.
     let l:list = l:list[: g:NeoComplCache_MaxList-1]
 
-    let l:prefix = matchstr(l:cur_keyword_str, printf('^.\+\ze[%s]', l:PATH_SEPARATOR))
-    let l:len_prefix = len(l:prefix)
-    if len(l:prefix) > g:NeoComplCache_MaxKeywordWidth
-        let l:prefix = printf('%.10s~%s', l:prefix, l:prefix[-10:])
-    endif
-
-    let l:abbr_pattern = printf('%%.%ds..%%s', g:NeoComplCache_MaxKeywordWidth-10)
+    let l:home_pattern = '^'.substitute($HOME, '\\', '/', 'g').'/'
     if g:NeoComplCache_EnableQuickMatch"{{{
         let l:save_list = l:list
         let l:list = s:get_quickmatch_list(a:cur_keyword_pos, a:cur_keyword_str, 'omni')
@@ -817,12 +860,9 @@ function! s:get_complete_files(cur_keyword_pos, cur_keyword_str)"{{{
         " Add number."{{{
         let l:num = 0
         for keyword in l:save_list[:g:NeoComplCache_QuickMatchMaxLists-1]
-            let l:abbr = keyword.word
+            let l:abbr = substitute(keyword.word, l:home_pattern, '\~/', '')
             if len(l:abbr) > g:NeoComplCache_MaxKeywordWidth
-                let l:pre = '~' . l:prefix[len(l:abbr)-g:NeoComplCache_MaxKeywordWidth+3 : ]
-                let l:abbr = printf(l:abbr_pattern, l:abbr, l:abbr[-8:])
-            else
-                let l:pre = l:prefix
+                let l:abbr = printf('%s..%s', l:abbr[:8], l:abbr[len(l:abbr)-g:NeoComplCache_MaxKeywordWidth-10:])
             endif
             if isdirectory(keyword.word)
                 let l:abbr .= '/'
@@ -836,18 +876,15 @@ function! s:get_complete_files(cur_keyword_pos, cur_keyword_str)"{{{
                 endif
             endif
 
-            let keyword.abbr = printf('%2d: %s%s', l:num, l:pre, l:abbr)
+            let keyword.abbr = printf('%2d: %s', l:num, l:abbr)
             let l:num += 1
 
             call add(l:list, keyword)
         endfor
         for keyword in l:save_list[g:NeoComplCache_QuickMatchMaxLists :]
-            let l:abbr = keyword.word[l:len_prefix :]
+            let l:abbr = substitute(keyword.word, l:home_pattern, '\~/', '')
             if len(l:abbr) > g:NeoComplCache_MaxKeywordWidth
-                let l:pre = '~' . l:prefix[len(l:abbr)-g:NeoComplCache_MaxKeywordWidth+3 : ]
-                let l:abbr = printf(l:abbr_pattern, l:abbr, l:abbr[-8:])
-            else
-                let l:pre = l:prefix
+                let l:abbr = printf('%s..%s', l:abbr[:8], l:abbr[len(l:abbr)-g:NeoComplCache_MaxKeywordWidth-10:])
             endif
             if isdirectory(keyword.word)
                 let l:abbr .= '/'
@@ -861,7 +898,7 @@ function! s:get_complete_files(cur_keyword_pos, cur_keyword_str)"{{{
                 endif
             endif
 
-            let keyword.abbr = printf('    %s%s', l:pre, l:abbr)
+            let keyword.abbr = '    ' . l:abbr
             call add(l:list, keyword)
         endfor"}}}
 
@@ -873,12 +910,9 @@ function! s:get_complete_files(cur_keyword_pos, cur_keyword_str)"{{{
         "}}}
     else
         for keyword in l:list
-            let l:abbr = keyword.word[l:len_prefix :]
+            let l:abbr = keyword.word
             if len(l:abbr) > g:NeoComplCache_MaxKeywordWidth
-                let l:pre = '~' . l:prefix[len(l:abbr)-g:NeoComplCache_MaxKeywordWidth+3 : ]
-                let l:abbr = printf(l:abbr_pattern, l:abbr, l:abbr[-8:])
-            else
-                let l:pre = l:prefix
+                let l:abbr = printf('%s..%s', l:abbr[:8], l:abbr[len(l:abbr)-g:NeoComplCache_MaxKeywordWidth-10:])
             endif
             if isdirectory(keyword.word)
                 let l:abbr .= '/'
@@ -892,9 +926,19 @@ function! s:get_complete_files(cur_keyword_pos, cur_keyword_str)"{{{
                 endif
             endif
 
-            let keyword.abbr = l:pre . l:abbr
+            let keyword.abbr = l:abbr
         endfor
     endif
+
+    " Skip completion if takes too much time."{{{
+    if neocomplcache#check_skip_time()
+        echo 'Skipped auto completion'
+        let s:skipped = 1
+        return []
+    endif"}}}
+
+    echo ''
+    redraw
 
     " Escape word.
     for keyword in l:list
@@ -925,22 +969,25 @@ function! s:get_complete_omni(cur_keyword_pos, cur_keyword_str)"{{{
         " Convert string list.
         let l:list = []
         for str in l:omni_list
-            call add(l:list, {
-                        \'word' : str, 'menu' : '[O]', 
-                        \})
+            call add(l:list, { 'word' : str })
         endfor
 
         let l:omni_list = l:list
     endif
 
-    let l:num = 0
     let l:list = []
     for l:omni in l:omni_list
-        call add(l:list, {
-                    \'word' : l:omni['word'], 'menu' : '[O]', 
+        let l:dict = {
+                    \'word' : l:omni.word, 'menu' : '[O]', 
                     \'icase' : 1, 'rank' : 5
-                    \})
-        let l:num += 1
+                    \}
+        if has_key(l:omni, 'kind')
+            let l:dict.menu = ' ' . l:omni.kind
+        endif
+        if has_key(l:omni, 'menu')
+            let l:dict.menu = ' ' . l:omni.menu
+        endif
+        call add(l:list, l:dict)
     endfor
     " Trunk many items.
     let l:list = l:list[: g:NeoComplCache_MaxList-1]
@@ -1034,6 +1081,7 @@ function! s:get_quickmatch_list(cur_keyword_pos, cur_keyword_str, type)"{{{
         let l:prefix = ''
         if a:type != s:prev_quickmatch_type
             if s:prev_quickmatch_type == 'file'
+                let l:PATH_SEPARATOR = (has('win32') || has('win64')) ? '/\\' : '/'
                 let l:pattern = printf('[/~]\?\%%(\\.\|\f\)\+[%s]\%%(\\.\|\f\)*$', l:PATH_SEPARATOR)
                 let l:quick_keyword_pos = match(getline('.'), l:pattern)
             elseif s:prev_quickmatch_type == 'omni' && &l:omnifunc != ''
@@ -1068,6 +1116,7 @@ function! s:get_quickmatch_list(cur_keyword_pos, cur_keyword_str, type)"{{{
                 let l:prefix = ''
                 if a:type != s:prepre_quickmatch_type
                     if s:prepre_quickmatch_type == 'file'
+                        let l:PATH_SEPARATOR = (has('win32') || has('win64')) ? '/\\' : '/'
                         let l:pattern = printf('[/~]\?\%%(\\.\|\f\)\+[%s]\%%(\\.\|\f\)*$', l:PATH_SEPARATOR)
                         let l:quick_keyword_pos = match(getline('.'), l:pattern)
                     elseif s:prepre_quickmatch_type == 'omni' && &l:omnifunc != ''
@@ -1139,7 +1188,7 @@ endfunction"}}}
 
 " Key mapping functions."{{{
 function! neocomplcache#close_popup()"{{{
-    let s:old_text = strpart(getline('.'), 0, col('.') - 1) 
+    let s:old_text = strpart(getline('.'), 0, col('.')-1) 
 
     if neocomplcache#keyword_complete#exists_current_source()
         let l:pattern = '\v%(' .  neocomplcache#keyword_complete#current_keyword_pattern() . ')$'
@@ -1158,7 +1207,7 @@ endfunction"}}}
 
 function! neocomplcache#manual_filename_complete()"{{{
     " Get cursor word.
-    let l:cur_text = strpart(getline('.'), 0, col('.') - 1) 
+    let l:cur_text = strpart(getline('.'), 0, col('.')-1) 
 
     let l:pattern = '[/~]\?\%(\\.\|\f\)\+$'
     let l:cur_keyword_pos = match(l:cur_text, l:pattern)
@@ -1188,7 +1237,7 @@ endfunction"}}}
 function! neocomplcache#manual_omni_complete()"{{{
     " Get cursor word.
     let l:cur_keyword_pos = call(&l:omnifunc, [1, ''])
-    let l:cur_text = strpart(getline('.'), 0, col('.') - 1) 
+    let l:cur_text = strpart(getline('.'), 0, col('.')-1) 
     let l:cur_keyword_str = l:cur_text[l:cur_keyword_pos :]
 
     " Save options.
