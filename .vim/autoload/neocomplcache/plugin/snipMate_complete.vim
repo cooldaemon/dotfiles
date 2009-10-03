@@ -9,15 +9,15 @@ let s:save_cpo = &cpo
 set cpo&vim
 
 
-function! neocomplcache#snipMate_complete#initialize() "{{{
+function! neocomplcache#plugin#snipMate_complete#initialize() "{{{
   " Initialize
   let s:snip_list = {}
 endfunction "}}}
 
-function! neocomplcache#snipMate_complete#finalize() "{{{
+function! neocomplcache#plugin#snipMate_complete#finalize() "{{{
 endfunction "}}}
 
-function! neocomplcache#snipMate_complete#get_keyword_list(cur_keyword_str) "{{{
+function! neocomplcache#plugin#snipMate_complete#get_keyword_list(cur_keyword_str) "{{{
   let snips = GetSnippetsList(&filetype)
   if empty(snips)
     return []
@@ -57,9 +57,9 @@ function! neocomplcache#snipMate_complete#get_keyword_list(cur_keyword_str) "{{{
 endfunction "}}}
 
 " Dummy function.
-function! neocomplcache#snipMate_complete#calc_rank(cache_keyword_buffer_list) "{{{
+function! neocomplcache#plugin#snipMate_complete#calc_rank(cache_keyword_buffer_list) "{{{
 endfunction "}}}
-function! neocomplcache#snipMate_complete#calc_prev_rank(cache_keyword_buffer_list, prev_word, prepre_word) "{{{
+function! neocomplcache#plugin#snipMate_complete#calc_prev_rank(cache_keyword_buffer_list, prev_word, prepre_word) "{{{
 endfunction "}}}
 
 " Internal function.

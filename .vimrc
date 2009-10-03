@@ -24,8 +24,6 @@ let mapleader = ','
 
 autocmd BufNewFile,BufRead,BufEnter * exec ':lcd ' . expand("%:p:h")
 
-nnoremap <expr> s* ':%substitute/\<' . expand('<cword>') . '\>/'
-
 "==<tabkey>=================================================================
 set cindent
 set expandtab
@@ -47,6 +45,8 @@ nmap g/ :grep // % \| cw5<LEFT><LEFT><LEFT><LEFT><LEFT><LEFT><LEFT><LEFT><LEFT>
 
 nnoremap * g*N
 nnoremap # g#N
+
+nnoremap <expr> s* ':%substitute/\<' . expand('<cword>') . '\>/'
 
 "==<status line>============================================================
 set laststatus=2
@@ -126,6 +126,7 @@ command! -nargs=? -complete=file -bang -bar Iso2022jp3 edit<bang> ++enc=iso-2022
 command! -nargs=? -complete=file -bang -bar Iso2022jp edit<bang> ++enc=iso-2022-jp <args>
 
 "==<complete>===============================================================
+set completeopt=menu,preview,menuone
 set isfname-=-
 set complete=.,w,b,u,t,i
 
@@ -226,11 +227,14 @@ let g:rails_devalut_database = 'mysql'
 nmap <silent><Leader>p <Plug>ToggleProject
 
 "fuzzyfinder
-nmap gb :FuzzyFinderBuffer<CR>
-nmap <Leader>fb :FuzzyFinderBuffer<CR>
-nmap <Leader>ff :FuzzyFinderFile<CR>
-nmap <Leader>fd :FuzzyFinderDir<CR>
-nmap <Leader>ft :FuzzyFinderTag<CR>
+nmap gb :FufBuffer<CR>
+nmap <Leader>fb  :FufBuffer<CR>
+nmap <Leader>ff  :FufFile<CR>
+nmap <Leader>fd  :FufDir<CR>
+nmap <Leader>fb  :FufBookmark<CR>
+nmap <Leader>fab :FufAddBookmark<CR>
+nmap <Leader>fe  :FufEditInfo<CR>
+nmap <Leader>ft  :FufTag<CR>
 
 "git-commit
 let git_diff_spawn_mode=1
@@ -249,14 +253,22 @@ map ge <Plug>(smartword-ge)
 "neocomplcache
 let g:NeoComplCache_EnableAtStartup = 1
 let g:NeoComplCache_KeywordCompletionStartLength = 1
+let g:NeoComplCache_PluginCompletionLength = {
+  \ 'snipMate_complete' : 1,
+  \ 'buffer_complete'   : 2,
+  \ 'include_complete'  : 2,
+  \ 'syntax_complete'   : 2,
+  \ 'filename_complete' : 2,
+  \ 'keyword_complete'  : 2,
+  \ 'omni_complete'     : 1
+  \ }
 let g:NeoComplCache_MinKeywordLength = 3
 let g:NeoComplCache_MinSyntaxLength = 3
 let g:NeoComplCache_SmartCase = 1
-let g:NeoComplCache_PluginCompletionLength = {
-  \ 'snipMate_complete' : 1,
-  \ 'keyword_complete'  : 2,
-  \ 'syntax_complete'   : 2
-  \ }
+let g:NeoComplCache_PartialCompletionStartLength = 2
+let g:NeoComplCache_PreviousKeywordCompletion = 1
+let g:NeoComplCache_EnableCamelCaseCompletion = 1
+let g:NeoComplCache_EnableUnderbarCompletion = 1
 let g:NeoComplCache_DictionaryFileTypeLists = {
   \ 'default'    : '',
   \ 'erlang'     : $HOME . '/.vim/dict/erlang.dict',
@@ -272,9 +284,5 @@ let g:NeoComplCache_SameFileTypeLists = {
   \ 'erlang'  : 'man',
   \ 'objc'    : 'c',
   \ 'tt2html' : 'html,perl'
-  \}
-let g:NeoComplCache_KeywordPatterns = {
-  \ 'perl'   : '\v\<\h\w*\>?|\h\w*(::\h\w*)*|[$@%&*]\h\w*|\h\w*%(\s*\(\)?)?',
-  \ 'erlang' : '\v\h\w*(:\h\w*)*'
-  \}
+  \ }
 
