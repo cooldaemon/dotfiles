@@ -53,33 +53,8 @@ function! neocomplcache#plugin#snipMate_complete#get_keyword_list(cur_keyword_st
     let list = s:snip_list[ft]
   endif
 
-  return s:keyword_filter(copy(list), a:cur_keyword_str)
+  return neocomplcache#keyword_filter(copy(list), a:cur_keyword_str)
 endfunction "}}}
-
-" Dummy function.
-function! neocomplcache#plugin#snipMate_complete#calc_rank(cache_keyword_buffer_list) "{{{
-endfunction "}}}
-function! neocomplcache#plugin#snipMate_complete#calc_prev_rank(cache_keyword_buffer_list, prev_word, prepre_word) "{{{
-endfunction "}}}
-
-" Internal function.
-function! s:keyword_filter(list, cur_keyword_str) "{{{
-    let l:skipped = neocomplcache#skipped()
-    let l:keyword_escape = neocomplcache#keyword_escape(a:cur_keyword_str)
-
-    " Keyword filter."{{{
-    if g:NeoComplCache_PartialMatch && !l:skipped && len(a:cur_keyword_str) >= g:NeoComplCache_PartialCompletionStartLength
-        " Partial match.
-        " Filtering len(a:cur_keyword_str).
-        let l:pattern = printf("v:val.word =~ %s", string(l:keyword_escape))
-    else
-        " Head match.
-        " Filtering len(a:cur_keyword_str).
-        let l:pattern = printf("v:val.word =~ %s", string('^' . l:keyword_escape))
-    endif"}}}
-
-    return filter(a:list, l:pattern)
-endfunction"}}}
 
 let &cpo = s:save_cpo
 unlet s:save_cpo
