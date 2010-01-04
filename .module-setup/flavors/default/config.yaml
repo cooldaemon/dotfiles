@@ -1,0 +1,9 @@
+---
+author: cooldaemon
+email: cooldaemon@gmail.com
+plugins:
+  - Config::Basic
+  - Template
+  - Test::Makefile
+  - Additional
+  - VC::Git
