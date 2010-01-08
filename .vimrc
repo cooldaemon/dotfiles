@@ -286,3 +286,5 @@ let g:NeoComplCache_SameFileTypeLists = {
   \ 'tt2html' : 'html,perl'
   \ }
 
+autocmd BufFilePost Manpageview* silent execute ":NeoComplCacheCachingBuffer"
+
