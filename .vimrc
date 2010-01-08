@@ -277,13 +277,19 @@ let g:NeoComplCache_DictionaryFileTypeLists = {
   \ 'mxml'       : $HOME . '/.vim/dict/mxml.dict',
   \ 'ruby'       : $HOME . '/.vim/dict/ruby.dict',
   \ 'perl'       : $HOME . '/.vim/dict/perl.dict',
-  \ 'scheme'     : $HOME . '/.vim/dict/gauche.dict'
+  \ 'scheme'     : $HOME . '/.vim/dict/gauche.dict',
+  \ 'int_erl'    : $HOME . '/.vim/dict/erlang.dict',
+  \ 'int_irb'    : $HOME . '/.vim/dict/ruby.dict',
+  \ 'int_perlsh' : $HOME . '/.vim/dict/perl.dict'
   \ }
 let g:NeoComplCache_SameFileTypeLists = {
-  \ 'perl'    : 'man',
-  \ 'erlang'  : 'man',
-  \ 'objc'    : 'c',
-  \ 'tt2html' : 'html,perl'
+  \ 'perl'       : 'man',
+  \ 'erlang'     : 'man',
+  \ 'objc'       : 'c',
+  \ 'tt2html'    : 'html,perl',
+  \ 'int_erl'    : 'erlang,man',
+  \ 'int_irb'    : 'ruby',
+  \ 'int_perlsh' : 'perl,man'
   \ }
 
 autocmd BufFilePost Manpageview* silent execute ":NeoComplCacheCachingBuffer"
