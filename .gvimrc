@@ -8,6 +8,13 @@ if has('gui_macvim')
   set imdisable
   set transparency=10
   set guioptions=egmt
+
+  " for vimshell
+  let g:VimShell_EnableInteractive = 1
+  let g:VimShell_EnableSmartCase = 1
+  let g:VimShell_EnableAutoLs = 1
+  let g:VimShell_Prompt = $USER."% "
+  let g:VimShell_UserPrompt = 'printf("%s %50s", fnamemodify(getcwd(), ":~"), vimshell#vcs#info("(%s)-[%b]"))'
 elseif has('mac')
   set columns=160
   autocmd VimEnter * :vsplit
