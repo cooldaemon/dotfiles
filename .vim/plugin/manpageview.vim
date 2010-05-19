@@ -339,6 +339,15 @@ fun! s:ManPageView(viamap,bknum,...) range
   endif
 "  call Decho("manpagebook<".manpagebook."> manpagetopic<".manpagetopic.">")
 
+  if ext == 'erl'
+    let splited_topic = split(manpagetopic, ':')
+    let manpagetopic = splited_topic[0]
+    let topic_length = len(splited_topic)
+    if 2 <= topic_length
+      let manpagesrch = splited_topic[1] . '('
+    endif
+  endif
+
   " it was reported to me that some systems change display sizes when a
   " filtering command is used such as :r! .  I record the height&width
   " here and restore it afterwards.  To make use of it, put
