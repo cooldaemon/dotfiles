@@ -42,9 +42,10 @@
 #
 
 export CDD_PWD_FILE=$HOME/.zsh/cdd_pwd_list
+export WINDOW=`tmux respawn-window | cut -d ':' -f 3`
 
 function _reg_pwd_screennum() {
-  if [ "$STY" != "" ]; then
+  if [ "$STY" != "" ] || [ "$TMUX" != "" ] ; then
     if [ ! -f "$CDD_PWD_FILE" ]; then
       echo "\n" >> "$CDD_PWD_FILE"
     fi
