@@ -4,6 +4,7 @@ alias -g lM='| more'
 alias -g lX='| xargs'
 
 alias sc='screen -xR'
+alias tm='tmux attach-session || tmux'
 alias v='vim'
 alias g='git'
 alias cdgr='git rev-parse --is-inside-work-tree > /dev/null 2>&1 && cd $(git rev-parse --show-cdup)'
