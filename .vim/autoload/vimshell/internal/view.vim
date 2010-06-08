@@ -1,8 +1,7 @@
 "=============================================================================
 " FILE: view.vim
 " AUTHOR: Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 30 Aug 2009
-" Usage: Just source this file.
+" Last Modified: 16 Apr 2010
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -23,69 +22,55 @@
 "     TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 "     SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 " }}}
-" Version: 1.5, for Vim 7.0
-"-----------------------------------------------------------------------------
-" ChangeLog: "{{{
-"   1.5:
-"     - Catch error.
-"
-"   1.4:
-"     - Extend current directory.
-"
-"   1.3:
-"     - Ignore directory.
-"
-"   1.2:
-"     - Improved error.
-"
-"   1.1:
-"     - Split nicely.
-"
-"   1.0:
-"     - Initial version.
-""}}}
-"-----------------------------------------------------------------------------
-" TODO: "{{{
-"     - Nothing.
-""}}}
-" Bugs"{{{
-"     -
-""}}}
 "=============================================================================
 
 function! vimshell#internal#view#execute(program, args, fd, other_info)
-    " View file.
+  " View file.
 
-    " Filename escape
-    let l:arguments = join(a:args, ' ')
-
-    if isdirectory(l:arguments)
-        " Ignore.
-        return 0
+  if empty(a:args)
+    if a:fd.stdin == ''
+      vimshell#error_line(a:fd, 'Filename required.')
+      return 0
     endif
+    
+    " Read from stdin.
+    let l:filename = a:fd.stdin
+  else
+    let l:filename = a:args[0]
+  endif
 
-    call vimshell#print_prompt()
+  if isdirectory(l:filename)
+    " Ignore.
+    return 0
+  endif
 
-    if empty(l:arguments)
-        vimshell#error_line(a:fd, 'Filename required.')
-    else
-        " Save current directiory.
-        let l:cwd = getcwd()
+  let l:lines = readfile(l:filename)
+  if len(l:lines) < winheight(0)
+    " Print lines if one screen.
+    for l:line in l:lines
+      call vimshell#print_line(a:fd, l:line)
+    endfor
+    
+    return 0
+  endif
+  
+  let l:context = a:other_info
+  let l:context.fd = a:fd
+  call vimshell#print_prompt(l:context)
+  
+  " Save current directiory.
+  let l:cwd = getcwd()
 
-        " Split nicely.
-        if winheight(0) > &winheight
-            split
-        else
-            vsplit
-        endif
+  " Split nicely.
+  call vimshell#split_nicely()
 
-        try
-            edit `=l:arguments`
-        catch /^.*/
-            echohl Error | echomsg v:errmsg | echohl None
-        endtry
+  try
+    edit `=l:filename`
+  catch
+    echohl Error | echomsg v:errmsg | echohl None
+  endtry
 
-        lcd `=l:cwd`
-        setlocal nomodifiable
-    endif
+  lcd `=l:cwd`
+  setlocal nomodifiable
+  return 1
 endfunction

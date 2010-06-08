@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: command_complete.vim
 " AUTHOR: Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 23 Dec 2009
+" Last Modified: 16 Apr 2010
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -25,70 +25,82 @@
 "=============================================================================
 
 function! vimshell#complete#command_complete#complete()"{{{
-    let &iminsert = 0
-    let &imsearch = 0
+  let &iminsert = 0
+  let &imsearch = 0
 
-    if vimshell#get_cur_text() =~ '^.\+/\|^[^\\]\+\s'
-        " Args completion.
+  if !vimshell#check_prompt()
+    " Ignore.
+    return ''
+  endif
 
-        return vimshell#complete#args_complete#complete()
-    endif
+  if len(vimshell#get_current_args()) > 1
+    " Args completion.
 
-    " Command completion.
+    return vimshell#complete#args_complete#complete()
+  endif
 
-    if exists(':NeoComplCacheDisable') && exists('*neocomplcache#complfunc#completefunc_complete#call_completefunc')
-        return neocomplcache#complfunc#completefunc_complete#call_completefunc('vimshell#complete#command_complete#omnifunc')
-    else
-        " Set complete function.
-        let &l:omnifunc = 'vimshell#complete#command_complete#omnifunc'
-        
-        return "\<C-x>\<C-o>\<C-p>"
-    endif
+  " Command completion.
+
+  if exists(':NeoComplCacheDisable') && exists('*neocomplcache#complfunc#completefunc_complete#call_completefunc')
+    return neocomplcache#complfunc#completefunc_complete#call_completefunc('vimshell#complete#command_complete#omnifunc')
+  else
+    " Set complete function.
+    let &l:omnifunc = 'vimshell#complete#command_complete#omnifunc'
+
+    return "\<C-x>\<C-o>\<C-p>"
+  endif
 endfunction"}}}
 
 function! vimshell#complete#command_complete#omnifunc(findstart, base)"{{{
-    if a:findstart
-        return len(vimshell#get_prompt())
-    endif
+  if a:findstart
+    return len(vimshell#get_prompt())
+  endif
 
-    " Save option.
-    let l:ignorecase_save = &ignorecase
+  " Save option.
+  let l:ignorecase_save = &ignorecase
 
-    " Complete.
-    if g:VimShell_SmartCase && a:base =~ '\u'
-        let &ignorecase = 0
-    else
-        let &ignorecase = g:VimShell_IgnoreCase
-    endif
+  " Complete.
+  if g:vimshell_smart_case && a:base =~ '\u'
+    let &ignorecase = 0
+  else
+    let &ignorecase = g:vimshell_ignore_case
+  endif
 
-    let l:complete_words = s:get_complete_commands(a:base)
+  let l:complete_words = s:get_complete_commands(a:base)
 
-    " Restore option.
-    let &ignorecase = l:ignorecase_save
-    if &l:omnifunc != ''
-        let &l:omnifunc = ''
-    endif
+  " Restore option.
+  let &ignorecase = l:ignorecase_save
+  if &l:omnifunc != 'vimshell#complete#auto_complete#omnifunc'
+    let &l:omnifunc = 'vimshell#complete#auto_complete#omnifunc'
+  endif
 
-    return l:complete_words
+  return l:complete_words
 endfunction"}}}
 
 function! s:get_complete_commands(cur_keyword_str)"{{{
-    let l:directories = vimshell#complete#helper#directories(a:cur_keyword_str)
+  if a:cur_keyword_str =~ '/'
+    " Filename completion.
+    return vimshell#complete#helper#files(a:cur_keyword_str)
+  endif
+
+  let l:directories = vimshell#complete#helper#directories(a:cur_keyword_str)
+  if a:cur_keyword_str =~ '^\./'
     for l:keyword in l:directories
-        let l:keyword.word = './' . l:keyword.word
+      let l:keyword.word = './' . l:keyword.word
     endfor
-    
-    let l:ret =    l:directories
-                \+ vimshell#complete#helper#cdpath_directories(a:cur_keyword_str)
-                \+ vimshell#complete#helper#aliases(a:cur_keyword_str)
-                \+ vimshell#complete#helper#specials(a:cur_keyword_str)
-                \+ vimshell#complete#helper#internals(a:cur_keyword_str)
+  endif
+  
+  let l:ret =    l:directories
+        \+ vimshell#complete#helper#cdpath_directories(a:cur_keyword_str)
+        \+ vimshell#complete#helper#aliases(a:cur_keyword_str)
+        \+ vimshell#complete#helper#specials(a:cur_keyword_str)
+        \+ vimshell#complete#helper#internals(a:cur_keyword_str)
 
-    if len(a:cur_keyword_str) >= 1
-        let l:ret += vimshell#complete#helper#commands(a:cur_keyword_str)
-    endif
+  if len(a:cur_keyword_str) >= 1
+    let l:ret += vimshell#complete#helper#commands(a:cur_keyword_str)
+  endif
 
-    return l:ret
+  return l:ret
 endfunction"}}}
 
 " vim: foldmethod=marker

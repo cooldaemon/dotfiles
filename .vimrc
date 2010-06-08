@@ -278,19 +278,29 @@ let g:NeoComplCache_DictionaryFileTypeLists = {
   \ 'ruby'       : $HOME . '/.vim/dict/ruby.dict',
   \ 'perl'       : $HOME . '/.vim/dict/perl.dict',
   \ 'scheme'     : $HOME . '/.vim/dict/gauche.dict',
-  \ 'int_erl'    : $HOME . '/.vim/dict/erlang.dict',
-  \ 'int_irb'    : $HOME . '/.vim/dict/ruby.dict',
-  \ 'int_perlsh' : $HOME . '/.vim/dict/perl.dict'
+  \ 'int-erl'    : $HOME . '/.vim/dict/erlang.dict',
+  \ 'int-irb'    : $HOME . '/.vim/dict/ruby.dict',
+  \ 'int-perlsh' : $HOME . '/.vim/dict/perl.dict'
   \ }
 let g:NeoComplCache_SameFileTypeLists = {
-  \ 'perl'       : 'man',
-  \ 'erlang'     : 'man',
+  \ 'c'          : 'ref-man,ref-erlang',
+  \ 'perl'       : 'ref-perldoc',
+  \ 'ruby'       : 'ref-refe',
+  \ 'erlang'     : 'ref-erlang',
   \ 'objc'       : 'c',
   \ 'tt2html'    : 'html,perl',
-  \ 'int_erl'    : 'erlang,man',
-  \ 'int_irb'    : 'ruby',
-  \ 'int_perlsh' : 'perl,man'
+  \ 'int-erl'    : 'erlang,ref-erlang',
+  \ 'int-perlsh' : 'perl,ref-perldoc',
+  \ 'int-irb'    : 'ruby,ref-refe'
   \ }
 
-autocmd BufFilePost Manpageview* silent execute ":NeoComplCacheCachingBuffer"
+autocmd BufFilePost \[ref-* silent execute ":NeoComplCacheCachingBuffer"
+
+"vimshell
+let g:vimshell_smart_case = 1
+let g:vimshell_prompt = $USER."% "
+let g:vimshell_user_prompt = 'printf("%s %s", fnamemodify(getcwd(), ":~"), vimshell#vcs#info("(%s)-[%b]"))'
+
+"ref
+let g:ref_open = 'tabnew'
 

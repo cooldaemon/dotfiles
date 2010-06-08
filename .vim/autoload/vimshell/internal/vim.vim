@@ -1,8 +1,7 @@
 "=============================================================================
 " FILE: vim.vim
 " AUTHOR: Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 30 Aug 2009
-" Usage: Just source this file.
+" Last Modified: 16 Apr 2010
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -23,75 +22,53 @@
 "     TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 "     SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 " }}}
-" Version: 1.5, for Vim 7.0
-"-----------------------------------------------------------------------------
-" ChangeLog: "{{{
-"   1.5:
-"     - Catch error.
-"
-"   1.4:
-"     - Extend current directory.
-"
-"   1.3:
-"     - Open directory.
-"
-"   1.2:
-"     - Ignore directory.
-"
-"   1.1:
-"     - Split nicely.
-"
-"   1.0:
-"     - Initial version.
-""}}}
-"-----------------------------------------------------------------------------
-" TODO: "{{{
-"     - Nothing.
-""}}}
-" Bugs"{{{
-"     -
-""}}}
 "=============================================================================
 
 function! vimshell#internal#vim#execute(program, args, fd, other_info)
-    " Edit file.
+  " Edit file.
 
-    " Filename escape
-    let l:arguments = join(a:args, ' ')
+  if empty(a:args)
+    " Read from stdin.
+    let l:filename = a:fd.stdin
+  else
+    let l:filename = a:args[0]
+  endif
 
-    call vimshell#print_prompt()
+  let l:context = a:other_info
+  let l:context.fd = a:fd
+  call vimshell#print_prompt(l:context)
 
-    " Save current directiory.
-    let l:cwd = getcwd()
+  " Save current directiory.
+  let l:cwd = getcwd()
 
-    " Split nicely.
-    if winheight(0) > &winheight
-        let l:is_split = 1
+  " Split nicely.
+  if winwidth(0) > 2 * &winwidth
+    let l:is_split = 0
+  else
+    let l:is_split = 1
+  endif
+
+  if l:filename == ''
+    if l:is_split
+      new
     else
-        let l:is_split = 0
+      vnew
+    endif
+  else
+    if l:is_split
+      split
+    else
+      vsplit
     endif
 
-    if empty(l:arguments)
-        if l:is_split
-            new
-        else
-            vnew
-        endif
-    else
-        if l:is_split
-            split
-        else
-            vsplit
-        endif
+    try
+      edit `=l:filename`
+    catch
+      echohl Error | echomsg v:errmsg | echohl None
+    endtry
+  endif
 
-        try
-            edit `=l:arguments`
-        catch /^.*/
-            echohl Error | echomsg v:errmsg | echohl None
-        endtry
-    endif
+  lcd `=l:cwd`
 
-    lcd `=l:cwd`
-
-    return 1
+  return 1
 endfunction

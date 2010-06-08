@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: helper.vim
 " AUTHOR: Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 27 Dec 2009
+" Last Modified: 17 Apr 2010
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -24,15 +24,29 @@
 " }}}
 "=============================================================================
 
-function! vimshell#complete#helper#files(cur_keyword_str)"{{{
+function! vimshell#complete#helper#files(cur_keyword_str, ...)"{{{
+    if a:0 > 1
+        echoerr 'Too many arguments.'
+    endif
+    
+    " Not Filename pattern.
+    if a:cur_keyword_str =~ 
+                \'\*$\|\.\.\+$\|[/\\][/\\]\f*$\|[^[:print:]]\f*$\|/c\%[ygdrive/]$\|\\|$\|\a:[^/]*$'
+        return []
+    endif
+
     let l:cur_keyword_str = escape(a:cur_keyword_str, '[]')
 
     let l:is_win = has('win32') || has('win64')
     let l:cur_keyword_str = substitute(l:cur_keyword_str, '\\ ', ' ', 'g')
-    " Substitute ... -> ../..
-    while l:cur_keyword_str =~ '\.\.\.'
-        let l:cur_keyword_str = substitute(l:cur_keyword_str, '\.\.\zs\.', '/\.\.', 'g')
-    endwhile
+    
+    if a:0 == 1
+        let l:mask = a:1
+    elseif l:cur_keyword_str =~ '\*$'
+        let l:mask = ''
+    else
+        let l:mask = '*'
+    endif
 
     if a:cur_keyword_str =~ '^\$\h\w*'
         let l:env = matchstr(a:cur_keyword_str, '^\$\h\w*')
@@ -46,15 +60,15 @@ function! vimshell#complete#helper#files(cur_keyword_str)"{{{
     endif
 
     try
-        let l:glob = (l:cur_keyword_str !~ '\*$')?  l:cur_keyword_str . '*' : l:cur_keyword_str
+        let l:glob = l:cur_keyword_str . l:mask
         let l:files = split(substitute(glob(l:glob), '\\', '/', 'g'), '\n')
         if empty(l:files)
             " Add '*' to a delimiter.
             let l:cur_keyword_str = substitute(l:cur_keyword_str, '\w\+\ze[/._-]', '\0*', 'g')
-            let l:glob = (l:cur_keyword_str !~ '\*$')?  l:cur_keyword_str . '*' : l:cur_keyword_str
+            let l:glob = l:cur_keyword_str . l:mask
             let l:files = split(substitute(glob(l:glob), '\\', '/', 'g'), '\n')
         endif
-    catch /.*/
+    catch
         return []
     endtry
     if empty(l:files)
@@ -66,7 +80,7 @@ function! vimshell#complete#helper#files(cur_keyword_str)"{{{
     for word in l:files
         let l:dict = {
                     \'word' : substitute(word, l:home_pattern, '\~/', ''),
-                    \'menu' : 'file', 'icase' : 1
+                    \'menu' : 'file', 'icase' : &ignorecase
                     \}
         
         if l:len_env != 0 && l:dict.word[: l:len_env-1] == l:env_ev
@@ -79,11 +93,6 @@ function! vimshell#complete#helper#files(cur_keyword_str)"{{{
     let l:exts = escape(substitute($PATHEXT, ';', '\\|', 'g'), '.')
     for keyword in l:list
         let l:abbr = keyword.word
-        if len(l:abbr) > g:VimShell_MaxKeywordWidth
-            let l:over_len = len(l:abbr) - g:VimShell_MaxKeywordWidth
-            let l:prefix_len = (l:over_len > 10) ?  10 : l:over_len
-            let l:abbr = printf('%s~%s', l:abbr[: l:prefix_len - 1], l:abbr[l:over_len+l:prefix_len :])
-        endif
 
         if isdirectory(keyword.word)
             let l:abbr .= '/'
@@ -100,10 +109,6 @@ function! vimshell#complete#helper#files(cur_keyword_str)"{{{
 
         let keyword.abbr = l:abbr
 
-        if !filewritable(keyword.word)
-            let keyword.menu .= ' [-]'
-        endif
-        
         " Escape word.
         let keyword.word = escape(keyword.word, ' *?[]"={}')
     endfor
@@ -113,10 +118,7 @@ endfunction"}}}
 function! vimshell#complete#helper#directories(cur_keyword_str)"{{{
     let l:ret = []
     for keyword in filter(split(substitute(glob(a:cur_keyword_str . '*'), '\\', '/', 'g'), '\n'), 'isdirectory(v:val)')
-        let l:dict = { 'word' : escape(keyword, ' *?[]"={}'), 'menu' : 'directory', 'icase' : 1 }
-        
-        let l:dict.abbr = len(keyword) > g:VimShell_MaxKeywordWidth ? 
-                    \vimshell#trunk_string(keyword, g:VimShell_MaxKeywordWidth) . '/' : keyword . '/'
+        let l:dict = { 'word' : escape(keyword, ' *?[]"={}'), 'abbr' : keyword.'/', 'menu' : 'directory', 'icase' : &ignorecase }
         
         call add(l:ret, l:dict)
     endfor
@@ -137,10 +139,7 @@ function! vimshell#complete#helper#cdpath_directories(cur_keyword_str)"{{{
     for keyword in keys(l:check)
         " Substitute home path.
         let keyword = substitute(keyword, l:home_pattern, '\~/', '')
-        let l:dict = { 'word' : escape(keyword, ' *?[]"={}'), 'menu' : 'cdpath', 'icase' : 1 }
-        
-        let l:dict.abbr = len(keyword) > g:VimShell_MaxKeywordWidth ? 
-                    \vimshell#trunk_string(keyword, g:VimShell_MaxKeywordWidth) . '/' : keyword . '/'
+        let l:dict = { 'word' : escape(keyword, ' *?[]"={}'), 'abbr' : keyword.'/', 'menu' : 'directory', 'icase' : &ignorecase }
         
         call add(l:ret, l:dict)
     endfor
@@ -149,16 +148,13 @@ function! vimshell#complete#helper#cdpath_directories(cur_keyword_str)"{{{
 endfunction"}}}
 function! vimshell#complete#helper#aliases(cur_keyword_str)"{{{
     let l:ret = []
-    for keyword in filter(keys(b:vimshell_alias_table), printf('v:val =~ "^%s"', a:cur_keyword_str))
-        let l:dict = { 'word' : keyword, 'icase' : 1 }
+    for keyword in filter(keys(b:vimshell.alias_table), printf('v:val =~ "^%s"', a:cur_keyword_str))
+        let l:dict = { 'word' : keyword, 'abbr' : keyword, 'icase' : &ignorecase }
         
-        let l:dict.abbr = len(keyword) > g:VimShell_MaxKeywordWidth ? 
-                    \vimshell#trunk_string(keyword, g:VimShell_MaxKeywordWidth) : keyword
-        
-        if len(b:vimshell_alias_table[keyword]) > 15
-            let l:dict.menu = 'alias ' . printf("%s..%s", b:vimshell_alias_table[keyword][:8], b:vimshell_alias_table[keyword][-4:])
+        if len(b:vimshell.alias_table[keyword]) > 15
+            let l:dict.menu = 'alias ' . printf("%s..%s", b:vimshell.alias_table[keyword][:8], b:vimshell.alias_table[keyword][-4:])
         else
-            let l:dict.menu = 'alias ' . b:vimshell_alias_table[keyword]
+            let l:dict.menu = 'alias ' . b:vimshell.alias_table[keyword]
         endif
         
         call add(l:ret, l:dict)
@@ -169,11 +165,7 @@ endfunction"}}}
 function! vimshell#complete#helper#specials(cur_keyword_str)"{{{
     let l:ret = []
     for keyword in filter(keys(g:vimshell#internal_func_table), printf('v:val =~ "^%s"', a:cur_keyword_str))
-        let l:dict = { 'word' : keyword, 'menu' : 'special', 'icase' : 1 }
-
-        let l:dict.abbr = len(keyword) > g:VimShell_MaxKeywordWidth ? 
-                    \vimshell#trunk_string(keyword, g:VimShell_MaxKeywordWidth) : keyword
-
+        let l:dict = { 'word' : keyword, 'abbr' : keyword, 'menu' : 'special', 'icase' : &ignorecase }
         call add(l:ret, l:dict)
     endfor 
     
@@ -182,10 +174,8 @@ endfunction"}}}
 function! vimshell#complete#helper#internals(cur_keyword_str)"{{{
     let l:ret = []
     for keyword in filter(keys(g:vimshell#internal_func_table), printf('v:val =~ "^%s"', a:cur_keyword_str))
-        let l:dict = { 'word' : keyword, 'menu' : 'internal', 'icase' : 1 }
-
-        let l:dict.abbr = len(keyword) > g:VimShell_MaxKeywordWidth ? 
-                    \vimshell#trunk_string(keyword, g:VimShell_MaxKeywordWidth) : keyword
+        let l:dict = { 'word' : keyword, 'abbr' : keyword, 'menu' : 'internal', 'icase' : &ignorecase }
+        call add(l:ret, l:dict)
     endfor 
     
     return l:ret
@@ -204,10 +194,7 @@ function! vimshell#complete#helper#commands(cur_keyword_str)"{{{
     endif
 
     for keyword in l:list
-        let l:dict = { 'word' : keyword, 'menu' : 'command', 'icase' : 1 }
-
-        let l:dict.abbr = len(keyword) > g:VimShell_MaxKeywordWidth ? 
-                    \vimshell#trunk_string(keyword, g:VimShell_MaxKeywordWidth) . '*' : keyword . '*'
+        let l:dict = { 'word' : keyword, 'abbr' : keyword.'*', 'menu' : 'command', 'icase' : &ignorecase }
         call add(l:ret, l:dict)
     endfor 
     
@@ -219,10 +206,7 @@ function! vimshell#complete#helper#buffers(cur_keyword_str)"{{{
     while l:bufnumber <= bufnr('$')
         if buflisted(l:bufnumber) && vimshell#head_match(bufname(l:bufnumber), a:cur_keyword_str)
             let l:keyword = bufname(l:bufnumber)
-            let l:dict = { 'word' : escape(keyword, ' *?[]"={}'), 'menu' : 'buffer', 'icase' : 1 }
-
-            let l:dict.abbr = len(l:keyword) > g:VimShell_MaxKeywordWidth ? 
-                        \vimshell#trunk_string(l:keyword, g:VimShell_MaxKeywordWidth) : l:keyword
+            let l:dict = { 'word' : escape(keyword, ' *?[]"={}'), 'abbr' : l:keyword, 'menu' : 'buffer', 'icase' : &ignorecase }
             call add(l:ret, l:dict)
         endif
 
@@ -230,6 +214,16 @@ function! vimshell#complete#helper#buffers(cur_keyword_str)"{{{
     endwhile
     
     return l:ret
+endfunction"}}}
+function! vimshell#complete#helper#command_args(args)"{{{
+    " command args...
+    if len(a:args) == 1
+        " Commands.
+        return vimshell#complete#helper#commands(a:args[0])
+    else
+        " Args.
+        return vimshell#complete#args_complete#get_complete_words(a:args[0], a:args[1:])
+    endif
 endfunction"}}}
 
 function! vimshell#complete#helper#compare_rank(i1, i2)"{{{
