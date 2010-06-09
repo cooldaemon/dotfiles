@@ -301,6 +301,13 @@ let g:vimshell_smart_case = 1
 let g:vimshell_prompt = $USER."% "
 let g:vimshell_user_prompt = 'printf("%s %s", fnamemodify(getcwd(), ":~"), vimshell#vcs#info("(%s)-[%b]"))'
 
+autocmd FileType vimshell
+  \ call vimshell#hook#add('chpwd', 'g:chpwd_for_vimshell')
+
+function! g:chpwd_for_vimshell()
+  call vimshell#execute('ls')
+endfunction
+
 "ref
 let g:ref_open = 'tabnew'
 
