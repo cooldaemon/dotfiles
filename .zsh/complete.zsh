@@ -1,6 +1,6 @@
 # complet & color
 
-_cache_hosts=(svn.zerolocal.jp pubmail.zerolocal.jp pm01.zerolocal.jp pm02.zerolocal.jp tr.zerolocal.jp factoring.zerolocal.jp tuka.zerolocal.jp manager.zerolocal.jp z.zerolocal.jp www.zeroweb.jp ssl.zeroweb.co.jp bsd.zerolocal.jp hobbit.zerolocal.jp zeus.zerolocal.jp app2.zeus.zerolocal.jp web00.xtend.jp www1.xtend.jp www2.xtend.jp www3.xtend.jp ns.xtend.jp x-click.xtend.jp hobbit.xtend.jp www4.xtend.jp mail00.xtend.jp mail01.xtend.jp storage00.zerolocal.jp storage01.zerolocal.jp)
+_cache_hosts=()
 
 fpath=($fpath ~/.zsh/functions)
 
@@ -14,7 +14,12 @@ bindkey '^X^Z' predict-on
 bindkey '^Z' predict-off
 zstyle ':predict' verbose true
 
-eval `dircolors ~/.zsh/.dircolors`
+if [ `uname` = 'Darwin' ]; then
+  eval `gdircolors ~/.zsh/.dircolors`
+else
+  eval `dircolors ~/.zsh/.dircolors`
+fi
+
 zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
 
 zstyle ':completion:*:cd:*' tag-order local-directories path-directories
