@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: bcd.vim
 " AUTHOR: Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 27 Apr 2010
+" Last Modified: 28 Jun 2010
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -27,8 +27,8 @@
 function! vimshell#complete#internal#bcd#get_complete_words(args)"{{{
     let l:ret = vimshell#complete#helper#buffers(a:args[-1])
     for l:keyword in l:ret
-        let l:keyword.menu .= ' ' . fnamemodify(l:keyword.abbr, ':p:h')
-        let l:keyword.abbr = fnamemodify(l:keyword.abbr, ':t')
+        let l:keyword.menu .= ' ' . fnamemodify(l:keyword.word, ':p:h')
+        let l:keyword.abbr = fnamemodify(l:keyword.word, ':t')
     endfor
     
     return l:ret

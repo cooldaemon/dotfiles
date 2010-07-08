@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: exe.vim
 " AUTHOR: Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 20 Apr 2010
+" Last Modified: 16 Jun 2010
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -24,7 +24,7 @@
 " }}}
 "=============================================================================
 
-function! vimshell#internal#exe#execute(program, args, fd, other_info)"{{{
+function! vimshell#internal#exe#execute(command, args, fd, other_info)"{{{
   let [l:args, l:options] = vimshell#parser#getopt(a:args, 
         \{ 'arg=' : ['--encoding']
         \})
@@ -39,7 +39,7 @@ function! vimshell#internal#exe#execute(program, args, fd, other_info)"{{{
   
   " Execute command.
   if s:init_process(a:fd, l:args, l:options)
-    return 0
+    return
   endif
 
   echo 'Running command.'
@@ -47,7 +47,6 @@ function! vimshell#internal#exe#execute(program, args, fd, other_info)"{{{
 
   " Move line.
   normal! j
-  redraw
   while b:interactive.process.is_valid
     call vimshell#interactive#execute_pipe_out()
 
@@ -56,19 +55,17 @@ function! vimshell#internal#exe#execute(program, args, fd, other_info)"{{{
     if l:char != 0
       let l:char = nr2char(l:char)
       if l:char == "\<C-z>"
-        call vimshell#error_line(a:fd, 'Background Executed.')
+        call vimshell#error_line(a:fd, 'exe: Background executed.')
 
         " Background execution.
-        call vimshell#internal#bg#init(l:args, a:other_info.is_interactive)
+        call vimshell#internal#bg#init(l:args, a:fd, a:other_info, 'vimshell-bg', a:other_info.is_interactive)
 
-        wincmd w
         unlet b:interactive
-        return 1
       elseif l:char == "\<C-d>"
         " Interrupt.
         call vimshell#interactive#force_exit()
-        call vimshell#error_line(a:fd, 'Interrupted.')
-        return 0
+        call vimshell#error_line(a:fd, 'exe: Interrupted.')
+        return
       endif
     endif
   endwhile
@@ -77,8 +74,6 @@ function! vimshell#internal#exe#execute(program, args, fd, other_info)"{{{
   echo ''
 
   let b:vimshell.system_variables['status'] = b:interactive.status
-
-  return 0
 endfunction"}}}
 
 function! s:init_process(fd, args, options)
@@ -103,6 +98,7 @@ function! s:init_process(fd, args, options)
         \ 'encoding' : a:options['--encoding'], 
         \ 'is_pty' : !vimshell#iswin(), 
         \ 'is_background': 0, 
+        \ 'echoback_linenr' : -1,
         \}
 
   " Input from stdin.
@@ -111,5 +107,5 @@ function! s:init_process(fd, args, options)
   endif
   call b:interactive.process.stdin.close()
 
-  return 0
+  return
 endfunction

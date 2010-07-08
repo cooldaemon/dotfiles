@@ -29,7 +29,7 @@ source ~/bin/cdd
 # mac
 if [ `uname` = 'Darwin' ]; then
     alias fcd='source ~/bin/fcd.sh'
-    alias gv='open -a /Applications/MacVim.app'
+    alias gv='mvim'
     alias ls='gls -F --color=auto'
     alias mxmlc='mxmlc -compiler.source-path+=.'
 

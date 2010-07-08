@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: interactive_command_complete.vim
 " AUTHOR: Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 23 Mar 2010
+" Last Modified: 18 Jun 2010
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -25,8 +25,7 @@
 "=============================================================================
 
 function! vimshell#complete#interactive_command_complete#complete()"{{{
-  let &iminsert = 0
-  let &imsearch = 0
+  call vimshell#imdisable()
 
   " Interactive completion.
 
@@ -102,7 +101,7 @@ function! s:get_complete_candidates(cur_keyword_str)"{{{
   endif
 
   " Filtering escape sequences.
-  let l:output = vimshell#terminal#filter_escape_sequence(l:output)
+  let l:output = vimshell#terminal#filter(l:output)
 
   let l:candidates = split(join(split(l:output, '\r\n\|\n')[: -2], '  '), '\s')
   let l:cnt = 0
@@ -128,12 +127,12 @@ endfunction"}}}
 
 function! s:get_complete_key()"{{{
   if b:interactive.is_pty
-    " For pty program.
+    " For pty command.
     return "\<TAB>"
   elseif &filetype == 'int-zsh' || &filetype == 'int-nyaos' 
     return "\<C-d>"
   else
-    " For readline program.
+    " For readline command.
     return "\<ESC>?"
   endif
 endfunction"}}}

@@ -24,7 +24,7 @@
 " }}}
 "=============================================================================
 
-function! vimshell#internal#exit#execute(program, args, fd, other_info)
+function! vimshell#internal#exit#execute(command, args, fd, other_info)
   " Exit vimshell.
   if a:other_info.is_interactive
     let vimsh_buf = bufnr('%')
@@ -35,9 +35,5 @@ function! vimshell#internal#exit#execute(program, args, fd, other_info)
       call vimshell#alternate_buffer()
     endif
     execute 'bdelete!'. vimsh_buf
-    return 1
-  else
-    " Return prompt line.
-    return 0
   endif
 endfunction

@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: dictionary_complete.vim
 " AUTHOR:  Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 26 May 2010
+" Last Modified: 01 Jul 2010
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -27,14 +27,14 @@
 function! neocomplcache#plugin#dictionary_complete#initialize()"{{{
   " Initialize.
   let s:dictionary_list = {}
-  let s:completion_length = neocomplcache#get_completion_length('dictionary_complete')
+  let s:completion_length = neocomplcache#get_auto_completion_length('dictionary_complete')
 
   " Initialize dictionary."{{{
-  if !exists('g:NeoComplCache_DictionaryFileTypeLists')
-    let g:NeoComplCache_DictionaryFileTypeLists = {}
+  if !exists('g:neocomplcache_dictionary_filetype_lists')
+    let g:neocomplcache_dictionary_filetype_lists = {}
   endif
-  if !has_key(g:NeoComplCache_DictionaryFileTypeLists, 'default')
-    let g:NeoComplCache_DictionaryFileTypeLists['default'] = ''
+  if !has_key(g:neocomplcache_dictionary_filetype_lists, 'default')
+    let g:neocomplcache_dictionary_filetype_lists['default'] = ''
   endif
   "}}}
 
@@ -45,8 +45,8 @@ function! neocomplcache#plugin#dictionary_complete#initialize()"{{{
   command! -nargs=? -complete=customlist,neocomplcache#filetype_complete NeoComplCacheCachingDictionary call s:recaching(<q-args>)
 
   " Create cache directory.
-  if !isdirectory(g:NeoComplCache_TemporaryDir . '/dictionary_cache')
-    call mkdir(g:NeoComplCache_TemporaryDir . '/dictionary_cache')
+  if !isdirectory(g:neocomplcache_temporary_dir . '/dictionary_cache')
+    call mkdir(g:neocomplcache_temporary_dir . '/dictionary_cache')
   endif
 endfunction"}}}
 
@@ -57,7 +57,13 @@ endfunction"}}}
 function! neocomplcache#plugin#dictionary_complete#get_keyword_list(cur_keyword_str)"{{{
   let l:list = []
 
-  for l:source in neocomplcache#get_sources_list(s:dictionary_list, &filetype)
+  let l:key = neocomplcache#is_text_mode() ? 'text' : neocomplcache#get_context_filetype()
+  if neocomplcache#is_text_mode() && !has_key(s:dictionary_list, 'text')
+    " Caching.
+    call s:caching()
+  endif
+
+  for l:source in neocomplcache#get_sources_list(s:dictionary_list, l:key)
     let l:list += neocomplcache#dictionary_filter(l:source, a:cur_keyword_str, s:completion_length)
   endfor
 
@@ -69,49 +75,30 @@ function! s:caching()"{{{
     return
   endif
 
-  for l:filetype in keys(neocomplcache#get_source_filetypes(&filetype))
+  let l:key = neocomplcache#is_text_mode() ? 'text' : neocomplcache#get_context_filetype()
+  for l:filetype in keys(neocomplcache#get_source_filetypes(l:key))
     if !has_key(s:dictionary_list, l:filetype)
-      if g:NeoComplCache_CachingPercentInStatusline
-        let l:statusline_save = &l:statusline
-      endif
-
       call neocomplcache#print_caching('Caching dictionary "' . l:filetype . '"... please wait.')
 
       let s:dictionary_list[l:filetype] = s:initialize_dictionary(l:filetype)
 
       call neocomplcache#print_caching('Caching done.')
-
-      if g:NeoComplCache_CachingPercentInStatusline
-        let &l:statusline = l:statusline_save
-      endif
     endif
   endfor
 endfunction"}}}
 
 function! s:recaching(filetype)"{{{
   if a:filetype == ''
-    if &filetype != ''
-      let l:filetype = &filetype
-    else
-      let l:filetype = 'nothing'
-    endif
+    let l:filetype = neocomplcache#get_context_filetype()
   else
     let l:filetype = a:filetype
   endif
 
   " Caching.
-  if g:NeoComplCache_CachingPercentInStatusline
-    let l:statusline_save = &l:statusline
-  endif
-
   call neocomplcache#print_caching('Caching dictionary "' . l:filetype . '"... please wait.')
   let s:dictionary_list[l:filetype] = s:caching_from_dict(l:filetype)
 
   call neocomplcache#print_caching('Caching done.')
-
-  if g:NeoComplCache_CachingPercentInStatusline
-    let &l:statusline = l:statusline_save
-  endif
 endfunction"}}}
 
 function! s:initialize_dictionary(filetype)"{{{
@@ -125,13 +112,17 @@ function! s:initialize_dictionary(filetype)"{{{
 endfunction"}}}
 
 function! s:caching_from_dict(filetype)"{{{
-  if !has_key(g:NeoComplCache_DictionaryFileTypeLists, a:filetype)
+  if has_key(g:neocomplcache_dictionary_filetype_lists, a:filetype)
+    let l:dictionaries = g:neocomplcache_dictionary_filetype_lists[a:filetype]
+  elseif a:filetype != &filetype || &l:dictionary == ''
     return {}
+  else
+    let l:dictionaries = &l:dictionary
   endif
 
   let l:keyword_list = []
 
-  for l:dictionary in split(g:NeoComplCache_DictionaryFileTypeLists[a:filetype], ',')
+  for l:dictionary in split(l:dictionaries, ',')
     if filereadable(l:dictionary)
       let l:keyword_list += neocomplcache#cache#load_from_file(l:dictionary, 
             \neocomplcache#get_keyword_pattern(a:filetype), 'D')
@@ -149,7 +140,7 @@ function! s:caching_from_dict(filetype)"{{{
   endfor 
 
   " Save dictionary cache.
-  call neocomplcache#cache#save_cache('dictionary_cache', &filetype, neocomplcache#unpack_dictionary(l:keyword_dict))
+  call neocomplcache#cache#save_cache('dictionary_cache', a:filetype, neocomplcache#unpack_dictionary(l:keyword_dict))
 
   return l:keyword_dict
 endfunction"}}}

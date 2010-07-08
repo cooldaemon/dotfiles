@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: vimsh.vim
 " AUTHOR: Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 26 Apr 2010
+" Last Modified: 13 Jun 2010
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -27,11 +27,11 @@
 function! vimshell#internal#vimsh#execute(program, args, fd, other_info)
   " Create new vimshell or execute script.
   if empty(a:args)
-    let l:context = a:other_info
-    let l:context.fd = a:fd
-    call vimshell#print_prompt(l:context)
-    call vimshell#create_shell(0)
-    return 1
+    let l:bufnr = bufnr('%')
+    call vimshell#create_shell(0, getcwd())
+    execute 'buffer' l:bufnr
+
+    return
   else
     " Filename escape.
     let l:filename = join(a:args, ' ')
@@ -42,7 +42,6 @@ function! vimshell#internal#vimsh#execute(program, args, fd, other_info)
             \ 'fd' : { 'stdin' : '', 'stdout': '', 'stderr': ''}, 
             \}
       let i = 0
-      let l:skip_prompt = 0
       let l:lines = readfile(l:filename)
       let l:max = len(l:lines)
       
@@ -62,25 +61,20 @@ function! vimshell#internal#vimsh#execute(program, args, fd, other_info)
         endwhile
         
         try
-          let l:skip_prompt = vimshell#parser#eval_script(l:script, l:context)
+          call vimshell#parser#eval_script(l:script, l:context)
         catch
           let l:message = (v:exception !~# '^Vim:')? v:exception : v:exception . ' ' . v:throwpoint
           call vimshell#error_line({}, printf('%s(%d): %s', join(a:args), i, l:message))
-          return 0
+          return
         endtry
 
         let i += 1
       endwhile
-
-      if l:skip_prompt
-        " Skip prompt.
-        return 1
-      endif
     else
       " Error.
-      call vimshell#error_line(a:fd, printf('Not found the script "%s".', l:filename))
+      call vimshell#error_line(a:fd, printf('vimsh: Not found the script "%s".', l:filename))
     endif
   endif
 
-  return 0
+  return
 endfunction

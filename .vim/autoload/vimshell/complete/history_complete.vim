@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: history_complete.vim
 " AUTHOR: Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 17 Apr 2010
+" Last Modified: 18 Jun 2010
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -25,8 +25,7 @@
 "=============================================================================
 
 function! vimshell#complete#history_complete#whole()"{{{
-  let &iminsert = 0
-  let &imsearch = 0
+  call vimshell#imdisable()
 
   if !vimshell#check_prompt()
     " Ignore.
@@ -45,8 +44,7 @@ function! vimshell#complete#history_complete#whole()"{{{
   endif
 endfunction"}}}
 function! vimshell#complete#history_complete#insert()"{{{
-  let &iminsert = 0
-  let &imsearch = 0
+  call vimshell#imdisable()
 
   if !vimshell#check_prompt()
     " Ignore.
@@ -106,9 +104,9 @@ function! vimshell#complete#history_complete#omnifunc_whole(findstart, base)"{{{
         call add(l:complete_words, { 'word' : hist, 'menu' : 'history', 'icase' : &ignorecase })
       endif
     endfor
-    let l:complete_words = l:complete_words[:100]
+    let l:complete_words = l:complete_words[: g:vimshell_max_list]
   else
-    for hist in g:vimshell#hist_buffer[:100]
+    for hist in g:vimshell#hist_buffer[: g:vimshell_max_list]
       call add(l:complete_words, { 'word' : hist, 'menu' : 'history', 'icase' : &ignorecase })
     endfor
   endif
@@ -143,9 +141,9 @@ function! vimshell#complete#history_complete#omnifunc_insert(findstart, base)"{{
         call add(l:complete_words, { 'word' : hist, 'menu' : 'history' })
       endif
     endfor
-    let l:complete_words = l:complete_words[:100]
+    let l:complete_words = l:complete_words[: g:vimshell_max_list]
   else
-    for hist in g:vimshell#hist_buffer[:100]
+    for hist in g:vimshell#hist_buffer[: g:vimshell_max_list]
       call add(l:complete_words, { 'word' : hist, 'menu' : 'history' })
     endfor
   endif

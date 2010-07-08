@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: bg.vim
 " AUTHOR: Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 23 May 2010
+" Last Modified: 25 Jun 2010
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -28,8 +28,8 @@ augroup vimshell_bg
   autocmd!
 augroup END
 
-function! vimshell#internal#bg#execute(program, args, fd, other_info)"{{{
-  " Execute program in background.
+function! vimshell#internal#bg#execute(command, args, fd, other_info)"{{{
+  " Execute command in background.
   let [l:args, l:options] = vimshell#parser#getopt(a:args, 
         \{ 'arg=' : ['--encoding', '--filetype']
         \})
@@ -37,11 +37,11 @@ function! vimshell#internal#bg#execute(program, args, fd, other_info)"{{{
     let l:options['--encoding'] = &termencoding
   endif
   if !has_key(l:options, '--filetype')
-    let l:options['--filetype'] = 'background'
+    let l:options['--filetype'] = 'vimshell-bg'
   endif
 
   if empty(l:args)
-    return 0
+    return
   elseif l:args[0] == 'shell'
     " Background shell.
     if has('win32') || has('win64')
@@ -58,7 +58,7 @@ function! vimshell#internal#bg#execute(program, args, fd, other_info)"{{{
       shell
     endif
 
-    return 0
+    return
   endif
   
   " Background execute.
@@ -73,15 +73,7 @@ function! vimshell#internal#bg#execute(program, args, fd, other_info)"{{{
   endif
 
   " Initialize.
-  try
-    let l:sub = vimproc#popen3(l:args)
-  catch 'list index out of range'
-    let l:error = printf('File: "%s" is not found.', l:args[0])
-
-    call vimshell#error_line(a:fd, l:error)
-
-    return 0
-  endtry
+  let l:sub = vimproc#popen3(l:args)
 
   " Set variables.
   let l:interactive = {
@@ -103,18 +95,11 @@ function! vimshell#internal#bg#execute(program, args, fd, other_info)"{{{
 endfunction"}}}
 
 function! vimshell#internal#bg#vimshell_bg(args)"{{{
-  let [l:program, l:script] = vimshell#parser#parse_alias(a:args)
-  call vimshell#internal#bg#execute('bg', vimshell#parser#split_args(l:program . ' ' . l:script), {'stdin' : '', 'stdout' : '', 'stderr' : ''}, {'is_interactive' : 0})
+  let [l:command, l:script] = vimshell#parser#parse_command(vimshell#parser#parse_alias(a:args))
+  call vimshell#internal#bg#execute('bg', vimshell#parser#split_args(l:command . ' ' . l:script), {'stdin' : '', 'stdout' : '', 'stderr' : ''}, {'is_interactive' : 0})
 endfunction"}}}
 
 function! vimshell#internal#bg#init(args, fd, other_info, filetype, interactive)"{{{
-  " Init buffer.
-  if a:other_info.is_interactive
-    let l:context = a:other_info
-    let l:context.fd = a:fd
-    call vimshell#print_prompt(l:context)
-  endif
-
   " Save current directiory.
   let l:cwd = getcwd()
 
@@ -144,7 +129,7 @@ function! vimshell#internal#bg#init(args, fd, other_info, filetype, interactive)
   augroup END
   
   nnoremap <buffer><silent> <Plug>(vimshell_interactive_execute_line)  :<C-u>call <SID>on_execute()<CR>
-  nnoremap <buffer><silent> <Plug>(vimshell_interactive_interrupt)       :<C-u>call <SID>on_interrupt(bufname('%'))<CR>
+  nnoremap <buffer><silent> <Plug>(vimshell_interactive_interrupt)       :<C-u>call vimshell#interactive#hang_up(a:afile)
   nnoremap <buffer><silent> <Plug>(vimshell_interactive_exit)       :<C-u>call <SID>on_exit()<CR>
   
   nmap <buffer><CR>      <Plug>(vimshell_interactive_execute_line)
@@ -153,12 +138,7 @@ function! vimshell#internal#bg#init(args, fd, other_info, filetype, interactive)
   
   call s:on_execute()
 
-  wincmd w
-  if a:other_info.is_interactive
-    call vimshell#start_insert(a:other_info.is_insert)
-  endif
-
-  return 1
+  wincmd p
 endfunction"}}}
 
 function! s:on_execute()"{{{
@@ -168,9 +148,6 @@ function! s:on_execute()"{{{
   redraw
   echo ''
   setlocal nomodifiable
-endfunction"}}}
-function! s:on_interrupt(afile)"{{{
-  call vimshell#interactive#hang_up(a:afile)
 endfunction"}}}
 function! s:on_exit()"{{{
   if !b:interactive.process.is_valid

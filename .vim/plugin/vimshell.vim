@@ -1,8 +1,7 @@
 "=============================================================================
 " FILE: vimshell.vim
-" AUTHOR: Janakiraman .S <prince@india.ti.com>(Original)
-"         Shougo Matsushita <Shougo.Matsu@gmail.com>(Modified)
-" Last Modified: 11 May 2010
+" AUTHOR: Shougo Matsushita <Shougo.Matsu@gmail.com>
+" Last Modified: 18 Jun 2010
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -26,10 +25,10 @@
 "=============================================================================
 
 if v:version < 700
-    echoerr 'vimshell does not work this version of Vim "' . v:version . '".'
-    finish
+  echoerr 'vimshell does not work this version of Vim "' . v:version . '".'
+  finish
 elseif exists('g:loaded_vimshell')
-    finish
+  finish
 endif
 
 let s:save_cpo = &cpo
@@ -37,55 +36,90 @@ set cpo&vim
 
 " Obsolute options check."{{{
 if exists('g:VimShell_Prompt')
-    echoerr 'g:VimShell_Prompt option does not work this version of vimshell.'
+  echoerr 'g:VimShell_Prompt option does not work this version of vimshell.'
 endif
 if exists('g:VimShell_SecondaryPrompt')
-    echoerr 'g:VimShell_SecondaryPrompt option does not work this version of vimshell.'
+  echoerr 'g:VimShell_SecondaryPrompt option does not work this version of vimshell.'
 endif
 if exists('g:VimShell_UserPrompt')
-    echoerr 'g:VimShell_UserPrompt option does not work this version of vimshell.'
+  echoerr 'g:VimShell_UserPrompt option does not work this version of vimshell.'
 endif
 if exists('g:VimShell_EnableInteractive')
-    echoerr 'g:VimShell_EnableInteractive option does not work this version of vimshell.'
+  echoerr 'g:VimShell_EnableInteractive option does not work this version of vimshell.'
 endif
 "}}}
 " Global options definition."{{{
 if !exists('g:vimshell_ignore_case')
-    let g:vimshell_ignore_case = &ignorecase
+  let g:vimshell_ignore_case = &ignorecase
 endif
 if !exists('g:vimshell_smart_case')
-    let g:vimshell_smart_case = 0
+  let g:vimshell_smart_case = 0
 endif
 if !exists('g:vimshell_max_list')
-    let g:vimshell_max_list = 100
+  let g:vimshell_max_list = 100
 endif
 if !exists('g:vimshell_use_ckw')
-    let g:vimshell_use_ckw = 0
+  let g:vimshell_use_ckw = 0
 endif
 if !exists('g:vimshell_split_height')
-    let g:vimshell_split_height = 30
+  let g:vimshell_split_height = 30
 endif
 if !exists('g:vimshell_temporary_directory')
-    let g:vimshell_temporary_directory = expand('~/.vimshell')
+  let g:vimshell_temporary_directory = expand('~/.vimshell')
 endif
 if !isdirectory(fnamemodify(g:vimshell_temporary_directory, ':p'))
-    call mkdir(fnamemodify(g:vimshell_temporary_directory, ':p'), 'p')
+  call mkdir(fnamemodify(g:vimshell_temporary_directory, ':p'), 'p')
 endif
-if !exists('g:vimshell_history_max_size')
-    let g:vimshell_history_max_size = 1000
+if !exists('g:vimshell_max_command_history')
+  let g:vimshell_max_command_history = 1000
+endif
+if !exists('g:vimshell_max_directory_stack')
+  let g:vimshell_max_directory_stack = 100
 endif
 if !exists('g:vimshell_vimshrc_path')
-    let g:vimshell_vimshrc_path = '~/.vimshrc'
+  let g:vimshell_vimshrc_path = expand('~/.vimshrc')
 endif
 let g:vimshell_vimshrc_path = expand(g:vimshell_vimshrc_path)
 if !isdirectory(fnamemodify(g:vimshell_vimshrc_path, ':p:h'))
-    call mkdir(fnamemodify(g:vimshell_vimshrc_path, ':p:h'), 'p')
+  call mkdir(fnamemodify(g:vimshell_vimshrc_path, ':p:h'), 'p')
 endif
 if !exists('g:vimshell_escape_colors')
-    let g:vimshell_escape_colors = [
-                \'#3c3c3c', '#ff6666', '#66ff66', '#ffd30a', '#1e95fd', '#ff13ff', '#1bc8c8', '#C0C0C0', 
-                \'#686868', '#ff6666', '#66ff66', '#ffd30a', '#6699ff', '#f820ff', '#4ae2e2', '#ffffff'
-                \]
+  let g:vimshell_escape_colors = [
+        \'#3c3c3c', '#ff6666', '#66ff66', '#ffd30a', '#1e95fd', '#ff13ff', '#1bc8c8', '#C0C0C0',
+        \'#686868', '#ff6666', '#66ff66', '#ffd30a', '#6699ff', '#f820ff', '#4ae2e2', '#ffffff',
+        \]
+endif
+if !exists('g:vimshell_cat_command')
+  let g:vimshell_cat_command = 'cat'
+endif
+if !exists('g:vimshell_split_command')
+  let g:vimshell_split_command = ''
+endif
+if !exists('g:vimshell_no_save_history_commands')
+  let g:vimshell_no_save_history_commands = { 'history' : 1, 'h' : 1, 'histdel' : 1 }
+endif
+if !exists('g:vimshell_interactive_no_save_history_commands')
+  let g:vimshell_interactive_no_save_history_commands = {}
+endif
+if !exists('g:vimshell_interactive_update_time')
+  let g:vimshell_interactive_update_time = 500
+endif
+if !exists('g:vimshell_interactive_command_options')
+  let g:vimshell_interactive_command_options = {}
+endif
+if !exists('g:vimshell_interactive_encodings')
+  let g:vimshell_interactive_encodings = {}
+endif
+
+" For Cygwin commands.
+if !exists('g:vimshell_interactive_cygwin_commands')
+  let g:vimshell_interactive_cygwin_commands = {}
+endif
+if !exists('g:vimshell_interactive_cygwin_path')
+  let g:vimshell_interactive_cygwin_path = 'c:/cygwin/bin'
+endif
+if !exists('g:vimshell_interactive_cygwin_home')
+  let g:vimshell_interactive_cygwin_home = ''
 endif
 "}}}
 

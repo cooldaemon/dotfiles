@@ -251,9 +251,8 @@ map e  <Plug>(smartword-e)
 map ge <Plug>(smartword-ge)
 
 "neocomplcache
-let g:NeoComplCache_EnableAtStartup = 1
-let g:NeoComplCache_KeywordCompletionStartLength = 1
-let g:NeoComplCache_PluginCompletionLength = {
+let g:neocomplcache_enable_at_startup = 1
+let g:neocomplcache_plugin_completion_length = {
   \ 'snipMate_complete' : 1,
   \ 'buffer_complete'   : 2,
   \ 'include_complete'  : 2,
@@ -262,14 +261,9 @@ let g:NeoComplCache_PluginCompletionLength = {
   \ 'keyword_complete'  : 2,
   \ 'omni_complete'     : 1
   \ }
-let g:NeoComplCache_MinKeywordLength = 3
-let g:NeoComplCache_MinSyntaxLength = 3
-let g:NeoComplCache_SmartCase = 1
-let g:NeoComplCache_PartialCompletionStartLength = 2
-let g:NeoComplCache_PreviousKeywordCompletion = 1
-let g:NeoComplCache_EnableCamelCaseCompletion = 1
-let g:NeoComplCache_EnableUnderbarCompletion = 1
-let g:NeoComplCache_DictionaryFileTypeLists = {
+let g:neocomplcache_min_keyword_length = 3
+let g:neocomplcache_min_syntax_length = 3
+let g:neocomplcache_dictionary_filetype_lists = {
   \ 'default'    : '',
   \ 'erlang'     : $HOME . '/.vim/dict/erlang.dict',
   \ 'objc'       : $HOME . '/.vim/dict/objc.dict',
@@ -282,7 +276,7 @@ let g:NeoComplCache_DictionaryFileTypeLists = {
   \ 'int-irb'    : $HOME . '/.vim/dict/ruby.dict',
   \ 'int-perlsh' : $HOME . '/.vim/dict/perl.dict'
   \ }
-let g:NeoComplCache_SameFileTypeLists = {
+let g:neocomplcache_same_filetype_lists = {
   \ 'c'          : 'ref-man,ref-erlang',
   \ 'perl'       : 'ref-perldoc',
   \ 'ruby'       : 'ref-refe',
@@ -297,14 +291,15 @@ let g:NeoComplCache_SameFileTypeLists = {
 autocmd BufFilePost \[ref-* silent execute ":NeoComplCacheCachingBuffer"
 
 "vimshell
+let g:vimshell_split_command = 'split'
 let g:vimshell_smart_case = 1
 let g:vimshell_prompt = $USER."% "
 let g:vimshell_user_prompt = 'printf("%s %s", fnamemodify(getcwd(), ":~"), vimshell#vcs#info("(%s)-[%b]"))'
 
 autocmd FileType vimshell
-  \ call vimshell#hook#add('chpwd', 'g:chpwd_for_vimshell')
+  \ call vimshell#hook#set('chpwd', ['g:chpwd_for_vimshell'])
 
-function! g:chpwd_for_vimshell()
+function! g:chpwd_for_vimshell(args, context)
   call vimshell#execute('ls')
 endfunction
 

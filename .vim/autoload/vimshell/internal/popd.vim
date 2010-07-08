@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: popd.vim
-" AUTHOR: Shougo Matsushita <Shougo.Matsu@gmail.com>(Modified)
-" Last Modified: 08 Apr 2010
+" AUTHOR: Shougo Matsushita <Shougo.Matsu@gmail.com>
+" Last Modified: 22 Jun 2010
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -29,7 +29,7 @@ function! vimshell#internal#popd#execute(program, args, fd, other_info)
 
   if empty(b:vimshell.directory_stack)
     " Error.
-    call vimshell#error_line(a:fd, 'Directory stack is empty.')
+    call vimshell#error_line(a:fd, 'popd: Directory stack is empty.')
     return
   endif
 
@@ -39,29 +39,19 @@ function! vimshell#internal#popd#execute(program, args, fd, other_info)
     let l:pop = str2nr(l:arguments)
   elseif empty(l:arguments)
     " Default pop value.
-    let l:pop = 1
+    let l:pop = 0
   else
     " Error.
-    call vimshell#error_line(a:fd, 'Arguments error .')
+    call vimshell#error_line(a:fd, 'popd: Arguments error.')
     return
   endif
 
   if l:pop >= len(b:vimshell.directory_stack)
     " Overflow.
-    call vimshell#error_line(a:fd, printf("Not found '%d' in directory stack.", l:pop))
+    call vimshell#error_line(a:fd, printf("popd: Not found '%d' in directory stack.", l:pop))
     return
   endif
 
-  lcd `=b:vimshell.directory_stack[l:pop]`
-  if a:other_info.is_interactive
-    " Call chpwd hook.
-    let l:context = a:other_info
-    let l:context.fd = a:fd
-    for l:func_name in values(b:vimshell.hook_functions_table['chpwd'])
-      call call(l:func_name, [l:context])
-    endfor
-  endif
-
-  " Pop from stack.
-  let b:vimshell.directory_stack = b:vimshell.directory_stack[l:pop+1:]
+  return vimshell#internal#cd#execute('cd', [ b:vimshell.directory_stack[l:pop] ], 
+        \ a:fd, a:other_info)
 endfunction

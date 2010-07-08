@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: vimshell.vim
 " AUTHOR: Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 24 May 2010
+" Last Modified: 27 Jun 2010
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -29,15 +29,12 @@ function! vimshell#version()"{{{
 endfunction"}}}
 
 " Check vimproc.
-let s:is_vimproc = exists('*vimproc#system')
-let s:is_version = exists('*vimproc#version')
-if !s:is_vimproc
-  echoerr 'vimproc is not installed. Please install vimproc Ver.4.0 or above.'
-  finish
-elseif !s:is_version
-  echoerr 'Please install vimproc Ver.4.0 or above.'
+let s:exists_vimproc_version = exists('*vimproc#version')
+if !s:exists_vimproc_version || vimproc#version() < 401
+  echoerr 'Please install vimproc Ver.4.1 or above.'
   finish
 endif
+let s:exists_eskk = exists('*eskk#is_enabled')
 
 " Initialize."{{{
 let s:prompt = exists('g:vimshell_prompt') ? g:vimshell_prompt : 'vimshell% '
@@ -78,7 +75,7 @@ augroup vimshell
   autocmd GUIEnter * set vb t_vb=
 augroup end
 
-" User utility functions."{{{
+" User utility functions.
 function! vimshell#default_settings()"{{{
   setlocal buftype=nofile
   setlocal noswapfile
@@ -86,87 +83,24 @@ function! vimshell#default_settings()"{{{
   setlocal noreadonly
   setlocal nolist
   setlocal tabstop=8
+  setlocal iskeyword+=-,+,.,\\,!,~
   setlocal omnifunc=vimshell#complete#auto_complete#omnifunc
   
   " Set autocommands.
   augroup vimshell
-    autocmd BufWinEnter <buffer> call s:restore_current_dir()
+    autocmd BufWinEnter,WinEnter <buffer> call s:restore_current_dir()
   augroup end
 
-  " Plugin keymappings"{{{
-  nnoremap <buffer><silent> <Plug>(vimshell_enter)  :<C-u>call vimshell#mappings#execute_line(0)<CR><ESC>
-  nnoremap <buffer><silent> <Plug>(vimshell_previous_prompt)  :<C-u>call vimshell#mappings#previous_prompt()<CR>
-  nnoremap <buffer><silent> <Plug>(vimshell_next_prompt)  :<C-u>call vimshell#mappings#next_prompt()<CR>
-  nnoremap <buffer><silent> <Plug>(vimshell_delete_previous_output)  :<C-u>call vimshell#mappings#delete_previous_output()<CR>
-  nnoremap <buffer><silent> <Plug>(vimshell_paste_prompt)  :<C-u>call vimshell#mappings#paste_prompt()<CR>
-  nnoremap <buffer><silent> <Plug>(vimshell_move_end_argument) :<C-u>call vimshell#mappings#move_end_argument()<CR>
-  nnoremap <buffer><silent> <Plug>(vimshell_exit) :<C-u>call vimshell#mappings#exit()<CR>
-
-  inoremap <buffer><expr> <Plug>(vimshell_history_complete_whole)  vimshell#complete#history_complete#whole()
-  inoremap <buffer><expr> <Plug>(vimshell_history_complete_insert)  vimshell#complete#history_complete#insert()
-  inoremap <buffer><expr> <Plug>(vimshell_command_complete) pumvisible() ? "\<C-n>" : vimshell#parser#check_wildcard() ? 
-        \ vimshell#mappings#expand_wildcard() : vimshell#complete#command_complete#complete()
-  inoremap <buffer><silent> <Plug>(vimshell_push_current_line)  <ESC>:<C-u>call vimshell#mappings#push_current_line()<CR>
-  inoremap <buffer><silent> <Plug>(vimshell_insert_last_word)  <ESC>:<C-u>call vimshell#mappings#insert_last_word()<CR>
-  inoremap <buffer><silent> <Plug>(vimshell_run_help)  <ESC>:<C-u>call vimshell#mappings#run_help()<CR>
-  inoremap <buffer><silent> <Plug>(vimshell_move_head)  <ESC>:<C-u>call vimshell#mappings#move_head()<CR>
-  inoremap <buffer><silent> <Plug>(vimshell_delete_line)  <ESC>:<C-u>call vimshell#mappings#delete_line()<CR>
-  inoremap <buffer><silent> <Plug>(vimshell_clear)  <ESC>:<C-u>call vimshell#mappings#clear()<CR>
-  inoremap <buffer><silent> <Plug>(vimshell_enter)  <ESC>:<C-u>call vimshell#mappings#execute_line(1)<CR>
-  
-  inoremap <buffer><expr> <Plug>(vimshell_delete_backword_char)  vimshell#mappings#delete_backword_char(0)
-  inoremap <buffer><expr> <Plug>(vimshell_another_delete_backword_char)  vimshell#mappings#delete_backword_char(1)
-  "}}}
-
-  if (exists('g:vimshell_no_default_keymappings') && g:vimshell_no_default_keymappings)
-    return
-  endif
-  
-  " Normal mode key-mappings."{{{
-  " Execute command.
-  nmap <buffer> <CR> <Plug>(vimshell_enter)
-  " Exit vimshell.
-  nmap <buffer> q <Plug>(vimshell_exit)
-  " Move to previous prompt.
-  nmap <buffer> <C-p> <Plug>(vimshell_previous_prompt)
-  " Move to next prompt.
-  nmap <buffer> <C-n> <Plug>(vimshell_next_prompt)
-  " Remove this output.
-  nmap <buffer> <C-d> <Plug>(vimshell_delete_previous_output)
-  " Paste this prompt.
-  nmap <buffer> <C-y> <Plug>(vimshell_paste_prompt)
-  " Search end argument.
-  nmap <buffer> E <Plug>(vimshell_move_end_argument)
-  "}}}
-
-  " Insert mode key-mappings."{{{
-  " Execute command.
-  inoremap <expr> <SID>(bs-ctrl-])    getline('.')[col('.') - 2] ==# "\<C-]>" ? "\<BS>" : ''
-  imap <buffer> <C-]>               <C-]><SID>(bs-ctrl-])
-  imap <buffer> <CR> <C-]><Plug>(vimshell_enter)
-  " History completion.
-  imap <buffer> <C-k>  <Plug>(vimshell_history_complete_whole)
-  imap <buffer> <C-q>  <Plug>(vimshell_history_complete_insert)
-  " Command completion.
-  imap <buffer> <TAB>  <Plug>(vimshell_command_complete)
-  " Move to Beginning of command.
-  imap <buffer> <C-a> <Plug>(vimshell_move_head)
-  " Delete all entered characters in the current line
-  imap <buffer> <C-u> <Plug>(vimshell_delete_line)
-  " Push current line to stack.
-  imap <buffer> <C-z> <Plug>(vimshell_push_current_line)
-  " Insert last word.
-  imap <buffer> <C-t> <Plug>(vimshell_insert_last_word)
-  " Run help.
-  imap <buffer> <C-r>h <Plug>(vimshell_run_help)
-  " Clear.
-  imap <buffer> <C-l> <Plug>(vimshell_clear)
-  " Delete char.
-  imap <buffer> <C-h>     <Plug>(vimshell_delete_backword_char)
-  imap <buffer> <BS>     <Plug>(vimshell_delete_backword_char)
-  "}}}
+  " Define mappings.
+  call vimshell#mappings#define_default_mappings()
 endfunction"}}}
-"}}}
+function! vimshell#set_variables(variable, keys, value)"{{{
+  for key in split(a:keys, ',')
+    if !has_key({a:variable}, key) 
+      let {a:variable}[key] = a:value
+    endif
+  endfor
+endfunction"}}}
 
 " vimshell plugin utility functions."{{{
 function! vimshell#create_shell(split_flag, directory)"{{{
@@ -231,10 +165,10 @@ function! vimshell#create_shell(split_flag, directory)"{{{
   let b:vimshell.variables = {}
   let b:vimshell.system_variables = { 'status' : 0 }
   let b:vimshell.directory_stack = []
-  let b:vimshell.directory_stack[0] = getcwd()
+  let b:vimshell.prompt_current_dir = {}
   let b:vimshell.hook_functions_table = {
-        \ 'precmd' : {}, 'preexec' : {}, 'emptycmd' : {}, 
-        \ 'chpwd' : {}, 
+        \ 'preprompt' : [], 'preparse' : [], 'preexec' : [], 'emptycmd' : [], 
+        \ 'chpwd' : [], 'notfound' : [],
         \}
 
   " Set environment variables.
@@ -244,6 +178,8 @@ function! vimshell#create_shell(split_flag, directory)"{{{
   let $COLUMNS = winwidth(0) * 8 / 10
   let $LINES = winheight(0) * 8 / 10
   let $SHELL = 'vimshell'
+  let $EDITOR = g:vimshell_cat_command
+  let $PAGER = g:vimshell_cat_command
   
   " Default settings.
   call vimshell#default_settings()
@@ -268,6 +204,9 @@ function! vimshell#create_shell(split_flag, directory)"{{{
   call vimshell#print_prompt(l:context)
 
   call vimshell#start_insert()
+
+  " Set undo point.
+  call feedkeys("\<C-g>u", 'n')
 endfunction"}}}
 function! vimshell#switch_shell(split_flag, directory)"{{{
   let l:context = {
@@ -395,21 +334,7 @@ function! vimshell#print(fd, string)"{{{
     return
   endif
 
-  " Strip <CR>.
-  let l:lines = split(a:string, '\n')
-  if line('$') == 1 && getline('$') == ''
-    call setline('$', l:lines[0])
-    let l:lines = l:lines[1:]
-  endif
-
-  for l:line in l:lines
-    call append('$', l:line)
-  endfor
-
-  call vimshell#terminal#interpret_escape_sequence()
-
-  " Set cursor.
-  $
+  call vimshell#terminal#print(a:string)
 endfunction"}}}
 function! vimshell#print_line(fd, string)"{{{
   if !empty(a:fd) && a:fd.stdout != ''
@@ -434,7 +359,6 @@ function! vimshell#print_line(fd, string)"{{{
     call append('$', a:string)
   endif
 
-  call vimshell#terminal#interpret_escape_sequence()
   $
 endfunction"}}}
 function! vimshell#error_line(fd, string)"{{{
@@ -464,14 +388,22 @@ function! vimshell#error_line(fd, string)"{{{
     call append('$', l:string)
   endif
 
-  call vimshell#terminal#interpret_escape_sequence()
   $
 endfunction"}}}
 function! vimshell#print_prompt(...)"{{{
+  if &filetype !=# 'vimshell'
+    return
+  endif
+  
+  " Save current directory.
+  let b:vimshell.prompt_current_dir[vimshell#get_prompt_linenr()] = getcwd()
+
   let l:context = a:0 >= 1? a:1 : vimshell#get_context()
   
-  " Call precmd hook.
-  call vimshell#hook#call('precmd', l:context)
+  $
+  
+  " Call preprompt hook.
+  call vimshell#hook#call('preprompt', l:context)
   
   " Search prompt
   if empty(b:vimshell.commandline_stack)
@@ -489,7 +421,6 @@ function! vimshell#print_prompt(...)"{{{
         call setline('$', l:secondary)
       else
         call append('$', l:secondary)
-        $
       endif
     endfor
     
@@ -513,8 +444,9 @@ function! vimshell#print_prompt(...)"{{{
     call setline('$', l:new_prompt)
   else
     call append('$', l:new_prompt)
-    $
   endif
+
+  $
   let &modified = 0
 endfunction"}}}
 function! vimshell#print_secondary_prompt()"{{{
@@ -526,11 +458,18 @@ endfunction"}}}
 function! vimshell#append_history(command)"{{{
   " Reduce blanks.
   let l:command = substitute(a:command, '\s\+', ' ', 'g')
+  
+  let l:program = matchstr(l:command, vimshell#get_program_pattern())
+  if l:program != '' && has_key(g:vimshell_no_save_history_commands, l:program)
+    " No history command.
+    return
+  endif
+  
   " Filtering.
-  call insert(filter(g:vimshell#hist_buffer, printf("v:val != '%s'", substitute(l:command, "'", "''", 'g'))), l:command)
+  call insert(filter(g:vimshell#hist_buffer, 'v:val != ' . string(a:command)), l:command)
 
   " Trunk.
-  let g:vimshell#hist_buffer = g:vimshell#hist_buffer[:g:vimshell_history_max_size-1]
+  let g:vimshell#hist_buffer = g:vimshell#hist_buffer[:g:vimshell_max_command_history-1]
 
   let l:history_path = g:vimshell_temporary_directory . '/command-history'
   call writefile(g:vimshell#hist_buffer, l:history_path)
@@ -571,13 +510,18 @@ function! vimshell#getfilename(program)"{{{
   endif
 endfunction"}}}
 function! vimshell#start_insert(...)"{{{
+  if &filetype !=# 'vimshell'
+    return
+  endif
+
   let l:is_insert = (a:0 == 0)? 1 : a:1
 
   if l:is_insert
     " Enter insert mode.
     $
     startinsert!
-    set iminsert=0 imsearch=0
+
+    call vimshell#imdisable()
   else
     normal! $
   endif
@@ -598,22 +542,7 @@ function! vimshell#get_cur_text()"{{{
   " Get cursor text without prompt.
   let l:pos = mode() ==# 'i' ? 2 : 1
 
-  let l:cur_text = col('.') < l:pos ? '' : getline('.')[: col('.') - l:pos]
-
-  if l:cur_text != '' && char2nr(l:cur_text[-1:]) >= 0x80
-    let l:len = len(getline('.'))
-
-    " Skip multibyte
-    let l:pos -= 1
-    let l:cur_text = getline('.')[: col('.') - l:pos]
-    let l:fchar = char2nr(l:cur_text[-1:])
-    while col('.')-l:pos+1 < l:len && l:fchar >= 0x80
-      let l:pos -= 1
-
-      let l:cur_text = getline('.')[: col('.') - l:pos]
-      let l:fchar = char2nr(l:cur_text[-1:])
-    endwhile
-  endif
+  let l:cur_text = col('.') < l:pos ? '' : matchstr(getline('.'), '.*')[: col('.') - l:pos]
   return l:cur_text[len(vimshell#get_prompt()):]
 endfunction"}}}
 function! vimshell#get_prompt_command()"{{{
@@ -664,8 +593,8 @@ function! vimshell#get_current_args()"{{{
     return []
   endif
   
-  let l:args = vimshell#parser#split_args(l:commands[-1])
-  if vimshell#get_cur_text() =~ '\s\+$'
+  let l:args = vimshell#parser#split_args_through(l:commands[-1])
+  if vimshell#get_cur_text() =~ '\\\@!\s\+$'
     " Add blank argument.
     call add(l:args, '')
   endif
@@ -674,6 +603,10 @@ endfunction"}}}
 function! vimshell#check_prompt(...)"{{{
   let l:line = a:0 == 0 ? getline('.') : getline(a:1)
   return vimshell#head_match(l:line, vimshell#get_prompt())
+endfunction"}}}
+function! vimshell#get_prompt_linenr()"{{{
+  let [l:line, l:col] = searchpos('^' . vimshell#escape_match(vimshell#get_prompt()), 'bcW')
+  return l:line
 endfunction"}}}
 function! vimshell#check_secondary_prompt(...)"{{{
   let l:line = a:0 == 0 ? getline('.') : getline(a:1)
@@ -698,46 +631,17 @@ function! vimshell#system(str, ...)"{{{
   return l:output
 endfunction"}}}
 function! vimshell#open(filename)"{{{
-  let l:filename = a:filename
-  if &termencoding != '' && &encoding != &termencoding
-    " Convert encoding.
-    let l:filename = iconv(l:filename, &encoding, &termencoding)
-  endif
-  
-  " Detect desktop environment.
-  if vimshell#iswin()
-    if !isdirectory(a:filename) && executable('fiber.exe')
-      call vimshell#system('fiber "' . l:filename . '"')
-    else
-      execute printf('silent ! start "" "%s"', l:filename)
-    endif
-  elseif has('win32unix')
-    " Cygwin.
-    call vimshell#system('cygstart ''' . l:filename . '''')
-  elseif executable('xdg-open')
-    " Linux.
-    call vimshell#system('xdg-open ''' . l:filename . ''' &')
-  elseif exists('$KDE_FULL_SESSION') && $KDE_FULL_SESSION ==# 'true'
-    " KDE.
-    call vimshell#system('kioclient exec ''' . l:filename . '''')
-  elseif exists('$GNOME_DESKTOP_SESSION_ID')
-    " GNOME.
-    call vimshell#system('gnome-open ''' . l:filename . ''' &')
-  elseif executable('exo-open')
-    " Xfce.
-    call vimshell#system('exo-open ''' . l:filename . ''' &')
-  elseif (has('macunix') || system('uname') =~? '^darwin') && executable('open')
-    " Mac OS.
-    call vimshell#system('open ''' . l:filename . ''' &')
-  else
-    throw 'Not supported.'
-  endif
+  call vimproc#open(a:filename)
 endfunction"}}}
 function! vimshell#trunk_string(string, max)"{{{
   return printf('%.' . string(a:max-10) . 's..%s', a:string, a:string[-8:])
 endfunction"}}}
 function! vimshell#iswin()"{{{
   return has('win32') || has('win64')
+endfunction"}}}
+function! vimshell#resolve(filename)"{{{
+  return ((vimshell#iswin() && fnamemodify(a:filename, ':e') ==? 'LNK') || getftype(a:filename) ==# 'link') ?
+        \ substitute(resolve(a:filename), '\\', '/', 'g') : a:filename
 endfunction"}}}
 function! vimshell#get_program_pattern()"{{{
   return 
@@ -752,7 +656,9 @@ function! vimshell#get_alias_pattern()"{{{
 endfunction"}}}
 function! vimshell#split_nicely()"{{{
   " Split nicely.
-  if winwidth(0) > 2 * &winwidth
+  if g:vimshell_split_command != ''
+    execute g:vimshell_split_command
+  elseif winwidth(0) > 2 * &winwidth
     vsplit
   else
     split
@@ -787,13 +693,23 @@ function! vimshell#alternate_buffer()"{{{
     endif
   endif
 endfunction"}}}
+function! vimshell#imdisable()"{{{
+  " Disable input method.
+  if exists(s:exists_eskk) && eskk#is_enabled()
+    call feedkeys(eskk#disable(), 'n')
+  elseif exists('b:skk_on') && b:skk_on && exists('*SkkDisable')
+    call feedkeys(SkkDisable(), 'n')
+  elseif exists('&iminsert')
+    let &l:iminsert = 0
+  endif
+endfunction"}}}
 "}}}
 
 " User helper functions.
 function! vimshell#execute(cmdline, ...)"{{{
   let l:context = a:0 >= 1? a:1 : vimshell#get_context()
   try
-    let l:skip_prompt = vimshell#parser#eval_script(a:cmdline, l:context)
+    call vimshell#parser#eval_script(a:cmdline, l:context)
   catch /.*/
     let l:message = v:exception . ' ' . v:throwpoint
     call vimshell#error_line(l:context.fd, l:message)
@@ -857,7 +773,7 @@ function! s:special_command(program, args, fd, other_info)"{{{
     call vimshell#execute_internal_command('exe', insert(l:arguments, l:program), a:fd, a:other_info)
   endif
 
-  return 0
+  return
 endfunction"}}}
 function! s:special_internal(program, args, fd, other_info)"{{{
   if empty(a:args)
@@ -878,9 +794,8 @@ function! s:special_internal(program, args, fd, other_info)"{{{
     endif
   endif
 
-  return 0
+  return
 endfunction"}}}
-
 
 function! s:restore_current_dir()"{{{
   if !exists('b:vimshell')

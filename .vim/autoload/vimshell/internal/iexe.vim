@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: iexe.vim
 " AUTHOR: Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 25 May 2010
+" Last Modified: 25 Jun 2010
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -25,31 +25,71 @@
 "=============================================================================
 
 let s:last_interactive_bufnr = 1
+let s:update_time_save = &updatetime
 
-function! vimshell#internal#iexe#execute(program, args, fd, other_info)"{{{
+" Set interactive options."{{{
+if vimshell#iswin()
+  " Windows only options.
+  call vimshell#set_variables('g:vimshell_interactive_command_options', 'bash,bc,gosh,python,zsh', '-i')
+  call vimshell#set_variables('g:vimshell_interactive_command_options', 'irb', '--inf-ruby-mode')
+  call vimshell#set_variables('g:vimshell_interactive_command_options', 'powershell', '-Command -')
+  call vimshell#set_variables('g:vimshell_interactive_command_options', 'scala', '--Xnojline')
+  call vimshell#set_variables('g:vimshell_interactive_command_options', 'nyaos', '-t')
+  
+  call vimshell#set_variables('g:vimshell_interactive_encodings', 'gosh,fakecygpty', 'utf8')
+  
+  call vimshell#set_variables('g:vimshell_interactive_cygwin_commands', 'tail,zsh,ssh', 1)
+endif
+call vimshell#set_variables('g:vimshell_interactive_command_options', 'termtter', '--monochrome')
+"}}}
+
+function! vimshell#internal#iexe#execute(command, args, fd, other_info)"{{{
   " Interactive execute command.
   let [l:args, l:options] = vimshell#parser#getopt(a:args, 
         \{ 'arg=' : ['--encoding']
         \})
-  if !has_key(l:options, '--encoding')
-    let l:options['--encoding'] = &termencoding
-  endif
-  
   if empty(l:args)
-    return 0
+    return
   endif
 
-  if has_key(s:interactive_option, fnamemodify(l:args[0], ':r'))
-    for l:arg in vimshell#parser#split_args(s:interactive_option[fnamemodify(l:args[0], ':r')])
+  if has_key(g:vimshell_interactive_cygwin_commands, fnamemodify(l:args[0], ':r'))
+    " Use Cygwin pty.
+    call insert(l:args, 'fakecygpty')
+  endif
+
+  let l:use_cygpty = vimshell#iswin() && l:args[0] =~ '^fakecygpty\%(\.exe\)\?$'
+  if l:use_cygpty
+    if !executable('fakecygpty')
+      call vimshell#error_line(a:fd, 'iexe: "fakecygpty.exe" is required. Please install it.')
+      return
+    endif
+    
+    " Get program path from g:vimshell_interactive_cygwin_path.
+    if len(l:args) < 2
+      call vimshell#error_line(a:fd, 'iexe: command is required.')
+      return
+    endif
+
+    let l:args[1] = vimproc#get_command_name(l:args[1], g:vimshell_interactive_cygwin_path)
+  endif
+
+  let l:cmdname = fnamemodify(l:args[0], ':r')
+  if !has_key(l:options, '--encoding')
+    let l:options['--encoding'] = has_key(g:vimshell_interactive_encodings, l:cmdname) ?
+          \ g:vimshell_interactive_encodings[l:cmdname] : &termencoding
+  endif
+
+  if !l:use_cygpty && has_key(g:vimshell_interactive_command_options, l:cmdname)
+    for l:arg in vimshell#parser#split_args(g:vimshell_interactive_command_options[l:cmdname])
       call add(l:args, l:arg)
     endfor
   endif
 
-  if vimshell#iswin() && l:args[0] =~ 'cmd\%(\.exe\)\?'
+  if vimshell#iswin() && l:cmdname == 'cmd'
     " Run cmdproxy.exe instead of cmd.exe.
     if !executable('cmdproxy.exe')
-      call vimshell#error_line(a:fd, 'cmdproxy.exe is not found. Please install it.')
-      return 0
+      call vimshell#error_line(a:fd, 'iexe: "cmdproxy.exe" is not found. Please install it.')
+      return
     endif
 
     let l:args[0] = 'cmdproxy.exe'
@@ -66,15 +106,22 @@ function! vimshell#internal#iexe#execute(program, args, fd, other_info)"{{{
   endif
 
   " Initialize.
-  try
-    let l:sub = vimproc#ptyopen(l:args)
-  catch 'list index out of range'
-    let l:error = printf('File: "%s" is not found.', l:args[0])
+  if l:use_cygpty
+    if g:vimshell_interactive_cygwin_home != ''
+      " Set $HOME.
+      let l:home_save = $HOME
+      let $HOME = g:vimshell_interactive_cygwin_home
+    endif
+  endif
 
-    call vimshell#error_line(a:fd, l:error)
+  let l:sub = vimproc#ptyopen(l:args)
 
-    return 0
-  endtry
+  if l:use_cygpty
+    if g:vimshell_interactive_cygwin_home != ''
+      " Restore $HOME.
+      let $HOME = l:home_save
+    endif
+  endif
 
   call s:init_bg(l:sub, l:args, a:fd, a:other_info)
 
@@ -85,22 +132,18 @@ function! vimshell#internal#iexe#execute(program, args, fd, other_info)"{{{
         \ 'encoding' : l:options['--encoding'],
         \ 'is_secret': 0, 
         \ 'prompt_history' : {}, 
-        \ 'command_history' : [], 
-        \ 'is_pty' : (!vimshell#iswin() || (l:args[0] == 'fakecygpty')),
+        \ 'command_history' : vimshell#interactive#load_history(), 
+        \ 'is_pty' : (!vimshell#iswin() || l:use_cygpty),
         \ 'is_background': 0, 
-        \ 'cached_output' : '', 
         \ 'args' : l:args,
+        \ 'echoback_linenr' : 0
         \}
 
   call vimshell#interactive#execute_pty_out(1)
-  if getline(line('$')) =~ '^\s*$'
-    let b:interactive.prompt_history[line('$')] = ''
-    call setline(line('$'), '...')
-  endif
 
   startinsert!
 
-  return 1
+  wincmd p
 endfunction"}}}
 
 function! vimshell#internal#iexe#vimshell_iexe(args)"{{{
@@ -112,69 +155,25 @@ function! vimshell#internal#iexe#default_settings()"{{{
   setlocal noswapfile
   setlocal wrap
   setlocal tabstop=8
+  setlocal omnifunc=vimshell#complete#interactive_history_complete#omnifunc
 
   " Set syntax.
   syn region   InteractiveError   start=+!!!+ end=+!!!+ contains=InteractiveErrorHidden oneline
   syn match   InteractiveErrorHidden            '!!!' contained
-  syn match   InteractivePrompt         '^->\s\|^\.\.\.$'
   syn match   InteractiveMessage   '\*\%(Exit\|Killed\)\*'
   
   hi def link InteractiveMessage WarningMsg
   hi def link InteractiveError Error
   hi def link InteractiveErrorHidden Ignore
-  if has('gui_running')
-    hi InteractivePrompt  gui=UNDERLINE guifg=#80ffff guibg=NONE
-  else
-    hi def link InteractivePrompt Identifier
-  endif
 
-  " Plugin key-mappings.
-  inoremap <buffer><silent> <Plug>(vimshell_int_previous_history)  <ESC>:<C-u>call vimshell#int_mappings#previous_command()<CR>
-  inoremap <buffer><silent> <Plug>(vimshell_int_next_history)  <ESC>:<C-u>call vimshell#int_mappings#next_command()<CR>
-  inoremap <buffer><silent> <Plug>(vimshell_int_move_head)  <ESC>:<C-u>call vimshell#int_mappings#move_head()<CR>
-  inoremap <buffer><silent> <Plug>(vimshell_int_delete_line)  <ESC>:<C-u>call vimshell#int_mappings#delete_line()<CR>
-  inoremap <buffer><silent> <Plug>(vimshell_int_execute_line)       <ESC>:<C-u>call vimshell#int_mappings#execute_line(1)<CR>
-  inoremap <buffer><silent> <Plug>(vimshell_int_interrupt)       <C-o>:<C-u>call <SID>on_interrupt(bufname('%'))<CR>
-  inoremap <buffer><expr> <Plug>(vimshell_int_delete_backword_char)  vimshell#int_mappings#delete_backword_char(0)
-  inoremap <buffer><expr> <Plug>(vimshell_int_another_delete_backword_char)  vimshell#int_mappings#delete_backword_char(1)
-
-  imap <buffer> <C-h>     <Plug>(vimshell_int_delete_backword_char)
-  imap <buffer> <BS>     <Plug>(vimshell_int_delete_backword_char)
-  imap <buffer><expr> <TAB>   pumvisible() ? "\<C-n>" : vimshell#complete#interactive_command_complete#complete()
-  imap <buffer> <C-a>     <Plug>(vimshell_int_move_head)
-  imap <buffer> <C-u>     <Plug>(vimshell_int_delete_line)
-  inoremap <expr> <SID>(bs-ctrl-])    getline('.')[col('.') - 2] ==# "\<C-]>" ? "\<BS>" : ''
-  imap <buffer> <C-]>               <C-]><SID>(bs-ctrl-])
-  imap <buffer> <CR>      <C-]><Plug>(vimshell_int_execute_line)
-  imap <buffer> <C-c>     <Plug>(vimshell_int_interrupt)
-
-  nnoremap <buffer><silent> <Plug>(vimshell_int_previous_prompt)  :<C-u>call vimshell#int_mappings#previous_prompt()<CR>
-  nnoremap <buffer><silent> <Plug>(vimshell_int_next_prompt)  :<C-u>call vimshell#int_mappings#next_prompt()<CR>
-  nnoremap <buffer><silent> <Plug>(vimshell_int_execute_line)  :<C-u>call vimshell#int_mappings#execute_line(0)<CR><ESC>
-  nnoremap <buffer><silent> <Plug>(vimshell_int_paste_prompt)  :<C-u>call vimshell#int_mappings#paste_prompt()<CR>
-  nnoremap <buffer><silent> <Plug>(vimshell_int_interrupt)       :<C-u>call <SID>on_interrupt(bufname('%'))<CR>
-  nnoremap <buffer><silent> <Plug>(vimshell_int_exit)       :<C-u>call <SID>on_exit()<CR>
-  nnoremap <buffer><silent> <Plug>(vimshell_int_restart_command)       :<C-u>call vimshell#int_mappings#restart_command()<CR>
-
-  nmap <buffer> <C-p>     <Plug>(vimshell_int_previous_prompt)
-  nmap <buffer> <C-n>     <Plug>(vimshell_int_next_prompt)
-  nmap <buffer> <CR>      <Plug>(vimshell_int_execute_line)
-  nmap <buffer> <C-y>     <Plug>(vimshell_int_paste_prompt)
-  nmap <buffer> <C-r>     <Plug>(vimshell_int_restart_command)
-  nmap <buffer> <C-c>     <Plug>(vimshell_int_interrupt)
-  nmap <buffer> q         <Plug>(vimshell_int_exit)
+  " Define mappings.
+  call vimshell#int_mappings#define_default_mappings()
 endfunction"}}}
 
 function! s:init_bg(sub, args, fd, other_info)"{{{
   " Save current directiory.
   let l:cwd = getcwd()
 
-  " Init buffer.
-  if a:other_info.is_interactive
-    let l:context = a:other_info
-    let l:context.fd = a:fd
-    call vimshell#print_prompt(l:context)
-  endif
   " Split nicely.
   call vimshell#split_nicely()
 
@@ -183,61 +182,43 @@ function! s:init_bg(sub, args, fd, other_info)"{{{
 
   call vimshell#internal#iexe#default_settings()
   
-  set filetype=interactive
-  execute 'set filetype=int-'.fnamemodify(a:args[0], ':r')
+  let l:use_cygpty = vimshell#iswin() && a:args[0] =~ '^fakecygpty\%(\.exe\)\?$'
+  execute 'set filetype=int-'.fnamemodify(l:use_cygpty ? a:args[1] : a:args[0], ':t:r')
 
   " Set autocommands.
   augroup vimshell_iexe
-    autocmd BufUnload <buffer>       call s:on_interrupt(expand('<afile>'))
+    autocmd InsertEnter <buffer>       call s:insert_enter()
+    autocmd InsertLeave <buffer>       call s:insert_leave()
+    autocmd BufUnload <buffer>       call vimshell#interactive#hang_up(expand('<afile>'))
     autocmd BufWinLeave,WinLeave <buffer>       let s:last_interactive_bufnr = expand('<afile>')
-    autocmd CursorMovedI <buffer>  call s:on_moved()
     autocmd CursorHoldI <buffer>  call s:on_hold_i()
+    autocmd CursorMovedI <buffer>  call s:on_moved_i()
   augroup END
-
-  $
-
-  startinsert!
 endfunction"}}}
 
+function! s:insert_enter()"{{{
+  if &updatetime > g:vimshell_interactive_update_time
+    let s:update_time_save = &updatetime
+    let &updatetime = g:vimshell_interactive_update_time
+  endif
+endfunction"}}}
+function! s:insert_leave()"{{{
+  if &updatetime < s:update_time_save
+    let &updatetime = s:update_time_save
+  endif
+endfunction"}}}
 function! s:on_hold_i()"{{{
+  if line('.') == line('$')
+    call vimshell#interactive#check_output(b:interactive, bufnr('%'), bufnr('%'))
+    if b:interactive.process.is_valid
+      " Ignore key sequences.
+      call feedkeys("\<C-r>\<ESC>", 'n')
+    endif
+  endif
+endfunction"}}}
+function! s:on_moved_i()"{{{
   call vimshell#interactive#check_output(b:interactive, bufnr('%'), bufnr('%'))
-  
-  if b:interactive.process.is_valid
-    call feedkeys("\<C-r>\<ESC>", 'n')
-  endif
 endfunction"}}}
-function! s:on_moved()"{{{
-  let l:line = getline('.')
-  if l:line =~ '^\.\.\.\.\?[^.]\+$\|^$'
-    " Set prompt.
-    call setline('.', '-> ' . l:line[len(matchstr(l:line, '^\.\.\.\.\?')) :])
-    startinsert!
-  endif
-endfunction"}}}
-function! s:on_interrupt(afile)"{{{
-  call vimshell#interactive#hang_up(a:afile)
-endfunction "}}}
-function! s:on_exit()"{{{
-  if !b:interactive.process.is_valid
-    bdelete
-  endif  
-endfunction "}}}
-
-" Interactive options."{{{
-if vimshell#iswin()
-  " Windows only.
-  let s:interactive_option = {
-        \ 'bash' : '-i', 'bc' : '-i', 'irb' : '--inf-ruby-mode', 
-        \ 'gosh' : '-i', 'python' : '-i', 'zsh' : '-i', 
-        \ 'powershell' : '-Command -', 
-        \ 'termtter'   : '--monochrome', 
-        \ 'scala'   : '--Xnojline', 'nyaos' : '-t',
-        \}
-else
-  let s:interactive_option = {
-        \'termtter' : '--monochrome', 
-        \}
-endif"}}}
 
 " Command functions.
 function! s:send_string(line1, line2, string)"{{{

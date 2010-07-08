@@ -25,8 +25,8 @@ function! neocomplcache#plugin#snipMate_complete#get_keyword_list(cur_keyword_st
 
   let ft = empty(&filetype) ? '_' : &filetype
   if !has_key(s:snip_list, ft)
-    let l:abbr_pattern = printf('%%.%ds..%%s', g:NeoComplCache_MaxKeywordWidth-10)
-    let l:menu_pattern = '<S> %.'.g:NeoComplCache_MaxFilenameWidth.'s'
+    let l:abbr_pattern = printf('%%.%ds..%%s', g:neocomplcache_max_keyword_width-10)
+    let l:menu_pattern = '<S> %.'.g:neocomplcache_max_filename_width.'s'
 
     let list = []
     for trig in keys(snips)
@@ -40,7 +40,7 @@ function! neocomplcache#plugin#snipMate_complete#get_keyword_list(cur_keyword_st
         \ substitute(s:triger, '\n', '', 'g'),
         \ '\s', ' ', 'g')
       let l:abbr =
-        \ (len(l:abbr) > g:NeoComplCache_MaxKeywordWidth) ?
+        \ (len(l:abbr) > g:neocomplcache_max_keyword_width) ?
         \ printf(l:abbr_pattern, l:abbr, l:abbr[-8:]) : l:abbr
 
       let l:menu = printf(l:menu_pattern, trig)

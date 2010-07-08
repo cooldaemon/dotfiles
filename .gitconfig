@@ -21,4 +21,6 @@
 	svr = svn rebase
 	svci = svn dcommit
 	svf = svn fetch svn
+[merge]
+	tool = gvimdiff
 

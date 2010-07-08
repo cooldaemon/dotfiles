@@ -1,6 +1,6 @@
 "=============================================================================
 " FILE: dirs.vim
-" AUTHOR: Shougo Matsushita <Shougo.Matsu@gmail.com>(Modified)
+" AUTHOR: Shougo Matsushita <Shougo.Matsu@gmail.com>
 " Last Modified: 02 Apr 2010
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
@@ -24,7 +24,7 @@
 " }}}
 "=============================================================================
 
-function! vimshell#internal#dirs#execute(program, args, fd, other_info)
+function! vimshell#internal#dirs#execute(command, args, fd, other_info)
     " Print directory stack.
     
     let l:cnt = 0
@@ -33,7 +33,7 @@ function! vimshell#internal#dirs#execute(program, args, fd, other_info)
         " Default max value.
         let l:max = 20
     elseif l:arguments =~ '^\d\+$'
-        let l:max = str2nr(a:args)
+        let l:max = str2nr(l:arguments)
     else
         " Ignore arguments.
         let l:max = len(b:vimshell.directory_stack)

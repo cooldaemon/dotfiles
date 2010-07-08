@@ -1,6 +1,6 @@
 "=============================================================================
 " FILE: eval.vim
-" AUTHOR: Shougo Matsushita <Shougo.Matsu@gmail.com>(Modified)
+" AUTHOR: Shougo Matsushita <Shougo.Matsu@gmail.com>
 " Last Modified: 13 Apr 2010
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
@@ -24,7 +24,7 @@
 " }}}
 "=============================================================================
 
-function! vimshell#internal#eval#execute(program, args, fd, other_info)
+function! vimshell#internal#eval#execute(command, args, fd, other_info)
   " Evaluate arguments.
 
   let l:line = join(a:args)
@@ -36,15 +36,10 @@ function! vimshell#internal#eval#execute(program, args, fd, other_info)
         \}
 
   try
-    let l:skip_prompt = vimshell#parser#eval_script(l:line, l:context)
+    call vimshell#parser#eval_script(l:line, l:context)
   catch /.*/
     let l:message = v:exception . ' ' . v:throwpoint
     call vimshell#error_line({}, l:message)
     return
   endtry
-
-  if l:skip_prompt
-    " Skip prompt.
-    return 1
-  endif
 endfunction

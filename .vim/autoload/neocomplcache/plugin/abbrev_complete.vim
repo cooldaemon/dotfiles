@@ -1,8 +1,7 @@
 "=============================================================================
-" FILE: alias.vim
-" AUTHOR: Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 02 May 2010
-" Usage: Just source this file.
+" FILE: abbrev_complete.vim
+" AUTHOR:  Shougo Matsushita <Shougo.Matsu@gmail.com>
+" Last Modified: 02 Jun 2010
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -25,31 +24,33 @@
 " }}}
 "=============================================================================
 
-function! vimshell#special#alias#execute(program, args, fd, other_info)
-  let l:args = join(a:args)
-  
-  if empty(a:args)
-    " View all aliases.
-    for alias in keys(b:vimshell.alias_table)
-      call vimshell#print_line(a:fd, printf('%s=%s', alias, vimshell#get_alias(alias)))
-    endfor
-  elseif l:args =~ vimshell#get_alias_pattern().'$'
-    " View alias.
-    call vimshell#print_line(a:fd, printf('%s=%s', a:args[0], vimshell#get_alias(a:args[0])))
-  else
-    " Define alias.
+function! neocomplcache#plugin#abbrev_complete#initialize()"{{{
+  " Initialize.
+endfunction"}}}
 
-    " Parse command line.
-    let l:alias_name = matchstr(l:args, vimshell#get_alias_pattern().'\ze\s*=\s*')
+function! neocomplcache#plugin#abbrev_complete#finalize()"{{{
+endfunction"}}}
 
-    " Next.
-    if l:alias_name == ''
-      throw 'Wrong syntax: ' . l:args
+function! neocomplcache#plugin#abbrev_complete#get_keyword_list(cur_keyword_str)"{{{
+  " Get current abbrev list.
+  redir => l:abbrev_list
+  silent! iabbrev
+  redir END
+
+  let l:list = []
+  for l:line in split(l:abbrev_list, '\n')
+    let l:abbrev = split(l:line)
+
+    if l:abbrev[0] !~ '^[!ac]$'
+      " No abbreviation found.
+      return []
     endif
 
-    " Skip =.
-    let l:expression = l:args[matchend(l:args, '\s*=\s*') :]
+    call add(l:list, 
+          \{ 'word' : l:abbrev[1], 'menu' : printf('[A] %.'. g:neocomplcache_max_filename_width.'s', l:abbrev[2]) })
+  endfor
 
-    call vimshell#set_alias(l:alias_name, l:expression)
-  endif
-endfunction
+  return l:list
+endfunction"}}}
+
+" vim: foldmethod=marker

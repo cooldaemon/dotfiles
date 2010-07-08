@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: spell_complete.vim
 " AUTHOR:  Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 25 Apr 2010
+" Last Modified: 01 Jul 2010
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -32,14 +32,14 @@ function! neocomplcache#plugin#spell_complete#finalize()"{{{
 endfunction"}}}
 
 function! neocomplcache#plugin#spell_complete#get_keyword_list(cur_keyword_str)"{{{
-  if !&spell || neocomplcache#is_auto_complete() || len(a:cur_keyword_str) < 4
+  if !&spell || !neocomplcache#is_text_mode() || neocomplcache#is_auto_complete() || len(a:cur_keyword_str) < 4
     return []
   endif
 
   let l:list = []
   for l:keyword in spellsuggest(a:cur_keyword_str)
-    call add(l:list, { 'word' : l:keyword, 'menu' : '[Spell]', 'icase' : 1 })
-  endfor
+    call add(l:list, { 'word' : l:keyword, 'menu' : '[Spell]' })
+  end
 
   return l:list
 endfunction"}}}

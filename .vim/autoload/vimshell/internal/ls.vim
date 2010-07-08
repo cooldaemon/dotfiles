@@ -1,6 +1,6 @@
 "=============================================================================
 " FILE: ls.vim
-" AUTHOR: Shougo Matsushita <Shougo.Matsu@gmail.com>(Modified)
+" AUTHOR: Shougo Matsushita <Shougo.Matsu@gmail.com>
 " Last Modified: 26 Jun 2009
 " Usage: Just source this file.
 " License: MIT license  {{{
@@ -56,7 +56,7 @@
 ""}}}
 "=============================================================================
 
-function! vimshell#internal#ls#execute(program, args, fd, other_info)
+function! vimshell#internal#ls#execute(command, args, fd, other_info)
     let l:arguments = a:args
 
     " Check pipe.

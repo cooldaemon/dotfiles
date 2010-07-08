@@ -1,8 +1,7 @@
 "=============================================================================
-" FILE: alias.vim
+" FILE: popd.vim
 " AUTHOR: Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 02 May 2010
-" Usage: Just source this file.
+" Last Modified: 12 Jun 2010
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -25,31 +24,7 @@
 " }}}
 "=============================================================================
 
-function! vimshell#special#alias#execute(program, args, fd, other_info)
-  let l:args = join(a:args)
-  
-  if empty(a:args)
-    " View all aliases.
-    for alias in keys(b:vimshell.alias_table)
-      call vimshell#print_line(a:fd, printf('%s=%s', alias, vimshell#get_alias(alias)))
-    endfor
-  elseif l:args =~ vimshell#get_alias_pattern().'$'
-    " View alias.
-    call vimshell#print_line(a:fd, printf('%s=%s', a:args[0], vimshell#get_alias(a:args[0])))
-  else
-    " Define alias.
-
-    " Parse command line.
-    let l:alias_name = matchstr(l:args, vimshell#get_alias_pattern().'\ze\s*=\s*')
-
-    " Next.
-    if l:alias_name == ''
-      throw 'Wrong syntax: ' . l:args
-    endif
-
-    " Skip =.
-    let l:expression = l:args[matchend(l:args, '\s*=\s*') :]
-
-    call vimshell#set_alias(l:alias_name, l:expression)
-  endif
-endfunction
+function! vimshell#complete#internal#popd#get_complete_words(args)"{{{
+  return vimshell#complete#helper#directory_stack(a:args[-1])
+endfunction"}}}
+" vim: foldmethod=marker
