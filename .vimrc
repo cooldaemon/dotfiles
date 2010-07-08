@@ -134,6 +134,7 @@ set omnifunc=syntaxcomplete#Complete
 
 imap <C-o> <C-x><C-o>
 imap <C-l> <C-x><C-l>
+imap <C-u> <C-x><C-u>
 
 "==<buffer>=================================================================
 nmap <DOWN> :bn!<CR>
