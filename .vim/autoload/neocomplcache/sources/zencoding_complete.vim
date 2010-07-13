@@ -1,14 +1,16 @@
-let s:save_cpo = &cpo
-set cpo&vim
+let s:source = {
+      \ 'name' : 'zencoding_complete',
+      \ 'kind' : 'plugin',
+      \}
 
-function! neocomplcache#plugin#zencoding_complete#initialize()
+function! s:source.initialize()
   let s:snip_list = {}
 endfunction
 
-function! neocomplcache#plugin#zencoding_complete#finalize()
+function! s:source.finalize()
 endfunction
 
-function! neocomplcache#plugin#zencoding_complete#get_keyword_list(cur_keyword_str)
+function! s:source.get_keyword_list(cur_keyword_str)
   let snips = g:get_zen_snippets_list(&filetype)
   if empty(snips)
     return []
@@ -43,6 +45,7 @@ function! neocomplcache#plugin#zencoding_complete#get_keyword_list(cur_keyword_s
   return neocomplcache#keyword_filter(copy(list), a:cur_keyword_str)
 endfunction
 
-let &cpo = s:save_cpo
-unlet s:save_cpo
+function! neocomplcache#sources#zencoding_complete#define()
+  return s:source
+endfunction
 

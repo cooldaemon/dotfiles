@@ -1,23 +1,16 @@
-" A plugin for neocomplecache to complete snipMate snippets.
-" Version: 0.0
-" Author : thinca <http://d.hatena.ne.jp/thinca/>
-" License: Creative Commons Attribution 2.1 Japan License
-"          <http://creativecommons.org/licenses/by/2.1/jp/deed.en>
+let s:source = {
+      \ 'name' : 'snipMate_complete',
+      \ 'kind' : 'plugin',
+      \}
 
-
-let s:save_cpo = &cpo
-set cpo&vim
-
-
-function! neocomplcache#plugin#snipMate_complete#initialize() "{{{
-  " Initialize
+function! s:source.initialize()
   let s:snip_list = {}
-endfunction "}}}
+endfunction
 
-function! neocomplcache#plugin#snipMate_complete#finalize() "{{{
-endfunction "}}}
+function! s:source.finalize()
+endfunction
 
-function! neocomplcache#plugin#snipMate_complete#get_keyword_list(cur_keyword_str) "{{{
+function! s:source.get_keyword_list(cur_keyword_str)
   let snips = GetSnippetsList(&filetype)
   if empty(snips)
     return []
@@ -54,9 +47,9 @@ function! neocomplcache#plugin#snipMate_complete#get_keyword_list(cur_keyword_st
   endif
 
   return neocomplcache#keyword_filter(copy(list), a:cur_keyword_str)
-endfunction "}}}
+endfunction
 
-let &cpo = s:save_cpo
-unlet s:save_cpo
+function! neocomplcache#sources#snipMate_complete#define()
+  return s:source
+endfunction
 
-" vim: foldmethod=marker
