@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: vimshell.vim
 " AUTHOR: Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 18 Jun 2010
+" Last Modified: 02 Jul 2010
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -89,11 +89,20 @@ if !exists('g:vimshell_escape_colors')
         \'#686868', '#ff6666', '#66ff66', '#ffd30a', '#6699ff', '#f820ff', '#4ae2e2', '#ffffff',
         \]
 endif
+if !exists('g:vimshell_disable_escape_highlight')
+  let g:vimshell_disable_escape_highlight = 0
+endif
 if !exists('g:vimshell_cat_command')
   let g:vimshell_cat_command = 'cat'
 endif
+if !exists('g:vimshell_environment_term')
+  let g:vimshell_environment_term = 'vt100'
+endif
 if !exists('g:vimshell_split_command')
   let g:vimshell_split_command = ''
+endif
+if !exists('g:vimshell_external_history_path')
+  let g:vimshell_external_history_path = ''
 endif
 if !exists('g:vimshell_no_save_history_commands')
   let g:vimshell_no_save_history_commands = { 'history' : 1, 'h' : 1, 'histdel' : 1 }
@@ -128,6 +137,7 @@ command! -nargs=? -complete=dir VimShellCreate call vimshell#create_shell(0, <q-
 command! -nargs=? -complete=dir VimShellPop call vimshell#switch_shell(1, <q-args>)
 command! -nargs=+ -complete=customlist,vimshell#complete#vimshell_execute_complete#completefunc VimShellExecute call vimshell#internal#bg#vimshell_bg(<q-args>)
 command! -nargs=+ -complete=customlist,vimshell#complete#vimshell_execute_complete#completefunc VimShellInteractive call vimshell#internal#iexe#vimshell_iexe(<q-args>)
+command! -nargs=+ -complete=customlist,vimshell#complete#vimshell_execute_complete#completefunc VimShellTerminal call vimshell#internal#texe#vimshell_texe(<q-args>)
 command! -nargs=+ -complete=customlist,vimshell#complete#vimshell_execute_complete#completefunc VimShellBang call s:bang(<q-args>)
 command! -nargs=+ -complete=customlist,vimshell#complete#vimshell_execute_complete#completefunc VimShellRead call s:read(<q-args>)
 
@@ -148,7 +158,7 @@ function! s:read(cmdline)"{{{
   call append('.', split(vimshell#system(l:program . ' ' . l:script), '\n'))
 endfunction"}}}
 
-augroup VimShell
+augroup vimshell
   " Detect vimshell rc file.
   autocmd BufNewFile,BufRead *.vimsh,.vimshrc set filetype=vimshrc
 augroup END

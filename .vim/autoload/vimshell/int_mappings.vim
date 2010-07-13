@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: int_mappings.vim
 " AUTHOR: Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 28 Jun 2010
+" Last Modified: 03 Jul 2010
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -24,31 +24,32 @@
 " }}}
 "=============================================================================
 
-" Plugin key-mappings."{{{
-inoremap <silent> <Plug>(vimshell_int_previous_history)  <ESC>:<C-u>call <SID>previous_command()<CR>
-inoremap <silent> <Plug>(vimshell_int_next_history)  <ESC>:<C-u>call <SID>next_command()<CR>
-inoremap <silent> <Plug>(vimshell_int_move_head)  <ESC>:<C-u>call <SID>move_head()<CR>
-inoremap <silent> <Plug>(vimshell_int_delete_line)  <ESC>:<C-u>call <SID>delete_line()<CR>
-inoremap <expr> <Plug>(vimshell_int_delete_word)  <SID>delete_word()
-inoremap <silent> <Plug>(vimshell_int_execute_line)       <C-g>u<ESC>:<C-u>call <SID>execute_line(1)<CR>
-inoremap <silent> <Plug>(vimshell_int_interrupt)       <C-o>:<C-u>call vimshell#interactive#hang_up(bufname('%'))<CR>
-inoremap <expr> <Plug>(vimshell_int_delete_backword_char)  <SID>delete_backword_char(0)
-inoremap <expr> <Plug>(vimshell_int_another_delete_backword_char)  <SID>delete_backword_char(1)
-inoremap <expr> <Plug>(vimshell_int_history_complete)  vimshell#complete#interactive_history_complete#complete()
-inoremap <expr> <SID>(bs-ctrl-])    getline('.')[col('.') - 2] ==# "\<C-]>" ? "\<BS>" : ''
-
-nnoremap <silent> <Plug>(vimshell_int_previous_prompt)  :<C-u>call <SID>previous_prompt()<CR>
-nnoremap <silent> <Plug>(vimshell_int_next_prompt)  :<C-u>call <SID>next_prompt()<CR>
-nnoremap <silent> <Plug>(vimshell_int_execute_line)  :<C-u>call <SID>execute_line(0)<CR>
-nnoremap <silent> <Plug>(vimshell_int_paste_prompt)  :<C-u>call <SID>paste_prompt()<CR>
-nnoremap <silent> <Plug>(vimshell_int_interrupt)       :<C-u>call vimshell#interactive#hang_up(bufname('%'))<CR>
-nnoremap <silent> <Plug>(vimshell_int_exit)       :<C-u>call <SID>exit()<CR>
-nnoremap <silent> <Plug>(vimshell_int_restart_command)       :<C-u>call <SID>restart_command()<CR>
-nnoremap <expr> <Plug>(vimshell_int_change_line) printf('0%dlc$', strlen(vimshell#interactive#get_prompt()))
-nmap  <Plug>(vimshell_int_delete_line) <Plug>(vimshell_int_change_line)<ESC>
-"}}}
-
 function! vimshell#int_mappings#define_default_mappings()"{{{
+  " Plugin key-mappings."{{{
+  inoremap <silent> <Plug>(vimshell_int_previous_history)  <ESC>:<C-u>call <SID>previous_command()<CR>
+  inoremap <silent> <Plug>(vimshell_int_next_history)  <ESC>:<C-u>call <SID>next_command()<CR>
+  inoremap <silent> <Plug>(vimshell_int_move_head)  <ESC>:<C-u>call <SID>move_head()<CR>
+  inoremap <silent> <Plug>(vimshell_int_delete_line)  <ESC>:<C-u>call <SID>delete_line()<CR>
+  inoremap <expr> <Plug>(vimshell_int_delete_word)  <SID>delete_word()
+  inoremap <silent> <Plug>(vimshell_int_execute_line)       <C-g>u<ESC>:<C-u>call <SID>execute_line(1)<CR>
+  inoremap <silent> <Plug>(vimshell_int_interrupt)       <C-o>:<C-u>call vimshell#interactive#hang_up(bufname('%'))<CR>
+  inoremap <expr> <Plug>(vimshell_int_delete_backword_char)  <SID>delete_backword_char(0)
+  inoremap <expr> <Plug>(vimshell_int_another_delete_backword_char)  <SID>delete_backword_char(1)
+  inoremap <expr> <Plug>(vimshell_int_history_complete)  vimshell#complete#interactive_history_complete#complete()
+  inoremap <expr> <Plug>(vimshell_int_send_input)  <ESC>:<C-u>call vimshell#interactive#send_input()<CR>
+  inoremap <expr> <SID>(bs-ctrl-])    getline('.')[col('.') - 2] ==# "\<C-]>" ? "\<BS>" : ''
+
+  nnoremap <silent> <Plug>(vimshell_int_previous_prompt)  :<C-u>call <SID>previous_prompt()<CR>
+  nnoremap <silent> <Plug>(vimshell_int_next_prompt)  :<C-u>call <SID>next_prompt()<CR>
+  nnoremap <silent> <Plug>(vimshell_int_execute_line)  :<C-u>call <SID>execute_line(0)<CR>
+  nnoremap <silent> <Plug>(vimshell_int_paste_prompt)  :<C-u>call <SID>paste_prompt()<CR>
+  nnoremap <silent> <Plug>(vimshell_int_interrupt)       :<C-u>call vimshell#interactive#hang_up(bufname('%'))<CR>
+  nnoremap <silent> <Plug>(vimshell_int_exit)       :<C-u>call <SID>exit()<CR>
+  nnoremap <silent> <Plug>(vimshell_int_restart_command)       :<C-u>call <SID>restart_command()<CR>
+  nnoremap <expr> <Plug>(vimshell_int_change_line) printf('0%dlc$', strlen(vimshell#interactive#get_prompt()))
+  nmap  <Plug>(vimshell_int_delete_line) <Plug>(vimshell_int_change_line)<ESC>
+  "}}}
+
   if (exists('g:vimshell_no_default_keymappings') && g:vimshell_no_default_keymappings)
     return
   endif
@@ -77,13 +78,19 @@ function! vimshell#int_mappings#define_default_mappings()"{{{
   imap <buffer> <CR>      <C-]><Plug>(vimshell_int_execute_line)
   imap <buffer> <C-c>     <Plug>(vimshell_int_interrupt)
   imap <buffer> <C-k>  <Plug>(vimshell_int_history_complete)
+"  imap <buffer> <C-v>  <Plug>(vimshell_int_send_input)
 endfunction"}}}
 
 " vimshell interactive key-mappings functions.
 function! s:delete_backword_char(is_auto_select)"{{{
-  let l:prefix = pumvisible() ? (a:is_auto_select? (
-        \ exists('*neocomplcache#cancel_popup')? neocomplcache#cancel_popup() : "\<C-e>")
-        \ : "\<C-y>") : ""
+  if !pumvisible()
+    let l:prefix = ''
+  elseif a:is_auto_select || (exists('g:neocomplcache_enable_auto_select') && g:neocomplcache_enable_auto_select)
+    let l:prefix = "\<C-e>"
+  else
+    let l:prefix = "\<C-y>"
+  endif
+  
   " Prevent backspace over prompt
   if !has_key(b:interactive.prompt_history, line('.')) || getline('.')[: col('.')-2] !=# b:interactive.prompt_history[line('.')]
     return l:prefix . "\<BS>"

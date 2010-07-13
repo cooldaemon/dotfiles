@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: texe.vim
 " AUTHOR: Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 28 Jun 2010
+" Last Modified: 07 Jul 2010
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -55,8 +55,13 @@ function! vimshell#internal#texe#execute(command, args, fd, other_info)"{{{
 
   let l:cmdname = fnamemodify(l:args[0], ':r')
   if !has_key(l:options, '--encoding')
-    let l:options['--encoding'] = has_key(g:vimshell_interactive_encodings, l:cmdname) ?
-          \ g:vimshell_interactive_encodings[l:cmdname] : &termencoding
+    if vimshell#iswin()
+      " Use UTF-8 Cygwin.
+      let l:options['--encoding'] = 'utf8'
+    else
+      let l:options['--encoding'] = has_key(g:vimshell_interactive_encodings, l:cmdname) ?
+            \ g:vimshell_interactive_encodings[l:cmdname] : &termencoding
+    endif
   endif
 
   " Encoding conversion.
@@ -78,6 +83,8 @@ function! vimshell#internal#texe#execute(command, args, fd, other_info)"{{{
     endif
   endif
 
+  call s:init_bg(l:args, a:fd, a:other_info)
+  
   let l:sub = vimproc#ptyopen(l:args)
 
   if vimshell#iswin()
@@ -86,8 +93,6 @@ function! vimshell#internal#texe#execute(command, args, fd, other_info)"{{{
       let $HOME = l:home_save
     endif
   endif
-
-  call s:init_bg(l:sub, l:args, a:fd, a:other_info)
 
   " Set variables.
   let b:interactive = {
@@ -102,34 +107,47 @@ function! vimshell#internal#texe#execute(command, args, fd, other_info)"{{{
         \ 'args' : l:args,
         \ 'echoback_linenr' : 0,
         \ 'save_cursor' : getpos('.'),
+        \ 'width' : winwidth(0),
+        \ 'height' : winheight(0),
         \}
+  call vimshell#interactive#init()
 
-  startinsert!
-
-  wincmd p
+  if !has_key(a:other_info, 'is_split') || a:other_info.is_split
+    wincmd p
+  endif
 endfunction"}}}
 
 function! vimshell#internal#texe#vimshell_texe(args)"{{{
-  call vimshell#internal#texe#execute('texe', vimshell#parser#split_args(a:args), {'stdin' : '', 'stdout' : '', 'stderr' : ''}, {'is_interactive' : 0})
+  call vimshell#internal#texe#execute('texe', vimshell#parser#split_args(a:args), { 'stdin' : '', 'stdout' : '', 'stderr' : '' }, 
+        \ { 'is_interactive' : 0, 'is_split' : 1 })
 endfunction"}}}
 
 function! vimshell#internal#texe#default_settings()"{{{
+  " Set environment variables.
+  let $TERMCAP = 'COLUMNS=' . winwidth(0)
+  let $VIMSHELL = 1
+  let $COLUMNS = winwidth(0)-5
+  let $LINES = winheight(0)
+  let $VIMSHELL_TERM = 'terminal'
+
+  " Define mappings.
+  call vimshell#term_mappings#define_default_mappings()
+  
   setlocal buftype=nofile
   setlocal noswapfile
   setlocal nowrap
   setlocal tabstop=8
   setfiletype vimshell-term
-
-  " Define mappings.
-  call vimshell#term_mappings#define_default_mappings()
 endfunction"}}}
 
-function! s:init_bg(sub, args, fd, other_info)"{{{
+function! s:init_bg(args, fd, other_info)"{{{
   " Save current directiory.
   let l:cwd = getcwd()
 
-  " Split nicely.
-  call vimshell#split_nicely()
+  if !has_key(a:other_info, 'is_split') || a:other_info.is_split
+    " Split nicely.
+    call vimshell#split_nicely()
+  endif
 
   edit `=fnamemodify(a:args[0], ':r').'$'.(bufnr('$')+1)`
   lcd `=l:cwd`
@@ -137,7 +155,7 @@ function! s:init_bg(sub, args, fd, other_info)"{{{
   call vimshell#internal#texe#default_settings()
   
   " Set autocommands.
-  augroup vimshell_iexe
+  augroup vimshell-texe
     autocmd InsertEnter <buffer>       call s:insert_enter()
     autocmd InsertLeave <buffer>       call s:insert_leave()
     autocmd BufUnload <buffer>       call vimshell#interactive#hang_up(expand('<afile>'))
@@ -156,14 +174,17 @@ function! s:insert_enter()"{{{
     NeoComplCacheLock
   endif
 
-  call setpos('.', b:interactive.save_cursor)
-  if b:interactive.save_cursor[2] >= len(getline(b:interactive.save_cursor[1]))
-    startinsert!
-  else
-    normal! l
+  if winwidth(0) != b:interactive.width || winheight(0) != b:interactive.height
+    " Set new window size.
+    call b:interactive.process.set_winsize(winwidth(0), winheight(0))
   endif
+
+  call setpos('.', b:interactive.save_cursor)
+  startinsert
 endfunction"}}}
 function! s:insert_leave()"{{{
+  setlocal nomodifiable
+  
   if &updatetime < s:update_time_save
     let &updatetime = s:update_time_save
   endif

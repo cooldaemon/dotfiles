@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: iexe.vim
 " AUTHOR: Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 25 Jun 2010
+" Last Modified: 07 Jul 2010
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -24,7 +24,6 @@
 " }}}
 "=============================================================================
 
-let s:last_interactive_bufnr = 1
 let s:update_time_save = &updatetime
 
 " Set interactive options."{{{
@@ -114,6 +113,8 @@ function! vimshell#internal#iexe#execute(command, args, fd, other_info)"{{{
     endif
   endif
 
+  call s:init_bg(l:args, a:fd, a:other_info)
+  
   let l:sub = vimproc#ptyopen(l:args)
 
   if l:use_cygpty
@@ -123,8 +124,6 @@ function! vimshell#internal#iexe#execute(command, args, fd, other_info)"{{{
     endif
   endif
 
-  call s:init_bg(l:sub, l:args, a:fd, a:other_info)
-
   " Set variables.
   let b:interactive = {
         \ 'process' : l:sub, 
@@ -132,7 +131,7 @@ function! vimshell#internal#iexe#execute(command, args, fd, other_info)"{{{
         \ 'encoding' : l:options['--encoding'],
         \ 'is_secret': 0, 
         \ 'prompt_history' : {}, 
-        \ 'command_history' : vimshell#interactive#load_history(), 
+        \ 'command_history' : vimshell#history#interactive_read(), 
         \ 'is_pty' : (!vimshell#iswin() || l:use_cygpty),
         \ 'is_background': 0, 
         \ 'args' : l:args,
@@ -141,16 +140,32 @@ function! vimshell#internal#iexe#execute(command, args, fd, other_info)"{{{
 
   call vimshell#interactive#execute_pty_out(1)
 
-  startinsert!
+  if b:interactive.process.is_valid
+    startinsert!
+  endif
 
-  wincmd p
+  if !has_key(a:other_info, 'is_split') || a:other_info.is_split
+    wincmd p
+    
+    if has_key(a:other_info, 'is_split') && a:other_info.is_split
+      stopinsert
+    endif
+  endif
 endfunction"}}}
 
 function! vimshell#internal#iexe#vimshell_iexe(args)"{{{
-  call vimshell#internal#iexe#execute('iexe', vimshell#parser#split_args(a:args), {'stdin' : '', 'stdout' : '', 'stderr' : ''}, {'is_interactive' : 0})
+  call vimshell#internal#iexe#execute('iexe', vimshell#parser#split_args(a:args), { 'stdin' : '', 'stdout' : '', 'stderr' : '' }, 
+        \ { 'is_interactive' : 0, 'is_split' : 1 })
 endfunction"}}}
 
 function! vimshell#internal#iexe#default_settings()"{{{
+  " Set environment variables.
+  let $TERMCAP = 'COLUMNS=' . winwidth(0)
+  let $VIMSHELL = 1
+  let $COLUMNS = winwidth(0)-5
+  let $LINES = winheight(0)
+  let $VIMSHELL_TERM = 'interactive'
+
   setlocal buftype=nofile
   setlocal noswapfile
   setlocal wrap
@@ -170,27 +185,28 @@ function! vimshell#internal#iexe#default_settings()"{{{
   call vimshell#int_mappings#define_default_mappings()
 endfunction"}}}
 
-function! s:init_bg(sub, args, fd, other_info)"{{{
+function! s:init_bg(args, fd, other_info)"{{{
   " Save current directiory.
   let l:cwd = getcwd()
 
-  " Split nicely.
-  call vimshell#split_nicely()
+  if !has_key(a:other_info, 'is_split') || a:other_info.is_split
+    " Split nicely.
+    call vimshell#split_nicely()
+  endif
 
   edit `=fnamemodify(a:args[0], ':r').'@'.(bufnr('$')+1)`
   lcd `=l:cwd`
-
+  
   call vimshell#internal#iexe#default_settings()
   
   let l:use_cygpty = vimshell#iswin() && a:args[0] =~ '^fakecygpty\%(\.exe\)\?$'
   execute 'set filetype=int-'.fnamemodify(l:use_cygpty ? a:args[1] : a:args[0], ':t:r')
 
   " Set autocommands.
-  augroup vimshell_iexe
+  augroup vimshell-iexe
     autocmd InsertEnter <buffer>       call s:insert_enter()
     autocmd InsertLeave <buffer>       call s:insert_leave()
     autocmd BufUnload <buffer>       call vimshell#interactive#hang_up(expand('<afile>'))
-    autocmd BufWinLeave,WinLeave <buffer>       let s:last_interactive_bufnr = expand('<afile>')
     autocmd CursorHoldI <buffer>  call s:on_hold_i()
     autocmd CursorMovedI <buffer>  call s:on_moved_i()
   augroup END
@@ -219,35 +235,4 @@ endfunction"}}}
 function! s:on_moved_i()"{{{
   call vimshell#interactive#check_output(b:interactive, bufnr('%'), bufnr('%'))
 endfunction"}}}
-
-" Command functions.
-function! s:send_string(line1, line2, string)"{{{
-  let l:winnr = bufwinnr(s:last_interactive_bufnr)
-  if l:winnr <= 0
-    return
-  endif
-  
-  " Check alternate buffer.
-  if getwinvar(l:winnr, '&filetype') =~ '^int-'
-    if a:string != ''
-      let l:string = a:string . "\<LF>"
-    else
-      let l:string = join(getline(a:line1, a:line2), "\<LF>") . "\<LF>"
-    endif
-    let l:line = split(l:string, "\<LF>")[0]
-    
-    execute winnr('#') 'wincmd w'
-
-    " Save prompt.
-    let l:prompt = vimshell#interactive#get_prompt(line('$'))
-    let l:prompt_nr = line('$')
-    
-    " Send string.
-    call vimshell#interactive#send_string(l:string)
-    
-    call setline(l:prompt_nr, l:prompt . l:line)
-  endif
-endfunction"}}}
-
-command! -range -nargs=? VimShellSendString call s:send_string(<line1>, <line2>, <q-args>)
 

@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: term_mappings.vim
 " AUTHOR: Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 25 Jul 2010
+" Last Modified: 02 Jul 2010
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -24,14 +24,15 @@
 " }}}
 "=============================================================================
 
-" Plugin key-mappings."{{{
-nnoremap <silent> <Plug>(vimshell_term_interrupt)       :<C-u>call vimshell#interactive#hang_up(bufname('%'))<CR>
-nnoremap <silent> <Plug>(vimshell_term_exit)       :<C-u>call <SID>exit()<CR>
-inoremap <silent> <Plug>(vimshell_term_send_escape)       <C-o>:call vimshell#interactive#send_char(char2nr("\<ESC>"))<CR>
-inoremap <silent> <Plug>(vimshell_term_send_string)       <C-o>:call <SID>send_string()<CR>
-"}}}
-
 function! vimshell#term_mappings#define_default_mappings()"{{{
+  " Plugin key-mappings."{{{
+  nnoremap <silent> <Plug>(vimshell_term_interrupt)       :<C-u>call vimshell#interactive#hang_up(bufname('%'))<CR>
+  nnoremap <silent> <Plug>(vimshell_term_exit)       :<C-u>call <SID>exit()<CR>
+  nnoremap <silent> <Plug>(vimshell_start_insert)       :<C-u>call <SID>start_insert()<CR>
+  execute 'inoremap <silent> <Plug>(vimshell_term_send_escape)' printf('<ESC>:call vimshell#interactive#send_char(%s)<CR>', char2nr("\<ESC>"))
+  inoremap <silent> <Plug>(vimshell_term_send_input)       <ESC>:call vimshell#interactive#send_input()<CR>
+  "}}}
+
   for l:lhs in [
         \ 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n',
         \ 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
@@ -42,7 +43,7 @@ function! vimshell#term_mappings#define_default_mappings()"{{{
         \ '[', ']', '{', '}', ':', ';', '''', '"', ',', '<', '.', '>', '/', '?',
         \ ]
 
-    execute 'inoremap <buffer><silent>' l:lhs printf('<C-o>:call vimshell#interactive#send_char(%s)<CR>', char2nr(l:lhs))
+    execute 'inoremap <buffer><silent>' l:lhs printf('<ESC>:call vimshell#interactive#send_char(%s)<CR>', char2nr(l:lhs))
   endfor
   
   for [l:key, l:value] in items({
@@ -50,12 +51,12 @@ function! vimshell#term_mappings#define_default_mappings()"{{{
         \ '<C-h>' : "\<C-h>", '<C-i>' : "\<C-i>", '<C-j>' : "\<C-j>", '<C-k>' : "\<C-k>", '<C-l>' : "\<C-l>", '<C-m>' : "\<LF>", '<C-n>' : "\<C-n>",
         \ '<C-o>' : "\<C-o>", '<C-p>' : "\<C-p>", '<C-q>' : "\<C-q>", '<C-r>' : "\<C-r>", '<C-s>' : "\<C-s>", '<C-t>' : "\<C-t>", '<C-u>' : "\<C-u>",
         \ '<C-v>' : "\<C-v>", '<C-w>' : "\<C-w>", '<C-x>' : "\<C-x>", '<C-y>' : "\<C-y>", '<C-z>' : "\<C-z>",
-        \ '<Home>' : "\<Home>", '<End>' : "\<End>", '<Del>' : "\<Del>", '<BS>' : "\<BS>",
-        \ '<Up>' : "\<Up>", '<Down>' : "\<Down>", '<Left>' : "\<Left>", '<Right>' : "\<Right>",
-        \ '<Bar>' : '|',
+        \ '<Home>' : "\<Home>", '<End>' : "\<End>", '<Del>' : "\<Del>", '<BS>' : "\<C-h>",
+        \ '<Up>' : "\<ESC>[A", '<Down>' : "\<ESC>[B", '<Left>' : "\<ESC>[D", '<Right>' : "\<ESC>[C",
+        \ '<Bar>' : '|', '<Space>' : ' ',
         \ })
     
-    execute 'inoremap <buffer><silent>' l:key printf('<C-o>:call vimshell#interactive#send_char(%s)<CR>', char2nr(l:value))
+    execute 'inoremap <buffer><silent>' l:key printf('<ESC>:call vimshell#interactive#send_char(%s)<CR>', char2nr(l:value))
   endfor
   
   if (exists('g:vimshell_no_default_keymappings') && g:vimshell_no_default_keymappings)
@@ -65,11 +66,15 @@ function! vimshell#term_mappings#define_default_mappings()"{{{
   " Normal mode key-mappings.
   nmap <buffer> <C-c>     <Plug>(vimshell_term_interrupt)
   nmap <buffer> q         <Plug>(vimshell_term_exit)
+  nmap <buffer> i         <Plug>(vimshell_start_insert)
+  nmap <buffer> I         <Plug>(vimshell_start_insert)
+  nmap <buffer> a         <Plug>(vimshell_start_insert)
+  nmap <buffer> A         <Plug>(vimshell_start_insert)
 
   " Insert mode key-mappings.
   imap <buffer> <ESC><ESC>         <Plug>(vimshell_term_send_escape)
   imap <buffer> <C-Space>  <C-@>
-  imap <buffer> <C-@>              <Plug>(vimshell_term_send_string)
+  imap <buffer> <C-@>              <Plug>(vimshell_term_send_input)
 endfunction"}}}
 
 " vimshell interactive key-mappings functions.
@@ -78,12 +83,9 @@ function! s:exit()"{{{
     bdelete
   endif  
 endfunction "}}}
-function! s:send_string()"{{{
-  let l:input = input('Please input send string: ')
-  call vimshell#imdisable()
-  if l:input != ''
-    call vimshell#interactive#send_string(l:input)
-  endif
+function! s:start_insert()"{{{
+  setlocal modifiable
+  startinsert
 endfunction "}}}
 
 " vim: foldmethod=marker
