@@ -1,5 +1,5 @@
 # header
-snippet head Default
+snippet head_default
 	%% @author Masahito Ikuta <cooldaemon@gmail.com> [http://d.hatena.ne.jp/cooldaemon/]
 	%% @copyright Masahito Ikuta `strftime("%Y")`
 	%% @doc This Module is ${1}
@@ -10,7 +10,7 @@ snippet head Default
 	-export([${3:function names}]).
 	${4}
 
-snippet head supervisor
+snippet head_supervisor
 	%% @author Masahito Ikuta <cooldaemon@gmail.com> [http://d.hatena.ne.jp/cooldaemon/]
 	%% @copyright Masahito Ikuta `strftime("%Y")`
 	%% @doc This Module is supervisor for ${1}
@@ -52,7 +52,7 @@ snippet head supervisor
 
 	%% Internal Functions
 
-snippet head gen_server
+snippet head_gen_server
 	%% @author Masahito Ikuta <cooldaemon@gmail.com> [http://d.hatena.ne.jp/cooldaemon/]
 	%% @copyright Masahito Ikuta `strftime("%Y")`
 	%% @doc This Module is server for ${1}
@@ -139,7 +139,7 @@ snippet record
 	-record(${1:record name}, {${2:field name1}, ${3:field name2}}).
 
 # function
-snippet anonfunction
+snippet function_anon
 	fun (${1}) -> ${2:code} end.
 
 snippet let
@@ -149,7 +149,7 @@ snippet function
 	${1:function name} (${2}) ->
 		${3:code}.
 
-snippet gfunction
+snippet function_guard
 	${1:function name} (${2}) when ${3:guard} ->
 		${4:code}.
 

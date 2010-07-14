@@ -1,8 +1,8 @@
 # #import <...>
-snippet Imp
+snippet imp
 	#import <${1:Cocoa/Cocoa.h}>${2}
 # #import "..."
-snippet imp
+snippet imp_local
 	#import "${1:`Filename()`.h}"${2}
 # @selector(...)
 snippet sel
@@ -74,13 +74,13 @@ snippet dict
 snippet bez
 	NSBezierPath *${1:path} = [NSBezierPath bezierPath];${2}
 # Method
-snippet m
+snippet method
 	- (${1:id})${2:method}
 	{
 		${3}
 	}
 # Method declaration
-snippet md
+snippet method_dec
 	- (${1:id})${2:method};${3}
 # IBAction declaration
 snippet ibad
@@ -98,20 +98,20 @@ snippet wake
 		${1}
 	}
 # Class Method
-snippet M
+snippet method_class
 	+ (${1:id})${2:method}
 	{${3}
 		return nil;
 	}
 # Sub-method (Call super)
-snippet sm
+snippet method_call_super
 	- (${1:id})${2:method}
 	{
 		[super $2];${3}
 		return self;
 	}
 # Method: Initialize
-snippet I
+snippet initialize
 	+ (void) initialize
 	{
 		[[NSUserDefaults standardUserDefaults] registerDefaults:[NSDictionary dictionaryWIthObjectsAndKeys:
@@ -120,7 +120,7 @@ snippet I
 	}
 # Accessor Methods For:
 # Object
-snippet objacc
+snippet method_accessor
 	- (${1:id})${2:thing}
 	{
 		return $2;
