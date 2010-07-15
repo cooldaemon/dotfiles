@@ -10,8 +10,8 @@ snippet fun
 		${3:// body...}
 	}
 # Anonymous Function
-snippet f
-	function(${1}) {${2}};
+snippet fun_anon
+	function (${1}) {${2}};
 # if
 snippet if
 	if (${1:true}) {${2}};
@@ -49,17 +49,17 @@ snippet forr
 		${4:$1[$2]}
 	};
 # while (...) {...}
-snippet wh
+snippet while
 	while (${1:/* condition */}) {
 		${2:/* code */}
 	}
 # do...while
 snippet do
-	do {
+	do {fun
 		${2:/* code */}
 	} while (${1:/* condition */});
 # Object Method
-snippet :f
+snippet fun_obj
 	${1:method_name}: function(${2:attribute}) {
 		${4}
 	}${3:,}
@@ -67,8 +67,8 @@ snippet :f
 snippet timeout
 	setTimeout(function() {${3}}${2}, ${1:10};
 # Get Elements
-snippet get
+snippet get_tag
 	getElementsBy${1:TagName}('${2}')${3}
 # Get Element
-snippet gett
+snippet get
 	getElementBy${1:Id}('${2}')${3}

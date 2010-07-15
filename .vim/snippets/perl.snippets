@@ -1,5 +1,5 @@
 # header
-snippet head Default
+snippet head
 	use strict;
 	use warnings;
 	
@@ -9,7 +9,7 @@ snippet head Default
 	
 	${1}
 
-snippet head with Shebang
+snippet head_shebang
 	#!/usr/bin/env perl
 	
 	use strict;
@@ -21,7 +21,7 @@ snippet head with Shebang
 	
 	${1}
 
-snippet head Package
+snippet head_package
 	package ${1:`Filename()`};
 	
 	use strict;
@@ -35,7 +35,7 @@ snippet head Package
 	
 	1;
 
-snippet head Old Style Class
+snippet head_class
 	package ${1:`Filename()`};
 	
 	use strict;
@@ -57,13 +57,13 @@ snippet head Old Style Class
 	1;
 
 # sub
-snippet sub Default
+snippet sub
 	sub ${1:function_name} {
 		${2:#body ...}
 		return;
 	}
 
-snippet sub with Args
+snippet sub_args
 	sub ${1:function_name} {
 		my ($${2:arg},) = @_;
 	
@@ -71,7 +71,7 @@ snippet sub with Args
 		return;
 	}
 
-snippet sub Class Method
+snippet sub_self
 	sub ${1:function_name} {
 		my $self = shift;
 	
@@ -79,7 +79,7 @@ snippet sub Class Method
 		return;
 	}
 
-snippet sub Class Method with Args
+snippet sub_self_args
 	sub ${1:function_name} {
 		my $self = shift;
 		my ($${2:arg},) = @_;
@@ -120,7 +120,7 @@ snippet ifee
 		${5:# else...}
 	}
 
-snippet xif
+snippet ifx
 	${2:expression} if ${1:condition};${3}
 
 snippet unless
@@ -128,7 +128,7 @@ snippet unless
 		${2:# body...}
 	}
 
-snippet xunless
+snippet unlessx
 	${2:expression} unless ${1:condition};${3}
 
 snippet given
@@ -156,7 +156,7 @@ snippet while
 		${2:# body...}
 	}
 
-snippet xwhile
+snippet whilex
 	${2:expression} while ${1:condition};${3}
 
 snippet for
@@ -174,7 +174,7 @@ snippet for_when
 		}
 	}
 
-snippet xfor
+snippet forx
 	${2:expression} for @${1:array};${3}
 
 snippet map
@@ -193,7 +193,7 @@ snippet sort
 	} @${1:array};
 
 # Moose
-snippet head Moose
+snippet head_moose
 	package ${1:`Filename()`};
 	
 	use feature qw(:5.10);
@@ -209,7 +209,7 @@ snippet head Moose
 	
 	1;
 
-snippet head Moose Role
+snippet head_moose_role
 	package ${1:`Filename()`};
 	
 	use feature qw(:5.10);
@@ -234,14 +234,14 @@ snippet with
 snippet requires
 	requires '${1:Method}'${2:;}
 
-snippet has Default
+snippet has
 	has '${1:name}' => (
 		is  => '${2:ro|rw|bare}',
 		isa => '${3:Type}',
 		${4:Attributes}
 	);
 
-snippet has Too many Attributes
+snippet has_attr
 	has '${1:name}' => (
 		is         => '${2:ro|rw|bare}',
 		isa        => '${3:Type}',${4}
@@ -315,7 +315,7 @@ snippet augment
 
 
 # Catalyst
-snippet sub Catalyst Controller Method
+snippet sub_catalyst
 	sub ${1} : ${2} {
 		my ($self, $c,) = @_;
 		
@@ -323,7 +323,7 @@ snippet sub Catalyst Controller Method
 		return;
 	}
 
-snippet sub Catalyst Controller Method with Args
+snippet sub_catalyst_args
 	sub ${1} : ${2} {
 		my ($self, $c,) = @_;
 		my ($${3:arg},) = @{$c->req->args};
@@ -332,7 +332,7 @@ snippet sub Catalyst Controller Method with Args
 		return;
 	}
 
-snippet sub Catalyst Controller begin Method
+snippet sub_catalyst_begin
 	sub begin : Private {
 		my ($self, $c,) = @_;
 		
@@ -340,7 +340,7 @@ snippet sub Catalyst Controller begin Method
 		return 1;
 	}
 
-snippet sub Catalyst Controller auto Method
+snippet sub_catalyst_auto
 	sub auto : Private {
 		my ($self, $c,) = @_;
 		
