@@ -1,13 +1,23 @@
 "==<etc>====================================================================
-set backupdir=~/.vim/backup
+set backupdir=~/.vimbackup
 let &directory = &backupdir
 
 set shortmess+=I
-set nu!
 set cmdheight=1
 set hidden
 set history=256
 set diffopt=filler,icase,iwhite
+
+if exists('+relativenumber')
+  set rnu
+else
+  set nonu
+endif
+
+if has('persistent_undo')
+  set undodir=~/.vimundo
+  set undofile
+endif
 
 if has('kaoriya')
   set iminsert=1 imsearch=0
@@ -134,7 +144,6 @@ set omnifunc=syntaxcomplete#Complete
 
 imap <C-o> <C-x><C-o>
 imap <C-l> <C-x><C-l>
-imap <C-u> <C-x><C-u>
 
 "==<buffer>=================================================================
 nmap <DOWN> :bn!<CR>
