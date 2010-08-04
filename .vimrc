@@ -282,6 +282,7 @@ let g:neocomplcache_dictionary_filetype_lists = {
   \ 'ruby'       : $HOME . '/.vim/dict/ruby.dict',
   \ 'perl'       : $HOME . '/.vim/dict/perl.dict',
   \ 'scheme'     : $HOME . '/.vim/dict/gauche.dict',
+  \ 'scala'      : $HOME . '/.vim/dict/scala.dict',
   \ 'int-erl'    : $HOME . '/.vim/dict/erlang.dict',
   \ 'int-irb'    : $HOME . '/.vim/dict/ruby.dict',
   \ 'int-perlsh' : $HOME . '/.vim/dict/perl.dict'
