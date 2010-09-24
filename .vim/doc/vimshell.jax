@@ -1,6 +1,6 @@
 *vimshell.txt*	Vim Scriptで実装された強力なシェル
 
-Version: 7.0
+Version: 8.0
 Author : Shougo <Shougo.Matsu@gmail.com>
 License: MIT license  {{{
     Permission is hereby granted, free of charge, to any person obtaining
@@ -73,11 +73,10 @@ aliasの設定はそこで行っておくと便利です。
 ==============================================================================
 INSTALL							*vimshell-install*
 
-http://github.com/Shougo/vimshell/tree/master より、配布ファイルをVimの
-'runtimepath'にコピーします。 ただし、presen/vimshell.txtとRakefileは必要あ
-りません。
+http://github.com/Shougo/vimshell/tree/master より、配布ファイルをそのフォルダ
+ごとVimの'runtimepath'にコピーします。
 
-非同期実行するには、vimprocが必要です。
+さらに、vimshellを使用するにはvimprocが必要です。
 
 私がvimshell用に修正したvimprocがあるので、それをリポジトリから取ってきます。
 http://github.com/Shougo/vimproc
@@ -85,27 +84,24 @@ http://github.com/Shougo/vimproc
 
 Make方法
 
-* Mingw:
+* Mingw: >
+	$ make -f make_mingw.mak
 
-        $ make -f make_mingw.mak
+* Mac OS X: >
+	$ make -f make_mac.mak
 
-* Mac:
+* Linux BSD: >
+	$ make -f make_gcc.mak
 
-        $ make -f make_mac.mak
+* Visual Studio: >
+	$ make -f make_msvc.mak
 
-* Linux BSD:
+* Cygwin: >
+	$ make -f make_cygwin.mak
 
-        $ make -f make_gcc.mak
-
-* Visual Studio:
-
-        $ make -f make_msvc.mak
-
-* Cygwin:
-
-        $ make -f make_cygwin.mak
-
-コンパイルが通ったら、autoloadにあるproc.vimとproc.soを.vimのautoloadディレクトリにコピーします。
+コンパイルが通ったら、autoloadにあるproc.vimとproc.soを.vimのautoloadディレクト
+リにコピーします。Cygwinでコンパイルしたproc.dllはCygwin上のVim専用です。
+WindowsのVimでは使えません。注意してください。
 
 ==============================================================================
 INTERFACE						*vimshell-interface*
@@ -135,38 +131,27 @@ COMMANDS 						*vimshell-commands*
 			ファイルをバックグラウンドで起動します。vimshellを
 			GNU screenのように使えます。
 
-:VimShellInteractive {command}				*:VimShellInteractive*
+:VimShellInteractive [{command}]			*:VimShellInteractive*
 			vimshellを起動せずに、{command}で指定された
 			インタプリタを起動します。EmacsのM-x 
-			{interpreter-name}のように使えます。
+			{interpreter-name}のように使えます。{command}
+			を省略すると、
+			|g:vimshell_interactive_interpreter_commands|の値が
+			使われます。
 
 :VimShellTerminal {command}				*:VimShellTerminal*
 			vimshellを起動せずに、{command}で指定された端末
 			プログラムを起動します。Emacsのansi-termのように使え
 			ます。ただしまだ未完成です。
 
-:VimShellBang {path}					*:VimShellBang*
-			vimshellを起動せずに、{path}で指定された実行ファイルを
-			起動します。|:VimShellExecute|とは違い、実行が終了する
-			まで待ち、結果を:echoで表示します。|:!|の代わりにな
-			ります。
-
-:VimShellRead {path}					*:VimShellRead*
-			vimshellを起動せずに、{path}で指定された実行ファイルを
-			起動します。|:VimShellExecute|とは違い、実行が終了する
-			まで待ち、結果をカーソル行に追記します。|:read|の代
-			わりになります。
-
-			Notes:
-			|:VimShellExecute|,|:VimShellRead|,|:VimShellBang|は
-			vimshellのエイリアスを解釈します。ただし、エイリアス
-			はバッファ毎に設定されているため、コマンドを実行する
-			バッファでエイリアスが定義される必要があります。
-
 :VimShellSendString {string}				*:VimShellSendString*
 			裏ウインドウのインタプリタに選択文字列を送信します。
 			まるで|quickrun|を使っているかのようにインタプリタを
 			操作できます。
+
+:VimShellSendBuffer {bufname}				*:VimShellSendBuffer*
+			裏ウインドウを{bufname}として設定します。{bufname}が
+			画面に表示されていない場合、自動的に開きます。
 
 ------------------------------------------------------------------------------
 VARIABLES 						*vimshell-variables*
@@ -286,7 +271,7 @@ g:vimshell_cat_command					*g:vimshell_cat_command*
 			vimshellは外部のページャやエディタをうまく扱えないの
 			で、$PAGERや$EDITORに|g:vimshell_cat_command|の値を
 			セットします。初期値は"cat"ですが、この変数の内容を
-			変更することで、 スタマイズできます。
+			変更することで、カスタマイズできます。
 			
 			初期値は"cat"です。
 
@@ -340,6 +325,14 @@ g:vimshell_interactive_command_options			*g:vimshell_interactive_command_options
 			初期値は複雑なので、autoload/internal/iexe.vimを参照
 			してください。
 
+g:vimshell_interactive_interpreter_commands		*g:vimshell_interactive_interpreter_commands*
+			ファイルタイプをキーとするディクショナリ変数になっていて、
+			|:VimShellInteractive|の引数を省略した際のインタプリ
+			タ名を指定します。
+			
+			初期値は複雑なので、autoload/internal/iexe.vimを参照
+			してください。
+
 g:vimshell_interactive_encodings			*g:vimshell_interactive_encodings*
 			コマンド名をキーとするディクショナリ変数になっていて、
 			|vimshell-internal-iexe|で起動するコマンドのエンコー
@@ -347,6 +340,13 @@ g:vimshell_interactive_encodings			*g:vimshell_interactive_encodings*
 			
 			初期値は複雑なので、autoload/internal/iexe.vimを参照
 			してください。
+
+g:vimshell_terminal_cursor				*g:vimshell_terminal_cursor*
+			|vimshell-internal-texe|で使用するカーソル形状を指定
+			します。'guicursor'を一時的に変更するので、GVim環境
+			でのみ意味があります。
+			
+			初期値は'i:block-Cursor/lCursor'です。
 
 g:vimshell_interactive_cygwin_commands			*g:vimshell_interactive_cygwin_commands*
 			コマンド名をキーとするディクショナリ変数になっていて、
@@ -375,6 +375,13 @@ g:vimshell_interactive_cygwin_home			*g:vimshell_interactive_cygwin_home*
 			
 			初期値は''です。
 
+g:vimshell_vcs_print_null				*g:vimshell_vcs_print_null*
+			これが0以外のとき、vimshellの|vimshell-tips-vcs_info|
+			において、利用できるVCSプラグインが存在しないとき、
+			'[novcs]-(noinfo)'と表示します。
+			
+			初期値は0です。
+
 ------------------------------------------------------------------------------
 KEY MAPPINGS 						*vimshell-key-mappings*
 
@@ -394,6 +401,27 @@ KEY MAPPINGS 						*vimshell-key-mappings*
 			vimshellを起動します。すでにvimshellバッファ
 			が存在していても、新しくvimshellバッファを作成します。
 
+------------------------------------------------------------------------------
+BUFFER KEY MAPPINGS 					*vimshell-buffer-key-mappings*
+
+vimshellバッファで使えるキーマッピングについては、
+autoload/vimshell/mappings.vimのvimshell#mappings#define_default_mappings()
+を参照せよ。
+
+------------------------------------------------------------------------------
+INTERACTIVE KEY MAPPINGS 				*vimshell-interactive-key-mappings*
+
+interactiveバッファで使えるキーマッピングについては、
+autoload/vimshell/int_mappings.vimのvimshell#int_mappings#define_default_mappings()
+を参照せよ。
+
+------------------------------------------------------------------------------
+TERMINAL KEY MAPPINGS 					*vimshell-terminal-key-mappings*
+
+terminalバッファで使えるキーマッピングについては、
+autoload/vimshell/term_mappings.vimのvimshell#term_mappings#define_default_mappings()
+を参照せよ。
+
 ==============================================================================
 EXAMPLES						*vimshell-examples*
 >
@@ -402,17 +430,17 @@ EXAMPLES						*vimshell-examples*
 	let g:vimshell_enable_smart_case = 1
 	
 	if has('win32') || has('win64') 
-	    " Display user name on Windows.
-	    let g:vimshell_prompt = $USERNAME."% "
+	  " Display user name on Windows.
+	  let g:vimshell_prompt = $USERNAME."% "
 	else
-	    " Display user name on Linux.
-	    let g:vimshell_prompt = $USER."% "
+	  " Display user name on Linux.
+	  let g:vimshell_prompt = $USER."% "
 	
-	    call vimshell#set_execute_file('bmp,jpg,png,gif', 'gexe eog')
-	    call vimshell#set_execute_file('mp3,m4a,ogg', 'gexe amarok')
-	    let g:vimshell_execute_file_list['zip'] = 'zipinfo'
-	    call vimshell#set_execute_file('tgz,gz', 'gzcat')
-	    call vimshell#set_execute_file('tbz,bz2', 'bzcat')
+	  call vimshell#set_execute_file('bmp,jpg,png,gif', 'gexe eog')
+	  call vimshell#set_execute_file('mp3,m4a,ogg', 'gexe amarok')
+	  let g:vimshell_execute_file_list['zip'] = 'zipinfo'
+	  call vimshell#set_execute_file('tgz,gz', 'gzcat')
+	  call vimshell#set_execute_file('tbz,bz2', 'bzcat')
 	endif
 	
 	autocmd FileType vimshell
@@ -437,6 +465,10 @@ EXAMPLES						*vimshell-examples*
 	endfunction
 	function! g:my_preexec(cmdline, context)
 	  call vimshell#execute('echo "preexec"')
+	
+	  if a:cmdline =~# '^\s*diff\>'
+	    call vimshell#set_syntax('diff')
+	  endif
 	  return a:cmdline
 	endfunction
 <
@@ -459,10 +491,10 @@ bg [{option}...] {command}				*vimshell-internal-bg*
 		バックグラウンド実行は新たにバッファを開き、そこに{command}
 		の出力を書き出します。 bgの場合、ユーザーからの入力は一切受け
 		付けません。 バックグラウンドバッファ上で<C-c>を入力すると、
-		{command}の実行を強制的に終了させます。コマンド名の最後に&を
-		付けると、bg command...と同じ意味となります。iexe, exe, bgは
-		オプションを解釈し、それに基づいて挙動を変更します。詳しくは
-		|vimshell-execute-options|を参照してください。
+		{command}の実行を強制的に終了させます。
+		iexe, exe, bg, texe, less はオプションを解釈し、それに基づい
+		て挙動を変更します。詳しくは |vimshell-execute-options|を参
+		照してください。
 		ここでは、bgのみに存在するオプションを解説します。
 		
 		--filetype = {filetype-name}
@@ -490,7 +522,7 @@ dirs [{max}]						*vimshell-internal-dirs*
 echo [{argument}...]					*vimshell-internal-echo*
 		引数を出力します。
 
-eval {expression}					*vimshell-internal-expression*
+eval {expression}					*vimshell-internal-eval*
 		{expression}をvimshell Scriptとして解釈し、評価結果を表示します。
 		前のバージョンのevとは動作が違います。evの代わりが欲しいなら、
 		alias ev = 'vexe echo'を設定しましょう。
@@ -498,8 +530,9 @@ eval {expression}					*vimshell-internal-expression*
 exe [{option}...] {command} 				*vimshell-internal-exe*
 		{command}に引数を与えて実行します。必ず外部コマンドが実行さ
 		れます。
-		iexe, exe, bgはオプションを解釈し、それに基づいて挙動を変更します。
-		詳しくは|vimshell-execute-options|を参照してください。
+		iexe, exe, bg, texe, less はオプションを解釈し、それに基づい
+		て挙動を変更します。詳しくは |vimshell-execute-options|を参
+		照してください。
 		
 							*vimshell-execute-options*
 		--encoding = {encoding-name}		*vimshell-execute-options-encoding*
@@ -533,7 +566,7 @@ h [{pattern}]						*vimshell-internal-h*
 		す。|vimshell-internal-h|により実行したコマンドはヒストリに
 		登録 されません。
 
-histdel [{history-number}]				*vimshell-internal-histdel*
+histdel {history-number}				*vimshell-internal-histdel*
 		{history-number}に一致するヒストリを削除します。ヒストリ番
 		号は|vimshell-internal-history|で確認できます。
 		{history-number}を省略すると、 無視されます。
@@ -547,9 +580,21 @@ history [{search-string}]				*vimshell-internal-history*
 iexe [{options}...] {command}				*vimshell-internal-iexe*
 		{command}に引数を与えて実行します。必ず外部コマンドが実行さ
 		れます。exeとは違い、対話コマンドを実行することに特化しています。
-		入出力を行なうために新しいバッファが生成されます。iexe, exe, bg
-		はオプションを解釈し、それに基づいて挙動を変更します。詳しくは
-		|vimshell-execute-options|を参照してください。
+		入出力を行なうために新しいバッファが生成されます。パイプを使
+		うとエラーになります。
+		iexe, exe, bg, texe, less はオプションを解釈し、それに基づい
+		て挙動を変更します。詳しくは |vimshell-execute-options|を参
+		照してください。
+
+less [{options}...] {command}				*vimshell-internal-less*
+		{command}に引数を与えて実行します。必ず外部コマンドが実行さ
+		れます。vimshellがページャとなります。出力が多いコマンドを実行するときに有用です。
+		シンタックスシュガーとして、次の形式も有効です。
+		{command1} | {command2} | less
+		入出力を行なうために新しいバッファが生成されます。
+		iexe, exe, bg, texe, less はオプションを解釈し、それに基づい
+		て挙動を変更します。詳しくは |vimshell-execute-options|を参
+		照してください。
 
 ls [{argument}...]					*vimshell-internal-ls*
 		外部コマンドのlsを適切な引数を与えて実行します。
@@ -565,7 +610,7 @@ open {filename}						*vimshell-internal-open*
 		{filename}を関連付け実行します。何が実行されるかはOSやデスク
 		トップ環境に依存します。
 
-popd [{directory-stack-number}]					*vimshell-internal-popd*
+popd [{directory-stack-number}]				*vimshell-internal-popd*
 		{directory-stack-number}で示されるディレクトリへ移動します。
 		{directory-stack-number}は|vimshell-internal-dirs|で確認でき
 		ます。{directory-stack-number}を省略すると、0になります。
@@ -576,10 +621,6 @@ pwd 							*vimshell-internal-pwd*
 
 repeat {cnt} {command}					*vimshell-internal-repeat*
 		{command}を{cnt}回実行します。
-
-screen {command}					*vimshell-internal-screen*
-		{command}をscreen上で実行します。端末の機能を用いるプログラ
-		ムを起動したいときに便利です。当然Windows上では動作しません。
 
 shell 							*vimshell-internal-shell*
 		|:shell|を用いて'shell'を起動します。Windows上のGVimでかつ
@@ -598,24 +639,28 @@ texe [{options}...] {command}				*vimshell-internal-texe*
 		{command}に引数を与えて実行します。必ず外部コマンドが実行さ
 		れます。exe, iexeとは違い、端末コマンドを実行することに特化
 		しています。入出力を行なうために新しいバッファが生成されます。
-		このコマンドは、まだ動作が不完全です。
-		iexe, exe, bgはオプションを解釈し、それに基づいて挙動を変更します。
-		詳しくは|vimshell-execute-options|を参照してください。
+		パイプを使うとエラーになります。このコマンドは、まだ動作が不
+		完全です。
+		iexe, exe, bg, texe, less はオプションを解釈し、それに基づい
+		て挙動を変更します。詳しくは |vimshell-execute-options|を参
+		照してください。
 
 vexe {expression}					*vimshell-internal-vexe*
 		{expression}をVim Scriptの文として実行し、出力をvimshellバッ
 		ファに書き出します。
 
-view {filename}						*vimshell-internal-view*
+view {filename} [{pattern}]				*vimshell-internal-view*
 		{filename}を読み取り専用で別バッファに開きます。ファイルの行
 		数がウインドウサイズよりも少ない場合、 別バッファを開かず、
 		catのように動作します。ファイルの中身をちょっと見てみたいと
 		きに便利です。
+		{pattern}を指定すると、その{pattern}を検索して現在位置とします。
 
-vim [{filename}]					*vimshell-internal-vim*
+vim [{filename} [{pattern}]]				*vimshell-internal-vim*
 		{filename}を別バッファに開きます。カレントディレクトリにある
 		ファイルを手軽に編集したいときに便利です。
 		{filename}を省略すると、無名バッファを開きます。
+		{pattern}を指定すると、その{pattern}を検索して現在位置とします。
 
 vimdiff {filename1} {filename2}				*vimshell-internal-vimdiff*
 		{filename1}と{filename2}を|:vimdiff|で比較します。vimshellか
@@ -626,6 +671,12 @@ vimsh [{filename}]					*vimshell-internal-vimsh*
 		ただし制御構造が実装されていないため、あまり使用価値はありま
 		せん。{filename}を省略すると、新しいvimshellバッファを開きま
 		す。
+
+which {command}					*vimshell-internal-which*
+		{command}のフルパスを出力します。aliasも認識されます。
+
+whrereis {command}				*vimshell-internal-whereis*
+		{command}のフルパスをすべて出力します。
 
 ==============================================================================
 SPECIAL COMMANDS					*vimshell-special-commands*
@@ -770,12 +821,11 @@ auto_cd							*vimshell-tips-auto_cd*
 		-> 00 01 02 03 04 05 06 07 08 09
 <
 ワイルドカード						*vimshell-tips-wildcard*
+		ワイルドカードも普通に使えます。指定されたファイルが存在し
+		ない場合、zshのようにエラーになります。
 >
 		vimshell% ls *.htm
 <
-		ワイルドカードも普通に使えます。指定されたファイルが存在し
-		ない場合、zshのようにエラーになります。
-		
 		ワイルドカードの除外もサポートしました。
 >
 		vimshell% ls *~*.htm
@@ -784,22 +834,22 @@ auto_cd							*vimshell-tips-auto_cd*
 		という意味になります。
 
 バッククオート						*vimshell-tips-backquote*
+		コマンドの引数にコマンドの実行結果が使えます。
 >
 		vimshell% echo `ls`
 <
-		コマンドの引数にコマンドの実行結果が使えます。
 		Vim scriptの埋め込みもできます。
 >
 		vimshell% echo `=3`
 <
 
 fakecygpty						*vimshell-tips-fakecygpty*
->
-<
 		fakecygptyとはKyotaro Horiguchiさんが開発した、Windowsの
 		パイプとCygwinのptyを接続させて動作させるためのコマンドです。
 		例えば、次のコマンドでCygwinのsshと接続できます。
+>
 		> fakecygpty ssh
+<
 		Meadowのソースコードに含まれていて探すのが大変なので、私が
 		ソースコードを再配布しています。
 		http://github.com/Shougo/fakecygpty
@@ -810,6 +860,16 @@ fakecygpty						*vimshell-tips-fakecygpty*
 		というコマンドを実行します。あとはfakecygptyを$PATHの通った
 		ところに置けば準備完了です。
 >
+vcs_info						*vimshell-tips-vcs-info*
+
+		vimshellには、zshが実装しているようなVCSとの連携機能がありま
+		す。標準ではgitにしか対応していませんが、プラグインを追加す
+		ることで、さまざまなVCSに対応できます。
+>
+		let g:vimshell_right_prompt = 'vimshell#vcs#info("(%s)-[%b]", "(%s)-[%b|%a]")'
+<
+		たとえば、このようにvimshellの右プロンプトにVCSの情報を表示
+		できます。フォーマットはzshのvcs_infoに準拠しています。
 
 ==============================================================================
 CREATE PLUGIN						*vimshell-create-plugin*

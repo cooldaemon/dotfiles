@@ -1,7 +1,7 @@
 "=============================================================================
-" FILE: altercmd.vim
+" FILE: whrereis.vim
 " AUTHOR: Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 13 Apr 2010
+" Last Modified: 17 Aug 2010
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -24,32 +24,22 @@
 " }}}
 "=============================================================================
 
-function! vimshell#altercmd#define(original, alternative)"{{{
-  execute 'inoreabbrev <buffer><expr>' a:original
-        \ '(join(vimshell#get_current_args()) ==# "' . a:original  . '")?' 
-        \ s:SID_PREFIX().'recursive_expand_altercmd('.string(a:original).')' ':' string(a:original)
-  let b:vimshell.altercmd_table[a:original] = a:alternative
+let s:command = {
+      \ 'name' : 'whereis',
+      \ 'kind' : 'internal',
+      \ 'description' : 'whereis command',
+      \}
+function! s:command.execute(command, args, fd, context)"{{{
+  if empty(a:args)
+    return
+  endif
+
+  let l:name = a:args[0]
+  for l:arg in vimproc#get_command_name(a:args[0], $PATH, -1)
+    call vimshell#print_line(a:fd, l:arg)
+  endfor
 endfunction"}}}
 
-function! s:SID_PREFIX()
-  return matchstr(expand('<sfile>'), '<SNR>\d\+_\zeSID_PREFIX$')
+function! vimshell#commands#whereis#define()
+  return s:command
 endfunction
-
-function! s:recursive_expand_altercmd(string)
-  " Recursive expand altercmd.
-  let l:abbrev = b:vimshell.altercmd_table[a:string]
-  let l:expanded = {}
-  while 1
-    let l:key = vimproc#parser#split_args(l:abbrev)[-1]
-    if has_key(l:expanded, l:abbrev) || !has_key(b:vimshell.altercmd_table, l:abbrev)
-      break
-    endif
-    
-    let l:expanded[l:abbrev] = 1
-    let l:abbrev = b:vimshell.altercmd_table[l:abbrev]
-  endwhile
-
-  return l:abbrev
-endfunction
-
-" vim: foldmethod=marker

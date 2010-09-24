@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: term_mappings.vim
 " AUTHOR: Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 02 Jul 2010
+" Last Modified: 05 Aug 2010
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -26,11 +26,12 @@
 
 function! vimshell#term_mappings#define_default_mappings()"{{{
   " Plugin key-mappings."{{{
-  nnoremap <silent> <Plug>(vimshell_term_interrupt)       :<C-u>call vimshell#interactive#hang_up(bufname('%'))<CR>
-  nnoremap <silent> <Plug>(vimshell_term_exit)       :<C-u>call <SID>exit()<CR>
-  nnoremap <silent> <Plug>(vimshell_start_insert)       :<C-u>call <SID>start_insert()<CR>
-  execute 'inoremap <silent> <Plug>(vimshell_term_send_escape)' printf('<ESC>:call vimshell#interactive#send_char(%s)<CR>', char2nr("\<ESC>"))
-  inoremap <silent> <Plug>(vimshell_term_send_input)       <ESC>:call vimshell#interactive#send_input()<CR>
+  nnoremap <buffer><silent> <Plug>(vimshell_term_interrupt)       :<C-u>call vimshell#interactive#hang_up(bufname('%'))<CR>
+  nnoremap <buffer><silent> <Plug>(vimshell_term_exit)       :<C-u>call vimshell#interactive#quit_buffer()<CR>
+  nnoremap <buffer><silent> <Plug>(vimshell_term_start_insert)       :<C-u>call <SID>start_insert()<CR>
+  nnoremap <buffer><silent> <Plug>(vimshell_term_execute_line)       :<C-u>call <SID>execute_line()<CR>
+  inoremap <buffer><silent><expr> <Plug>(vimshell_term_send_escape) vimshell#term_mappings#send_key("\<ESC>")
+  inoremap <buffer><silent> <Plug>(vimshell_term_send_input)       <C-o>:call vimshell#interactive#send_input()<CR>
   "}}}
 
   for l:lhs in [
@@ -43,7 +44,8 @@ function! vimshell#term_mappings#define_default_mappings()"{{{
         \ '[', ']', '{', '}', ':', ';', '''', '"', ',', '<', '.', '>', '/', '?',
         \ ]
 
-    execute 'inoremap <buffer><silent>' l:lhs printf('<ESC>:call vimshell#interactive#send_char(%s)<CR>', char2nr(l:lhs))
+    execute 'inoremap <buffer><silent><expr>' l:lhs 'vimshell#term_mappings#send_key('. string(l:lhs) .')'
+    "execute 'inoremap <buffer><silent>' l:lhs printf('<C-o>:call vimshell#interactive#send_char(%s)<CR>', char2nr(l:lhs))
   endfor
   
   for [l:key, l:value] in items({
@@ -51,12 +53,24 @@ function! vimshell#term_mappings#define_default_mappings()"{{{
         \ '<C-h>' : "\<C-h>", '<C-i>' : "\<C-i>", '<C-j>' : "\<C-j>", '<C-k>' : "\<C-k>", '<C-l>' : "\<C-l>", '<C-m>' : "\<LF>", '<C-n>' : "\<C-n>",
         \ '<C-o>' : "\<C-o>", '<C-p>' : "\<C-p>", '<C-q>' : "\<C-q>", '<C-r>' : "\<C-r>", '<C-s>' : "\<C-s>", '<C-t>' : "\<C-t>", '<C-u>' : "\<C-u>",
         \ '<C-v>' : "\<C-v>", '<C-w>' : "\<C-w>", '<C-x>' : "\<C-x>", '<C-y>' : "\<C-y>", '<C-z>' : "\<C-z>",
-        \ '<Home>' : "\<Home>", '<End>' : "\<End>", '<Del>' : "\<Del>", '<BS>' : "\<C-h>",
-        \ '<Up>' : "\<ESC>[A", '<Down>' : "\<ESC>[B", '<Left>' : "\<ESC>[D", '<Right>' : "\<ESC>[C",
+        \ '<C-^>' : "\<C-^>", '<C-_>' : "\<C-_>", '<C-\>' : "\<C-\>",
         \ '<Bar>' : '|', '<Space>' : ' ',
         \ })
     
-    execute 'inoremap <buffer><silent>' l:key printf('<ESC>:call vimshell#interactive#send_char(%s)<CR>', char2nr(l:value))
+    execute 'inoremap <buffer><silent>' l:key printf('<C-o>:call vimshell#interactive#send_char(%s)<CR>', char2nr(l:value))
+  endfor
+  
+  for [l:key, l:value] in items({
+        \ '<Home>' : "\<ESC>OH", '<End>' : "\<ESC>OF", '<Del>' : "\<ESC>[3~", '<BS>' : "\<C-h>",
+        \ '<Up>' : "\<ESC>[A", '<Down>' : "\<ESC>[B", '<Left>' : "\<ESC>[D", '<Right>' : "\<ESC>[C",
+        \ '<PageUp>' : "\<ESC>[5~", '<PageDown>' : "\<ESC>[6~",
+        \ '<F1>' : "\<ESC>[11~", '<F2>' : "\<ESC>[12~", '<F3>' : "\<ESC>[13~", '<F4>' : "\<ESC>[14~",
+        \ '<F5>' : "\<ESC>[15~", '<F6>' : "\<ESC>[17~", '<F7>' : "\<ESC>[18~", '<F8>' : "\<ESC>[19~",
+        \ '<F9>' : "\<ESC>[20~", '<F10>' : "\<ESC>[21~", '<F11>' : "\<ESC>[23~", '<F12>' : "\<ESC>[24~",
+        \ '<Insert>' : "\<ESC>[2~",
+        \ })
+    
+    execute 'inoremap <buffer><silent>' l:key printf('<C-o>:call vimshell#interactive#send_char(%s)<CR>', string(map(split(l:value, '\zs'), 'char2nr(v:val)')))
   endfor
   
   if (exists('g:vimshell_no_default_keymappings') && g:vimshell_no_default_keymappings)
@@ -66,26 +80,44 @@ function! vimshell#term_mappings#define_default_mappings()"{{{
   " Normal mode key-mappings.
   nmap <buffer> <C-c>     <Plug>(vimshell_term_interrupt)
   nmap <buffer> q         <Plug>(vimshell_term_exit)
-  nmap <buffer> i         <Plug>(vimshell_start_insert)
-  nmap <buffer> I         <Plug>(vimshell_start_insert)
-  nmap <buffer> a         <Plug>(vimshell_start_insert)
-  nmap <buffer> A         <Plug>(vimshell_start_insert)
+  nmap <buffer> i         <Plug>(vimshell_term_start_insert)
+  nmap <buffer> I         <Plug>(vimshell_term_start_insert)
+  nmap <buffer> a         <Plug>(vimshell_term_start_insert)
+  nmap <buffer> A         <Plug>(vimshell_term_start_insert)
+  nmap <buffer> <CR>      <Plug>(vimshell_term_execute_line)
 
   " Insert mode key-mappings.
   imap <buffer> <ESC><ESC>         <Plug>(vimshell_term_send_escape)
   imap <buffer> <C-Space>  <C-@>
   imap <buffer> <C-@>              <Plug>(vimshell_term_send_input)
 endfunction"}}}
+function! vimshell#term_mappings#send_key(key)"{{{
+  return printf("\<C-o>:call vimshell#interactive#send_char(%s)\<CR>", char2nr(a:key))
+endfunction"}}}
+function! vimshell#term_mappings#send_keys(keys)"{{{
+  return printf("\<C-o>:call vimshell#interactive#send_char(%s)\<CR>", string(map(split(a:keys, '\zs'), 'char2nr(v:val)')))
+endfunction"}}}
 
 " vimshell interactive key-mappings functions.
-function! s:exit()"{{{
-  if !b:interactive.process.is_valid
-    bdelete
-  endif  
-endfunction "}}}
 function! s:start_insert()"{{{
   setlocal modifiable
   startinsert
 endfunction "}}}
+function! s:execute_line()"{{{
+  " Search cursor file.
+  let l:filename = substitute(substitute(expand('<cfile>'), ' ', '\\ ', 'g'), '\\', '/', 'g')
+
+  if &termencoding != '' && &encoding != &termencoding
+    " Convert encoding.
+    let l:filename = iconv(l:filename, &encoding, &termencoding)
+  endif
+
+  " Execute cursor file.
+  if l:filename =~ '^\%(https\?\|ftp\)://'
+    " Open uri.
+    call vimshell#open(l:filename)
+    return
+  endif
+endfunction"}}}
 
 " vim: foldmethod=marker

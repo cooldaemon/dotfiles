@@ -1,7 +1,7 @@
 "=============================================================================
-" FILE: altercmd.vim
+" FILE: history.vim
 " AUTHOR: Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 13 Apr 2010
+" Last Modified: 12 Jul 2010
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -24,32 +24,45 @@
 " }}}
 "=============================================================================
 
-function! vimshell#altercmd#define(original, alternative)"{{{
-  execute 'inoreabbrev <buffer><expr>' a:original
-        \ '(join(vimshell#get_current_args()) ==# "' . a:original  . '")?' 
-        \ s:SID_PREFIX().'recursive_expand_altercmd('.string(a:original).')' ':' string(a:original)
-  let b:vimshell.altercmd_table[a:original] = a:alternative
+let s:command = {
+      \ 'name' : 'history',
+      \ 'kind' : 'internal',
+      \ 'description' : 'history [{search-string}]',
+      \}
+function! s:command.execute(command, args, fd, context)"{{{
+  let l:arguments = join(a:args, ' ')
+  if l:arguments =~ '^\d\+$'
+    let l:search = ''
+    let l:max = str2nr(l:arguments)
+  elseif empty(l:arguments)
+    " Default max value.
+    let l:search = ''
+    let l:max = 20
+  else
+    let l:search = l:arguments
+    let l:max = len(g:vimshell#hist_buffer)
+  endif
+  
+  if l:max <=0 || l:max >= len(g:vimshell#hist_buffer)
+    " Overflow.
+    let l:max = len(g:vimshell#hist_buffer)
+  endif
+  
+  let l:list = []
+  let l:cnt = 0
+  for l:hist in g:vimshell#hist_buffer
+    if vimshell#head_match(l:hist, l:search)
+      call add(l:list, [l:cnt, l:hist])
+    endif
+
+    let l:cnt += 1
+  endfor
+  
+  for [l:cnt, l:hist] in l:list[: l:max-1]
+    call vimshell#print_line(a:fd, printf('%3d: %s', l:cnt, l:hist))
+  endfor
 endfunction"}}}
 
-function! s:SID_PREFIX()
-  return matchstr(expand('<sfile>'), '<SNR>\d\+_\zeSID_PREFIX$')
+function! vimshell#commands#history#define()
+  return s:command
 endfunction
-
-function! s:recursive_expand_altercmd(string)
-  " Recursive expand altercmd.
-  let l:abbrev = b:vimshell.altercmd_table[a:string]
-  let l:expanded = {}
-  while 1
-    let l:key = vimproc#parser#split_args(l:abbrev)[-1]
-    if has_key(l:expanded, l:abbrev) || !has_key(b:vimshell.altercmd_table, l:abbrev)
-      break
-    endif
-    
-    let l:expanded[l:abbrev] = 1
-    let l:abbrev = b:vimshell.altercmd_table[l:abbrev]
-  endwhile
-
-  return l:abbrev
-endfunction
-
-" vim: foldmethod=marker

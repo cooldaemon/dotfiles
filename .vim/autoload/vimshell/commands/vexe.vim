@@ -1,7 +1,7 @@
 "=============================================================================
-" FILE: altercmd.vim
+" FILE: vexe.vim
 " AUTHOR: Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 13 Apr 2010
+" Last Modified: 08 Jul 2010
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -24,32 +24,35 @@
 " }}}
 "=============================================================================
 
-function! vimshell#altercmd#define(original, alternative)"{{{
-  execute 'inoreabbrev <buffer><expr>' a:original
-        \ '(join(vimshell#get_current_args()) ==# "' . a:original  . '")?' 
-        \ s:SID_PREFIX().'recursive_expand_altercmd('.string(a:original).')' ':' string(a:original)
-  let b:vimshell.altercmd_table[a:original] = a:alternative
+let s:command = {
+      \ 'name' : 'vexe',
+      \ 'kind' : 'special',
+      \ 'description' : 'vexe {expression}',
+      \}
+function! s:command.execute(program, args, fd, context)"{{{
+  " Execute vim command.
+
+  let l:context = a:context
+  let l:context.fd = a:fd
+  call vimshell#set_context(l:context)
+  
+  let l:temp = tempname()
+  let l:save_vfile = &verbosefile
+  let &verbosefile = l:temp
+  for l:command in split(join(a:args), '\n')
+    silent execute l:command
+  endfor
+  if &verbosefile == l:temp
+    let &verbosefile = l:save_vfile
+  endif
+  let l:output = readfile(l:temp)
+  call delete(l:temp)
+
+  for l:line in l:output
+    call vimshell#print_line(a:fd, l:line)
+  endfor
 endfunction"}}}
 
-function! s:SID_PREFIX()
-  return matchstr(expand('<sfile>'), '<SNR>\d\+_\zeSID_PREFIX$')
+function! vimshell#commands#vexe#define()
+  return s:command
 endfunction
-
-function! s:recursive_expand_altercmd(string)
-  " Recursive expand altercmd.
-  let l:abbrev = b:vimshell.altercmd_table[a:string]
-  let l:expanded = {}
-  while 1
-    let l:key = vimproc#parser#split_args(l:abbrev)[-1]
-    if has_key(l:expanded, l:abbrev) || !has_key(b:vimshell.altercmd_table, l:abbrev)
-      break
-    endif
-    
-    let l:expanded[l:abbrev] = 1
-    let l:abbrev = b:vimshell.altercmd_table[l:abbrev]
-  endwhile
-
-  return l:abbrev
-endfunction
-
-" vim: foldmethod=marker

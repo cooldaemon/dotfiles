@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: syntax/vimshell.vim
 " AUTHOR: Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 04 Jul 2010
+" Last Modified: 26 Aug 2010
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -32,13 +32,12 @@ endif
 
 execute 'syn match VimShellPrompt' string('^' . vimshell#escape_match(vimshell#get_prompt()))
 execute 'syn match VimShellPrompt' string('^' . vimshell#escape_match(vimshell#get_secondary_prompt()))
-syn match   VimShellUserPrompt   '^\[%\] .*$'
+syn match   VimShellUserPrompt   '^\[%\] .*$' contains=VimShellUserPromptHidden
 syn region   VimShellString   start=+'+ end=+'+ oneline
 syn region   VimShellString   start=+"+ end=+"+ contains=VimShellQuoted oneline
 syn region   VimShellString   start=+`+ end=+`+ oneline
 syn match   VimShellString   '[''"`]$' contained
 syn region   VimShellError   start=+!!!+ end=+!!!+ contains=VimShellErrorHidden oneline
-syn match   VimShellErrorHidden            '!!!' contained
 syn match   VimShellComment   '#.*$' contained
 syn match   VimShellConstants         '[+-]\=\<\d\+\>'
 syn match   VimShellConstants         '[+-]\=\<0x\x\+\>'
@@ -63,6 +62,16 @@ else
     syn match   VimShellLink              '\(^\|\s\)[[:alnum:]_.][[:alnum:]_.-]\+@'
 endif
 syn region   VimShellHistory  start=+^\s*\d\+:\s[^[:space:]]+ end=+.*+ oneline
+syn region   VimShellGrep  start=+^[^!]\f\+:+ end=+.*+ oneline
+
+if has('conceal')
+  " Supported conceal features.
+  syn match   VimShellErrorHidden            '!!!' contained conceal
+  syn match   VimShellUserPromptHidden       '\[%\] ' contained conceal
+else
+  syn match   VimShellErrorHidden            '!!!' contained
+  syn match   VimShellUserPromptHidden       '\[%\] ' contained
+endif
 
 execute "syn region   VimShellExe start=".string('^'.vimshell#escape_match(vimshell#get_prompt())) "end='[^[:blank:]]\\+\\zs[[:blank:]\\n]' contained contains=VimShellPrompt,VimShellSpecial,VimShellConstants,VimShellArguments,VimShellString,VimShellComment"
 syn match VimShellExe '[|;]\s*\f\+' contained contains=VimShellSpecial,VimShellArguments
@@ -87,6 +96,7 @@ hi def link VimShellSpecial PreProc
 hi def link VimShellVariable Comment
 hi def link VimShellComment Identifier
 hi def link VimShellHistory Comment
+hi def link VimShellGrep Comment
 hi def link VimShellNormal Normal
 
 hi def link VimShellExe Statement
@@ -96,5 +106,6 @@ hi def link VimShellLink Comment
 hi def link VimShellDotFiles Identifier
 hi def link VimShellError Error
 hi def link VimShellErrorHidden Ignore
+hi def link VimShellUserPromptHidden Ignore
 
 let b:current_syntax = 'vimshell'

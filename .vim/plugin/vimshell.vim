@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: vimshell.vim
 " AUTHOR: Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 02 Jul 2010
+" Last Modified: 16 Sep 2010
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -85,8 +85,8 @@ if !isdirectory(fnamemodify(g:vimshell_vimshrc_path, ':p:h'))
 endif
 if !exists('g:vimshell_escape_colors')
   let g:vimshell_escape_colors = [
-        \'#3c3c3c', '#ff6666', '#66ff66', '#ffd30a', '#1e95fd', '#ff13ff', '#1bc8c8', '#C0C0C0',
-        \'#686868', '#ff6666', '#66ff66', '#ffd30a', '#6699ff', '#f820ff', '#4ae2e2', '#ffffff',
+        \'#6c6c6c', '#ff6666', '#66ff66', '#ffd30a', '#1e95fd', '#ff13ff', '#1bc8c8', '#C0C0C0',
+        \'#383838', '#ff4444', '#44ff44', '#ffb30a', '#6699ff', '#f820ff', '#4ae2e2', '#ffffff',
         \]
 endif
 if !exists('g:vimshell_disable_escape_highlight')
@@ -116,8 +116,17 @@ endif
 if !exists('g:vimshell_interactive_command_options')
   let g:vimshell_interactive_command_options = {}
 endif
+if !exists('g:vimshell_interactive_interpreter_commands')
+  let g:vimshell_interactive_interpreter_commands = {}
+endif
 if !exists('g:vimshell_interactive_encodings')
   let g:vimshell_interactive_encodings = {}
+endif
+if !exists('g:vimshell_interactive_prompts')
+  let g:vimshell_interactive_prompts = {}
+endif
+if !exists('g:vimshell_terminal_cursor')
+  let g:vimshell_terminal_cursor = 'i:block-Cursor/lCursor'
 endif
 
 " For Cygwin commands.
@@ -135,11 +144,9 @@ endif
 command! -nargs=? -complete=dir VimShell call vimshell#switch_shell(0, <q-args>)
 command! -nargs=? -complete=dir VimShellCreate call vimshell#create_shell(0, <q-args>)
 command! -nargs=? -complete=dir VimShellPop call vimshell#switch_shell(1, <q-args>)
-command! -nargs=+ -complete=customlist,vimshell#complete#vimshell_execute_complete#completefunc VimShellExecute call vimshell#internal#bg#vimshell_bg(<q-args>)
-command! -nargs=+ -complete=customlist,vimshell#complete#vimshell_execute_complete#completefunc VimShellInteractive call vimshell#internal#iexe#vimshell_iexe(<q-args>)
-command! -nargs=+ -complete=customlist,vimshell#complete#vimshell_execute_complete#completefunc VimShellTerminal call vimshell#internal#texe#vimshell_texe(<q-args>)
-command! -nargs=+ -complete=customlist,vimshell#complete#vimshell_execute_complete#completefunc VimShellBang call s:bang(<q-args>)
-command! -nargs=+ -complete=customlist,vimshell#complete#vimshell_execute_complete#completefunc VimShellRead call s:read(<q-args>)
+command! -nargs=+ -complete=customlist,s:execute_completefunc VimShellExecute call s:vimshell_execute(<q-args>)
+command! -nargs=* -complete=customlist,s:execute_completefunc VimShellInteractive call s:vimshell_interactive(<q-args>)
+command! -nargs=+ -complete=customlist,s:execute_completefunc VimShellTerminal call s:vimshell_terminal(<q-args>)
 
 " Plugin keymappings"{{{
 nnoremap <silent> <Plug>(vimshell_split_switch)  :<C-u>call vimshell#switch_shell(1, '')<CR>
@@ -149,13 +156,35 @@ nnoremap <silent> <Plug>(vimshell_create)  :<C-u>call vimshell#create_shell(0, '
 "}}}
 
 " Command functions:
-function! s:bang(cmdline)"{{{
-  let [l:program, l:script] = vimshell#parser#parse_alias(a:cmdline)
-  echo vimshell#system(l:program . ' ' . l:script)
+function! s:execute_completefunc(lead, cmd, pos)"{{{
+  silent! let keys = vimshell#complete#vimshell_execute_complete#completefunc(a:lead, a:cmd, a:pos)
+  return keys 
 endfunction"}}}
-function! s:read(cmdline)"{{{
-  let [l:program, l:script] = vimshell#parser#parse_alias(a:cmdline)
-  call append('.', split(vimshell#system(l:program . ' ' . l:script), '\n'))
+function! s:vimshell_execute(args)"{{{
+  call vimshell#execute_internal_command('bg', vimproc#parser#split_args(a:args), { 'stdin' : '', 'stdout' : '', 'stderr' : '' }, 
+        \ { 'is_interactive' : 0, 'is_single_command' : 1 })
+endfunction"}}}
+function! s:vimshell_interactive(args)"{{{
+  if a:args == ''
+    call vimshell#commands#iexe#init()
+    
+    " Search interpreter.
+    if &filetype == '' || !has_key(g:vimshell_interactive_interpreter_commands, &filetype)
+      echoerr 'Interpreter is not found.'
+      return
+    endif
+    
+    let l:args = g:vimshell_interactive_interpreter_commands[&filetype]
+  else
+    let l:args = a:args
+  endif
+  
+  call vimshell#execute_internal_command('iexe', vimproc#parser#split_args(l:args), { 'stdin' : '', 'stdout' : '', 'stderr' : '' }, 
+        \ { 'is_interactive' : 0, 'is_single_command' : 1 })
+endfunction"}}}
+function! s:vimshell_terminal(args)"{{{
+  call vimshell#execute_internal_command('texe', vimproc#parser#split_args(a:args), { 'stdin' : '', 'stdout' : '', 'stderr' : '' }, 
+        \ { 'is_interactive' : 0, 'is_single_command' : 1 })
 endfunction"}}}
 
 augroup vimshell

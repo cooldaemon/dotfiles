@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: history.vim
 " AUTHOR: Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 04 Jul 2010
+" Last Modified: 09 Jul 2010
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -41,7 +41,7 @@ function! vimshell#history#append(command)"{{{
   " Filtering.
   call insert(filter(g:vimshell#hist_buffer, 'v:val !=# ' . string(a:command)), l:command)
 
-  " Trunk.
+  " Truncate.
   let g:vimshell#hist_buffer = g:vimshell#hist_buffer[: g:vimshell_max_command_history-1]
 
   " Save history file.
@@ -89,6 +89,10 @@ function! vimshell#history#interactive_append(command)"{{{
     call mkdir(fnamemodify(l:history_dir, ':p'), 'p')
   endif
   let l:history_path = l:history_dir . '/'.&filetype
+  if !filereadable(l:history_path)
+    " Create new file.
+    call writefile([], l:history_path)
+  endif
   let b:interactive.command_history = readfile(l:history_path)
 
   " Reduce blanks.
@@ -96,7 +100,7 @@ function! vimshell#history#interactive_append(command)"{{{
   " Filtering.
   call insert(filter(b:interactive.command_history, 'v:val !=# '.string(substitute(l:command, "'", "''", 'g'))), l:command)
 
-  " Trunk.
+  " Truncate.
   let b:interactive.command_history = b:interactive.command_history[: g:vimshell_max_command_history-1]
 
   " Save history file.

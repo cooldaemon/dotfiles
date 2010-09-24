@@ -1,7 +1,7 @@
 "=============================================================================
-" FILE: altercmd.vim
+" FILE: mkcd.vim
 " AUTHOR: Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 13 Apr 2010
+" Last Modified: 07 Jul 2010
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -24,32 +24,36 @@
 " }}}
 "=============================================================================
 
-function! vimshell#altercmd#define(original, alternative)"{{{
-  execute 'inoreabbrev <buffer><expr>' a:original
-        \ '(join(vimshell#get_current_args()) ==# "' . a:original  . '")?' 
-        \ s:SID_PREFIX().'recursive_expand_altercmd('.string(a:original).')' ':' string(a:original)
-  let b:vimshell.altercmd_table[a:original] = a:alternative
+let s:command = {
+      \ 'name' : 'mkcd',
+      \ 'kind' : 'internal',
+      \ 'description' : 'mkcd {directory-name}',
+      \}
+function! s:command.execute(command, args, fd, context)"{{{
+  " Make directory and change the working directory.
+
+  if empty(a:args)
+    " Move to HOME directory.
+    let l:arguments = $HOME
+  elseif len(a:args) == 2
+    " Substitute current directory.
+    let l:arguments = substitute(getcwd(), a:args[0], a:args[1], 'g')
+  elseif len(a:args) > 2
+    call vimshell#error_line(a:fd, 'mkcd: Too many arguments.')
+    return
+  else
+    " Filename escape.
+    let l:arguments = substitute(a:args[0], '^\~\ze[/\\]', substitute($HOME, '\\', '/', 'g'), '')
+  endif
+
+  if !isdirectory(l:arguments) && !filereadable(l:arguments)
+    " Make directory.
+    call mkdir(l:arguments)
+  endif
+
+  return vimshell#execute_internal_command('cd', a:args, a:fd, a:context)
 endfunction"}}}
 
-function! s:SID_PREFIX()
-  return matchstr(expand('<sfile>'), '<SNR>\d\+_\zeSID_PREFIX$')
+function! vimshell#commands#mkcd#define()
+  return s:command
 endfunction
-
-function! s:recursive_expand_altercmd(string)
-  " Recursive expand altercmd.
-  let l:abbrev = b:vimshell.altercmd_table[a:string]
-  let l:expanded = {}
-  while 1
-    let l:key = vimproc#parser#split_args(l:abbrev)[-1]
-    if has_key(l:expanded, l:abbrev) || !has_key(b:vimshell.altercmd_table, l:abbrev)
-      break
-    endif
-    
-    let l:expanded[l:abbrev] = 1
-    let l:abbrev = b:vimshell.altercmd_table[l:abbrev]
-  endwhile
-
-  return l:abbrev
-endfunction
-
-" vim: foldmethod=marker
