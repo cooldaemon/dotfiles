@@ -699,6 +699,7 @@ let s:zen_settings = {
 \            'form': {'action': ''},
 \            'form:get': {'action': '', 'method': 'get'},
 \            'form:post': {'action': '', 'method': 'post'},
+\            'form:upload': {'action': '', 'method': 'post', 'enctype': 'multipart/form-data'},
 \            'label': {'for': ''},
 \            'input': {'type': ''},
 \            'input:hidden': [{'type': 'hidden'}, {'name': ''}],
@@ -1615,7 +1616,7 @@ function! s:zen_toggleComment()
     let block = [pos1, [pos1[0], pos1[1] + len(content) - 1]]
     if content[-2:] == '/>' && s:point_in_region(curpos[1:2], block)
       let comment_region = s:search_region('<!--', '-->')
-      if !s:region_is_valid(comment_region) || !s:point_in_region(curpos[1:2], comment_region)
+      if !s:region_is_valid(comment_region) || !s:point_in_region(curpos[1:2], comment_region) || !(s:point_in_region(comment_region[0], block) && s:point_in_region(comment_region[1], block))
         let content = '<!-- ' . s:get_content(block) . ' -->'
         call s:change_content(block, content)
       else
@@ -1633,15 +1634,22 @@ function! s:zen_toggleComment()
         let pos2 = searchpos('</' . tag_name . '>', 'cneW')
       endif
       let block = [pos1, pos2]
+      if !s:region_is_valid(block)
+        call setpos('.', curpos)
+        let block = s:search_region('<!', '-->')
+        if !s:region_is_valid(block)
+          return
+        endif
+      endif
       if s:point_in_region(curpos[1:2], block)
         let comment_region = s:search_region('<!--', '-->')
-        if !s:region_is_valid(comment_region) || !s:point_in_region(curpos[1:2], comment_region)
+        if !s:region_is_valid(comment_region) || !s:point_in_region(curpos[1:2], comment_region) || !(s:point_in_region(comment_region[0], block) && s:point_in_region(comment_region[1], block))
           let content = '<!-- ' . s:get_content(block) . ' -->'
           call s:change_content(block, content)
         else
-          let content = s:get_content(block)
+          let content = s:get_content(comment_region)
           let content = substitute(content, '^<!--\s\(.*\)\s-->$', '\1', '')
-          call s:change_content(block, content)
+          call s:change_content(comment_region, content)
         endif
         return
       else
