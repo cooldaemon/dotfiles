@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: include_complete.vim
 " AUTHOR:  Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 10 Jul 2010
+" Last Modified: 21 Sep 2010
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -37,23 +37,27 @@ function! s:source.initialize()"{{{
   let s:include_cache = {}
   let s:cached_pattern = {}
   let s:completion_length = neocomplcache#get_auto_completion_length('include_complete')
+  
+  " Set rank.
+  call neocomplcache#set_dictionary_helper(g:neocomplcache_plugin_rank, 'include_complete', 7)
 
   augroup neocomplcache
     " Caching events
     autocmd FileType * call s:check_buffer_all()
+    autocmd BufWritePost * call s:check_buffer('')
   augroup END
 
   " Initialize include pattern."{{{
-  call neocomplcache#set_variable_pattern('g:neocomplcache_include_patterns', 'java,haskell', '^import')
+  call neocomplcache#set_dictionary_helper(g:neocomplcache_include_patterns, 'java,haskell', '^import')
   "}}}
   " Initialize expr pattern."{{{
-  call neocomplcache#set_variable_pattern('g:neocomplcache_include_exprs', 'haskell',
+  call neocomplcache#set_dictionary_helper(g:neocomplcache_include_exprs, 'haskell',
         \'substitute(v:fname,''\\.'',''/'',''g'')')
   "}}}
   " Initialize path pattern."{{{
   "}}}
   " Initialize suffixes pattern."{{{
-  call neocomplcache#set_variable_pattern('g:neocomplcache_include_suffixes', 'haskell', '.hs')
+  call neocomplcache#set_dictionary_helper(g:neocomplcache_include_suffixes, 'haskell', '.hs')
   "}}}
 
   " Create cache directory.
@@ -63,10 +67,21 @@ function! s:source.initialize()"{{{
 
   " Add command.
   command! -nargs=? -complete=buffer NeoComplCacheCachingInclude call s:check_buffer(<q-args>)
+
+  if neocomplcache#exists_echodoc()
+    call echodoc#register('include_complete', s:doc_dict)
+  endif
+  
+  " Initialize check.
+  call s:check_buffer_all()
 endfunction"}}}
 
 function! s:source.finalize()"{{{
   delcommand NeoComplCacheCachingInclude
+  
+  if neocomplcache#exists_echodoc()
+    call echodoc#unregister('include_complete')
+  endif
 endfunction"}}}
 
 function! s:source.get_keyword_list(cur_keyword_str)"{{{
@@ -91,7 +106,7 @@ function! s:source.get_keyword_list(cur_keyword_str)"{{{
     endfor
   endif
 
-  return neocomplcache#member_filter(l:keyword_list, a:cur_keyword_str)
+  return neocomplcache#member_filter(neocomplcache#dup_filter(l:keyword_list), a:cur_keyword_str)
 endfunction"}}}
 
 function! neocomplcache#sources#include_complete#define()"{{{
@@ -106,6 +121,60 @@ function! neocomplcache#sources#include_complete#get_include_files(bufnumber)"{{
   endif
 endfunction"}}}
 
+" For echodoc."{{{
+let s:doc_dict = {
+      \ 'name' : 'include_complete',
+      \ 'rank' : 5,
+      \ 'filetypes' : {},
+      \ }
+function! s:doc_dict.search(cur_text)"{{{
+  if &filetype ==# 'vim' || !has_key(s:include_info, bufnr('%'))
+    return []
+  endif
+  
+  " Collect words.
+  let l:words = []
+  let i = 0
+  while i >= 0
+    let l:word = matchstr(a:cur_text, '\k\+', i)
+    if len(l:word) >= s:completion_length
+      call add(l:words, l:word)
+    endif
+    
+    let i = matchend(a:cur_text, '\k\+', i)
+  endwhile
+
+  for l:word in reverse(l:words)
+    let l:key = tolower(l:word[: s:completion_length-1])
+    
+    for l:include in s:include_info[bufnr('%')].include_files
+      if has_key(s:include_cache[l:include], l:key)
+        let l:cache = filter(copy(s:include_cache[l:include][l:key]), 'stridx(v:val.word, ' . string(l:word) . ') == 0')
+        if !empty(l:cache) && has_key(l:cache[0], 'kind') && l:cache[0].kind != ''
+          let l:match = match(neocomplcache#escape_match(l:cache[0].abbr), l:word)
+          if l:match >= 0
+            let l:ret = []
+
+            if l:match > 0
+              call add(l:ret, { 'text' : l:cache[0].abbr[ : l:match-1] })
+            endif
+            
+            call add(l:ret, { 'text' : l:word, 'highlight' : 'Identifier' })
+            call add(l:ret, { 'text' : l:cache[0].abbr[l:match+len(l:word) :] })
+
+            if l:match > 0 || len(l:ret[-1].text) > 0
+              return l:ret
+            endif
+          endif
+        endif
+      endif
+    endfor
+  endfor
+  
+  return []
+endfunction"}}}
+"}}}
+
 function! s:check_buffer_all()"{{{
   let l:bufnumber = 1
 
@@ -119,7 +188,7 @@ function! s:check_buffer_all()"{{{
   endwhile
 endfunction"}}}
 function! s:check_buffer(bufname)"{{{
-  let l:bufname = fnamemodify((a:bufname == '')? a:bufname : bufname('%'), ':p')
+  let l:bufname = fnamemodify((a:bufname == '' ? bufname('%') : a:bufname), ':p')
   let l:bufnumber = bufnr(l:bufname)
   let s:include_info[l:bufnumber] = {}
   if (g:neocomplcache_disable_caching_buffer_name_pattern == '' || l:bufname !~ g:neocomplcache_disable_caching_buffer_name_pattern)
@@ -153,13 +222,13 @@ function! s:get_buffer_include_files(bufnumber)"{{{
         \&& !has_key(g:neocomplcache_include_paths, 'python')
         \&& executable('python')
     " Initialize python path pattern.
-    call neocomplcache#set_variable_pattern('g:neocomplcache_include_paths', 'python',
+    call neocomplcache#set_dictionary_helper(g:neocomplcache_include_paths, 'python',
           \neocomplcache#system('python -', 'import sys;sys.stdout.write(",".join(sys.path))'))
   endif
 
   let l:pattern = has_key(g:neocomplcache_include_patterns, l:filetype) ? 
         \g:neocomplcache_include_patterns[l:filetype] : getbufvar(a:bufnumber, '&include')
-  if l:pattern == ''
+  if l:pattern == '' || (l:filetype !~# '^\%(c\|cpp\|objc\)$' && l:pattern ==# '^\s*#\s*include')
     return []
   endif
   let l:path = has_key(g:neocomplcache_include_paths, l:filetype) ? 
@@ -278,6 +347,8 @@ function! s:load_from_cache(filename)"{{{
   let l:keyword_lists = {}
 
   for l:keyword in neocomplcache#cache#load_from_cache('include_cache', a:filename)
+    let l:keyword.dup = 1
+    
     let l:key = tolower(l:keyword.word[: s:completion_length-1])
     if !has_key(l:keyword_lists, l:key)
       let l:keyword_lists[l:key] = []

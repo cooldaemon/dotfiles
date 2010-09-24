@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: dictionary_complete.vim
 " AUTHOR:  Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 10 Jul 2010
+" Last Modified: 29 Aug 2010
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -53,6 +53,9 @@ function! s:source.initialize()"{{{
   if !isdirectory(g:neocomplcache_temporary_dir . '/dictionary_cache')
     call mkdir(g:neocomplcache_temporary_dir . '/dictionary_cache')
   endif
+
+  " Initialize check.
+  call s:caching()
 endfunction"}}}
 
 function! s:source.finalize()"{{{
@@ -87,27 +90,20 @@ function! s:caching()"{{{
   let l:key = neocomplcache#is_text_mode() ? 'text' : neocomplcache#get_context_filetype()
   for l:filetype in keys(neocomplcache#get_source_filetypes(l:key))
     if !has_key(s:dictionary_list, l:filetype)
-      call neocomplcache#print_caching('Caching dictionary "' . l:filetype . '"... please wait.')
-
       let s:dictionary_list[l:filetype] = s:initialize_dictionary(l:filetype)
-
-      call neocomplcache#print_caching('Caching done.')
     endif
   endfor
 endfunction"}}}
 
 function! s:recaching(filetype)"{{{
   if a:filetype == ''
-    let l:filetype = neocomplcache#get_context_filetype()
+    let l:filetype = neocomplcache#get_context_filetype(1)
   else
     let l:filetype = a:filetype
   endif
 
   " Caching.
-  call neocomplcache#print_caching('Caching dictionary "' . l:filetype . '"... please wait.')
   let s:dictionary_list[l:filetype] = s:caching_from_dict(l:filetype)
-
-  call neocomplcache#print_caching('Caching done.')
 endfunction"}}}
 
 function! s:initialize_dictionary(filetype)"{{{

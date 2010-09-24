@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: neocomplcache.vim
 " AUTHOR:  Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 11 Jul 2010
+" Last Modified: 10 Sep 2010
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -22,7 +22,7 @@
 "     TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 "     SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 " }}}
-" Version: 5.1, for Vim 7.0
+" Version: 5.2, for Vim 7.0
 " GetLatestVimScripts: 2620 1 :AutoInstall: neocomplcache
 "=============================================================================
 
@@ -32,7 +32,7 @@ if v:version < 700
 elseif exists('g:loaded_neocomplcache')
   finish
 elseif !has('reltime')
-  echoerr 'neocomplcache needs reltime future.'
+  echoerr 'neocomplcache needs reltime feature.'
   finish
 endif
 
@@ -40,7 +40,6 @@ let s:save_cpo = &cpo
 set cpo&vim
 
 command! -nargs=0 NeoComplCacheEnable call neocomplcache#enable()
-command! -nargs=0 NeoComplCacheToggle call neocomplcache#toggle()
 
 " Obsolute options check."{{{
 if exists('g:NeoComplCache_EnableAtStartup')
@@ -96,8 +95,8 @@ endif
 if !exists('g:neocomplcache_enable_underbar_completion')
   let g:neocomplcache_enable_underbar_completion = 0
 endif
-if !exists('g:neocomplcache_enable_display_parameter')
-  let g:neocomplcache_enable_display_parameter = 1
+if !exists('g:neocomplcache_enable_caching_message')
+  let g:neocomplcache_enable_caching_message = 1
 endif
 if !exists('g:neocomplcache_enable_cursor_hold_i')
   let g:neocomplcache_enable_cursor_hold_i = 0
@@ -117,8 +116,11 @@ endif
 if !exists('g:neocomplcache_lock_buffer_name_pattern')
   let g:neocomplcache_lock_buffer_name_pattern = ''
 endif
-if !exists('g:neocomplcache_temporary_dir')
-  let g:neocomplcache_temporary_dir = '~/.neocon'
+if !exists('g:neocomplcache_force_caching_buffer_name_pattern')
+  let g:neocomplcache_force_caching_buffer_name_pattern = ''
+endif
+if !exists('g:neocomplcache_disable_auto_select_buffer_name_pattern')
+  let g:neocomplcache_disable_auto_select_buffer_name_pattern = ''
 endif
 if !exists('g:neocomplcache_ctags_program')
   let g:neocomplcache_ctags_program = 'ctags'
@@ -132,13 +134,25 @@ endif
 if !exists('g:neocomplcache_plugin_rank')
   let g:neocomplcache_plugin_rank = {}
 endif
+if !exists('g:neocomplcache_temporary_dir')
+  let g:neocomplcache_temporary_dir = '~/.neocon'
+endif
 let g:neocomplcache_temporary_dir = expand(g:neocomplcache_temporary_dir)
 if !isdirectory(g:neocomplcache_temporary_dir)
   call mkdir(g:neocomplcache_temporary_dir, 'p')
 endif
+if !exists('g:neocomplcache_quick_match_table')
+  let g:neocomplcache_quick_match_table = {
+        \'a' : 0, 's' : 1, 'd' : 2, 'f' : 3, 'g' : 4, 'h' : 5, 'j' : 6, 'k' : 7, 'l' : 8, ';' : 9,
+        \'q' : 10, 'w' : 11, 'e' : 12, 'r' : 13, 't' : 14, 'y' : 15, 'u' : 16, 'i' : 17, 'o' : 18, 'p' : 19, 
+        \}
+endif
 if exists('g:neocomplcache_enable_at_startup') && g:neocomplcache_enable_at_startup
-  " Enable startup.
-  call neocomplcache#enable()
+  augroup neocomplcache
+    autocmd!
+    " Enable startup.
+    autocmd VimEnter * call neocomplcache#enable()
+  augroup END
 endif"}}}
 
 let &cpo = s:save_cpo
