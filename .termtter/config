@@ -1,0 +1,15 @@
+# -*- coding: utf-8 -*-
+# vim: filetype=ruby
+
+config.token_file = "~/.termtter/token"
+
+config.confirm = true
+config.plugins.stdout.colors = [:red, :green, :yellow, :magenta, :cyan]
+config.plugins.stdout.timeline_format =
+  "<%= indent_text %>[<%=status_id%>]<<%=color%>><%=s.user.screen_name%>: <%=text%></<%=color%>> <%=time%>"
+
+Termtter::Client.init do |t|
+   t.plug 'expand-tinyurl'
+   t.plug 'tinyurl'
+   t.plug 'uri-open'
+end
