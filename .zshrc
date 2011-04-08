@@ -1,10 +1,6 @@
 umask 002
 cdpath=(~)
 
-if [ `uname` = 'Darwin' ]; then
-  test -r /sw/bin/init.sh && . /sw/bin/init.sh
-fi
-
 setopt AUTOPUSHD
 setopt PUSHD_IGNORE_DUPS
 setopt AUTO_CD
@@ -13,7 +9,7 @@ setopt CDABLEVARS
 #typeset -ga chpwd_functions
 #typeset -ga preexec_functions
 
-for file in bindkey prompt complete history screen alias individual_alias; do
+for file in bindkey prompt complete history screen alias individual_alias zaw; do
   [ -f ~/.zsh/$file.zsh ]; source ~/.zsh/$file.zsh
 done
 
