@@ -65,7 +65,7 @@ set ruler
 set statusline=%<%f\ %m%r%h%w%{'['.(&fenc!=''?&fenc:&enc).']['.&ff.']['.&ft.']'}%=%l,%c%V%8P
 
 "==<color>==================================================================
-colorscheme desert
+colorscheme molokai
 
 set listchars=tab:>_
 set list
