@@ -4,7 +4,7 @@ alias -g lM='| more'
 alias -g lX='| xargs'
 
 alias sc='screen -xR'
-alias tm='tmux attach-session || tmux'
+alias tm='tmux -2 attach-session || tmux -2'
 alias v='vim'
 alias g='git'
 alias cdgr='git rev-parse --is-inside-work-tree > /dev/null 2>&1 && cd $(git rev-parse --show-cdup)'
@@ -24,12 +24,16 @@ alias du='du -h'
 alias df='df -h'
 alias j='jobs'
 
+alias p='perl'
+alias e='erl'
+alias s='scala'
+
 source ~/bin/cdd
 
 # mac
 if [ `uname` = 'Darwin' ]; then
     alias fcd='source ~/bin/fcd.sh'
-    alias gv='mvim'
+    alias gv='open -a /Applications/MacVim.app'
     alias ls='gls -F --color=auto'
     alias mxmlc='mxmlc -compiler.source-path+=.'
 
