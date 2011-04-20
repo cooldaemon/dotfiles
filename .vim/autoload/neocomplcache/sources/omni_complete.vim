@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: omni_complete.vim
 " AUTHOR:  Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 04 Sep 2010
+" Last Modified: 17 Mar 2011.
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -34,22 +34,6 @@ function! s:source.initialize()"{{{
   if !exists('g:neocomplcache_omni_patterns')
     let g:neocomplcache_omni_patterns = {}
   endif
-  "if has('ruby')
-    "try 
-      "ruby 1
-      "call neocomplcache#set_dictionary_helper(g:neocomplcache_omni_patterns, 'ruby',
-            "\'[^. *\t]\.\h\w*\|\h\w*::')
-    "catch
-    "endtry
-  "endif
-  if has('python')
-    try 
-      python 1
-      call neocomplcache#set_dictionary_helper(g:neocomplcache_omni_patterns, 'python',
-            \'[^. \t]\.\w*')
-    catch
-    endtry
-  endif
   call neocomplcache#set_dictionary_helper(g:neocomplcache_omni_patterns, 'html,xhtml,xml,markdown',
         \'<[^>]*')
   call neocomplcache#set_dictionary_helper(g:neocomplcache_omni_patterns, 'css',
@@ -59,13 +43,13 @@ function! s:source.initialize()"{{{
   call neocomplcache#set_dictionary_helper(g:neocomplcache_omni_patterns, 'actionscript',
         \'[^. \t][.:]\h\w*')
   "call neocomplcache#set_dictionary_helper(g:neocomplcache_omni_patterns, 'php',
-        "\'[^. \t]->\h\w*\|\$\h\w*\|\%(=\s*new\|extends\)\s\+\|\h\w*::')
+        "\'[^. \t]->\h\w*\|\h\w*::')
   call neocomplcache#set_dictionary_helper(g:neocomplcache_omni_patterns, 'java',
         \'\%(\h\w*\|)\)\.')
   "call neocomplcache#set_dictionary_helper(g:neocomplcache_omni_patterns, 'perl',
   "\'\h\w*->\h\w*\|\h\w*::')
   "call neocomplcache#set_dictionary_helper(g:neocomplcache_omni_patterns, 'c',
-        "\'\h\w\+\|\%(\h\w*\|)\)\%(\.\|->\)\h\w*')
+        "\'\%(\.\|->\)\h\w*')
   "call neocomplcache#set_dictionary_helper(g:neocomplcache_omni_patterns, 'cpp',
         "\'\h\w*\%(\.\|->\)\h\w*\|\h\w*::')
   call neocomplcache#set_dictionary_helper(g:neocomplcache_omni_patterns, 'vimshell',
@@ -74,8 +58,18 @@ function! s:source.initialize()"{{{
         \'\h\w\+\|\h\w*\%(\.\|->\)\h\w*')
   call neocomplcache#set_dictionary_helper(g:neocomplcache_omni_patterns, 'objj',
         \'[\[ \.]\w\+$\|:\w*$')
+
+  " External language interface check.
+  if has('ruby')
+    " call neocomplcache#set_dictionary_helper(g:neocomplcache_omni_patterns, 'ruby',
+    "       \'[^. *\t]\.\h\w*\|\h\w*::')
+  endif
+  if has('python')
+    call neocomplcache#set_dictionary_helper(g:neocomplcache_omni_patterns, 'python',
+          \'[^. \t]\.\w*')
+  endif
   "}}}
-  
+
   " Initialize omni function list."{{{
   if !exists('g:neocomplcache_omni_functions')
     let g:neocomplcache_omni_functions = {}
@@ -84,9 +78,6 @@ function! s:source.initialize()"{{{
 
   " Set rank.
   call neocomplcache#set_dictionary_helper(g:neocomplcache_plugin_rank, 'omni_complete', 100)
-  
-  " Set completion length.
-  call neocomplcache#set_completion_length('omni_complete', 0)
 endfunction"}}}
 function! s:source.finalize()"{{{
 endfunction"}}}
@@ -97,6 +88,7 @@ function! s:source.get_keyword_pos(cur_text)"{{{
   endif
 
   let l:filetype = neocomplcache#get_context_filetype()
+
   if neocomplcache#is_eskk_enabled()
     let l:omnifunc = &l:omnifunc
   elseif has_key(g:neocomplcache_omni_functions, l:filetype)
@@ -111,7 +103,7 @@ function! s:source.get_keyword_pos(cur_text)"{{{
   if l:omnifunc == ''
     return -1
   endif
-  
+
   if has_key(g:neocomplcache_omni_patterns, l:omnifunc)
     let l:pattern = g:neocomplcache_omni_patterns[l:omnifunc]
   elseif l:filetype != '' && has_key(g:neocomplcache_omni_patterns, l:filetype)
@@ -165,6 +157,13 @@ function! s:source.get_keyword_pos(cur_text)"{{{
 endfunction"}}}
 
 function! s:source.get_complete_words(cur_keyword_pos, cur_keyword_str)"{{{
+  if neocomplcache#is_eskk_enabled() && exists('g:eskk#start_completion_length')
+    " Check complete length.
+    if neocomplcache#util#mb_strlen(a:cur_keyword_str) < g:eskk#start_completion_length
+      return []
+    endif
+  endif
+
   let l:is_wildcard = g:neocomplcache_enable_wildcard && a:cur_keyword_str =~ '\*\w\+$'
         \&& neocomplcache#is_eskk_enabled() && neocomplcache#is_auto_complete()
 
@@ -186,15 +185,16 @@ function! s:source.get_complete_words(cur_keyword_pos, cur_keyword_str)"{{{
   endif
 
   try
-    if l:filetype == 'ruby' && l:is_wildcard
+    if l:omnifunc ==# 'rubycomplete#Complete' && l:is_wildcard
       let l:line = getline('.')
       let l:cur_text = neocomplcache#get_cur_text()
       call setline('.', l:cur_text[: match(l:cur_text, '\%(\*\w\+\)\+$') - 1])
     endif
 
-    let l:list = call(l:omnifunc, [0, (l:filetype == 'ruby')? '' : l:cur_keyword_str])
+    let l:list = call(l:omnifunc,
+          \ [0, (l:omnifunc ==# 'rubycomplete#Complete')? '' : l:cur_keyword_str])
 
-    if l:filetype == 'ruby' && l:is_wildcard
+    if l:omnifunc ==# 'rubycomplete#Complete' && l:is_wildcard
       call setline('.', l:line)
     endif
   catch

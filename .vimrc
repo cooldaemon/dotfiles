@@ -261,9 +261,11 @@ map e  <Plug>(smartword-e)
 map ge <Plug>(smartword-ge)
 
 "neocomplcache
+imap <expr><TAB> neocomplcache#sources#snippets_complete#expandable() ? "\<Plug>(neocomplcache_snippets_expand)" : pumvisible() ? "\<C-n>" : "\<TAB>"
+smap <expr><TAB> neocomplcache#sources#snippets_complete#expandable() ? "\<Plug>(neocomplcache_snippets_expand)" : pumvisible() ? "\<C-n>" : "\<TAB>"
+
 let g:neocomplcache_enable_at_startup = 1
 let g:neocomplcache_plugin_completion_length = {
-  \ 'snipMate_complete' : 1,
   \ 'buffer_complete'   : 2,
   \ 'include_complete'  : 2,
   \ 'syntax_complete'   : 2,
@@ -298,6 +300,13 @@ let g:neocomplcache_same_filetype_lists = {
   \ 'int-perlsh' : 'perl,ref-perldoc',
   \ 'int-irb'    : 'ruby,ref-refe'
   \ }
+let g:neocomplcache_snippets_dir = $HOME . '/.vim/snippets'
+
+fun! Filename(...)
+  let filename = expand('%:t:r')
+  if filename == '' | return a:0 == 2 ? a:2 : '' | endif
+  return !a:0 || a:1 == '' ? filename : substitute(a:1, '$1', filename, 'g')
+endf
 
 autocmd BufFilePost \[ref-* silent execute ":NeoComplCacheCachingBuffer"
 
