@@ -236,15 +236,10 @@ let g:rails_devalut_database = 'mysql'
 "project
 nmap <silent><Leader>p <Plug>ToggleProject
 
-"fuzzyfinder
-nmap gb :FufBuffer<CR>
-nmap <Leader>fb  :FufBuffer<CR>
-nmap <Leader>ff  :FufFile<CR>
-nmap <Leader>fd  :FufDir<CR>
-nmap <Leader>fb  :FufBookmark<CR>
-nmap <Leader>fab :FufAddBookmark<CR>
-nmap <Leader>fe  :FufEditInfo<CR>
-nmap <Leader>ft  :FufTag<CR>
+"unite
+nmap gb :Unite buffer<CR>
+nmap <Leader>fb :Unite buffer<CR>
+nmap <Leader>ff :Unite file<CR>
 
 "git-commit
 let git_diff_spawn_mode=1
