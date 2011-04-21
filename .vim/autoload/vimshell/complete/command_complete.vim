@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: command_complete.vim
 " AUTHOR: Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 23 Sep 2010
+" Last Modified: 16 Apr 2011.
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -25,8 +25,6 @@
 "=============================================================================
 
 function! vimshell#complete#command_complete#complete()"{{{
-  call vimshell#imdisable()
-
   if !vimshell#check_prompt()
     " Ignore.
     return ''
@@ -42,16 +40,21 @@ function! vimshell#complete#command_complete#omnifunc(findstart, base)"{{{
     return -1
   endif
 
+  return vimshell#complete#command_complete#get_candidates(
+        \ vimshell#get_cur_text(), a:findstart, a:base)
+endfunction"}}}
+
+function! vimshell#complete#command_complete#get_candidates(cur_text, findstart, base)"{{{
   try
-    let l:args = vimshell#get_current_args()
+    let l:args = vimshell#get_current_args(a:cur_text)
   catch /^Exception: Quote/
-    return []
+    return a:findstart ? -1 : []
   endtry
 
   if len(l:args) <= 1
     return s:complete_commands(a:findstart, a:base)
   else
-    if vimshell#get_cur_text() =~ '\s\+$'
+    if a:cur_text =~ '\s\+$'
       " Add blank argument.
       call add(l:args, '')
     endif
@@ -84,9 +87,24 @@ function! s:complete_commands(findstart, base)"{{{
 endfunction"}}}
 
 function! s:get_complete_commands(cur_keyword_str)"{{{
+  " Save option.
+  let l:ignorecase_save = &ignorecase
+
+  " Complete.
+  if g:vimshell_smart_case && a:cur_keyword_str =~ '\u'
+    let &ignorecase = 0
+  else
+    let &ignorecase = g:vimshell_ignore_case
+  endif
+
   if a:cur_keyword_str =~ '/'
     " Filename completion.
-    return vimshell#complete#helper#files(a:cur_keyword_str)
+    let l:ret = vimshell#complete#helper#files(a:cur_keyword_str)
+
+    " Restore option.
+    let &ignorecase = l:ignorecase_save
+
+    return l:ret
   endif
 
   let l:directories = vimshell#complete#helper#directories(a:cur_keyword_str)
@@ -95,23 +113,31 @@ function! s:get_complete_commands(cur_keyword_str)"{{{
       let l:keyword.word = './' . l:keyword.word
     endfor
   endif
-  
+
   let l:ret =    l:directories
-        \+ vimshell#complete#helper#cdpath_directories(a:cur_keyword_str)
-        \+ vimshell#complete#helper#aliases(a:cur_keyword_str)
-        \+ vimshell#complete#helper#internals(a:cur_keyword_str)
+        \ + vimshell#complete#helper#cdpath_directories(a:cur_keyword_str)
+        \ + vimshell#complete#helper#aliases(a:cur_keyword_str)
+        \ + vimshell#complete#helper#internals(a:cur_keyword_str)
 
   if len(a:cur_keyword_str) >= 1
     let l:ret += vimshell#complete#helper#executables(a:cur_keyword_str)
   endif
+
+  " Restore option.
+  let &ignorecase = l:ignorecase_save
 
   return l:ret
 endfunction"}}}
 
 function! s:complete_args(findstart, base, args)"{{{
   if a:findstart
-    " Get cursor word.
-    return col('.')-len(a:args[-1])-1
+    let l:pos = col('.')-len(a:args[-1])-1
+    if a:args[-1] =~ '/'
+      " Filename completion.
+      let l:pos += match(a:args[-1], '\%(\\[^[:alnum:].-]\|\f\)\+$')
+    endif
+
+    return l:pos
   endif
 
   " Get command name.

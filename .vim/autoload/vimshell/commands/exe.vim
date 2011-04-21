@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: exe.vim
 " AUTHOR: Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 23 Aug 2010
+" Last Modified: 07 Mar 2011.
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -37,7 +37,7 @@ function! s:command.execute(commands, context)"{{{
   if !has_key(l:options, '--encoding')
     let l:options['--encoding'] = &termencoding
   endif
-  
+
   if empty(l:commands[0].args)
     return
   endif
@@ -48,20 +48,22 @@ function! s:command.execute(commands, context)"{{{
       call map(l:command.args, 'iconv(v:val, &encoding, l:options["--encoding"])')
     endfor
   endif
-  
+
   " Execute command.
   if s:init_process(l:commands, a:context, l:options)
     return
   endif
 
   " Move line.
-  call append(line('$'), '')
+  call append(line('.'), '')
   normal! j
+
+  let b:interactive.output_pos = getpos('.')
 
   if a:context.is_interactive
     throw 'exe: Process started.'
   endif
-  
+
   echo 'Running command.'
   while b:interactive.process.is_valid
     call vimshell#interactive#execute_pipe_out()
@@ -127,16 +129,16 @@ function! s:init_process(commands, context, options)"{{{
 
   " Set variables.
   let b:interactive = {
-        \ 'type' : 'execute', 
+        \ 'type' : 'execute',
         \ 'syntax' : b:interactive.syntax,
-        \ 'process' : l:sub, 
-        \ 'fd' : a:context.fd, 
-        \ 'encoding' : a:options['--encoding'], 
-        \ 'is_pty' : !vimshell#iswin(), 
+        \ 'process' : l:sub,
+        \ 'fd' : a:context.fd,
+        \ 'encoding' : a:options['--encoding'],
+        \ 'is_pty' : !vimshell#iswin(),
         \ 'echoback_linenr' : -1,
         \ 'stdout_cache' : '',
         \ 'stderr_cache' : '',
-        \ 'cmdline' : join(l:cmdline, '|'), 
+        \ 'cmdline' : join(l:cmdline, '|'),
         \}
 
   " Input from stdin.

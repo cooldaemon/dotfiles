@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: interactive.vim
 " AUTHOR:  Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 23 Sep 2010
+" Last Modified: 25 Mar 2011.
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -58,13 +58,13 @@ function! vimshell#interactive#get_cur_line(line, ...)"{{{
   return s:chomp_prompt(getline(a:line), a:line, l:interactive)
 endfunction"}}}
 function! vimshell#interactive#get_prompt(...)"{{{
-  let l:line = a:0? a:1 : line('.')
+  let l:line = a:0 ? a:1 : line('.')
   " Get prompt line.
   return !has_key(b:interactive.prompt_history, l:line) ? '' : b:interactive.prompt_history[l:line]
 endfunction"}}}
 function! s:chomp_prompt(cur_text, line, interactive)"{{{
   let l:cur_text = a:cur_text
-  
+
   if has_key(a:interactive.prompt_history, a:line)
     let l:cur_text = a:cur_text[len(a:interactive.prompt_history[a:line]) : ]
   endif
@@ -79,7 +79,7 @@ function! vimshell#interactive#execute_pty_inout(is_insert)"{{{
 
   let l:in = vimshell#interactive#get_cur_line(line('.'))
 
-  call vimshell#history#interactive_append(l:in)
+  call vimshell#history#append(l:in)
 
   if b:interactive.encoding != '' && &encoding != b:interactive.encoding
     " Convert encoding.
@@ -88,7 +88,7 @@ function! vimshell#interactive#execute_pty_inout(is_insert)"{{{
 
   try
     let b:interactive.echoback_linenr = line('.')
-    
+
     if l:in =~ "\<C-d>$"
       " EOF.
       let l:eof = (b:interactive.is_pty ? "\<C-d>" : "\<C-z>")
@@ -111,6 +111,8 @@ function! vimshell#interactive#execute_pty_inout(is_insert)"{{{
     else
       normal! $
     endif
+
+    let b:interactive.output_pos = getpos('.')
   endif
 endfunction"}}}
 function! vimshell#interactive#send_string(string)"{{{
@@ -119,19 +121,21 @@ function! vimshell#interactive#send_string(string)"{{{
   endif
 
   setlocal modifiable
-  
+
   let l:in = a:string
-  
+
   if b:interactive.encoding != '' && &encoding != b:interactive.encoding
     " Convert encoding.
     let l:in = iconv(l:in, &encoding, b:interactive.encoding)
   endif
 
   try
+    let b:interactive.echoback_linenr = line('$')
+
     if l:in =~ "\<C-d>$"
       " EOF.
       let l:eof = (b:interactive.is_pty ? "\<C-d>" : "\<C-z>")
-      
+
       call b:interactive.process.write(l:in[:-2] . l:eof)
     else
       call b:interactive.process.write(l:in)
@@ -166,7 +170,7 @@ function! vimshell#interactive#send_char(char)"{{{
       let l:char .= nr2char(c)
     endfor
   endif
-  
+
   call b:interactive.process.write(l:char)
 
   call vimshell#interactive#execute_pty_out(1)
@@ -176,36 +180,40 @@ function! s:send_region(line1, line2, string)"{{{
   if l:winnr <= 0
     return
   endif
-  
+
   " Check alternate buffer.
   let l:type = getbufvar(winbufnr(l:winnr), 'interactive').type
-  if l:type ==# 'interactive' || l:type ==# 'terminal'
-    if a:string != ''
-      let l:string = a:string . "\<LF>"
-    else
-      let l:string = join(getline(a:line1, a:line2), "\<LF>") . "\<LF>"
-    endif
-    let l:line = split(l:string, "\<LF>")[0]
-    
-    execute winnr('#') 'wincmd w'
-
-    if l:type !=# 'terminal'
-      " Save prompt.
-      let l:prompt = vimshell#interactive#get_prompt(line('$'))
-      let l:prompt_nr = line('$')
-    endif
-    
-    " Send string.
-    call vimshell#interactive#send_string(l:string)
-    
-    if l:type !=# 'terminal'
-          \ && b:interactive.process.is_valid
-      call setline(l:prompt_nr, l:prompt . l:line)
-    endif
-
-    stopinsert
-    wincmd p
+  if l:type !=# 'interactive' && l:type !=# 'terminal'
+    return
   endif
+
+  let l:string = a:string
+  if l:string == ''
+    let l:string = join(getline(a:line1, a:line2), "\<LF>")
+  endif
+  let l:string .= "\<LF>"
+
+  let l:line = split(l:string, "\<LF>")[0]
+
+  let l:save_winnr = winnr()
+  execute l:winnr 'wincmd w'
+
+  if l:type !=# 'terminal'
+    " Save prompt.
+    let l:prompt = vimshell#interactive#get_prompt(line('$'))
+    let l:prompt_nr = line('$')
+  endif
+
+  " Send string.
+  call vimshell#interactive#send_string(l:string)
+
+  if l:type !=# 'terminal'
+        \ && b:interactive.process.is_valid
+    call setline(l:prompt_nr, l:prompt . l:line)
+  endif
+
+  stopinsert
+  execute l:save_winnr 'wincmd w'
 endfunction"}}}
 function! vimshell#interactive#set_send_buffer(bufname)"{{{
   let s:last_interactive_bufnr = bufnr(a:bufname)
@@ -214,7 +222,7 @@ function! vimshell#interactive#set_send_buffer(bufname)"{{{
     " Open buffer.
     call vimshell#split_nicely()
 
-    execute edit a:bufname
+    edit `=a:bufname`
   endif
 endfunction"}}}
 
@@ -222,7 +230,7 @@ function! vimshell#interactive#execute_pty_out(is_insert)"{{{
   if !b:interactive.process.is_valid
     return
   endif
-  
+
   let l:outputed = 0
 
   " Check cache.
@@ -231,20 +239,19 @@ function! vimshell#interactive#execute_pty_out(is_insert)"{{{
     call vimshell#interactive#print_buffer(b:interactive.fd, b:interactive.stdout_cache)
     let b:interactive.stdout_cache = ''
   endif
-  
+
   if !b:interactive.process.eof
-    let l:read = b:interactive.process.read(-1, 40)
+    let l:read = b:interactive.process.read(1000, 40)
     while l:read != ''
       let l:outputed = 1
 
       call vimshell#interactive#print_buffer(b:interactive.fd, l:read)
 
-      let l:read = b:interactive.process.read(-1, 40)
+      let l:read = b:interactive.process.read(1000, 40)
     endwhile
   endif
 
   if l:outputed && b:interactive.type !=# 'terminal'
-    $
     if !b:interactive.process.eof
       if a:is_insert
         startinsert!
@@ -252,8 +259,10 @@ function! vimshell#interactive#execute_pty_out(is_insert)"{{{
         normal! $
       endif
     endif
+
+    let b:interactive.output_pos = getpos('.')
   endif
-  
+
   if b:interactive.process.eof
     call vimshell#interactive#exit()
   endif
@@ -269,13 +278,13 @@ function! vimshell#interactive#execute_pipe_out()"{{{
     call vimshell#interactive#print_buffer(b:interactive.fd, b:interactive.stdout_cache)
     let b:interactive.stdout_cache = ''
   endif
-  
+
   if !b:interactive.process.stdout.eof
-    let l:read = b:interactive.process.stdout.read(-1, 40)
+    let l:read = b:interactive.process.stdout.read(1000, 40)
     while l:read != ''
       call vimshell#interactive#print_buffer(b:interactive.fd, l:read)
 
-      let l:read = b:interactive.process.stdout.read(-1, 40)
+      let l:read = b:interactive.process.stdout.read(1000, 40)
     endwhile
   endif
 
@@ -284,16 +293,16 @@ function! vimshell#interactive#execute_pipe_out()"{{{
     call vimshell#interactive#error_buffer(b:interactive.fd, b:interactive.stderr_cache)
     let b:interactive.stderr_cache = ''
   endif
-  
+
   if !b:interactive.process.stderr.eof
-    let l:read = b:interactive.process.stderr.read(-1, 40)
+    let l:read = b:interactive.process.stderr.read(1000, 40)
     while l:read != ''
       call vimshell#interactive#error_buffer(b:interactive.fd, l:read)
 
-      let l:read = b:interactive.process.stderr.read(-1, 40)
+      let l:read = b:interactive.process.stderr.read(1000, 40)
     endwhile
   endif
-  
+
   if b:interactive.process.stdout.eof && b:interactive.process.stderr.eof
     call vimshell#interactive#exit()
   endif
@@ -304,7 +313,7 @@ function! vimshell#interactive#quit_buffer()"{{{
     bdelete
   else
     call vimshell#echo_error('Process is running. Press <C-c> to kill process.')
-  endif  
+  endif
 endfunction"}}}
 function! vimshell#interactive#exit()"{{{
   if !b:interactive.process.is_valid
@@ -318,6 +327,7 @@ function! vimshell#interactive#exit()"{{{
       " Kill process.
       " 15 == SIGTERM
       call sub.kill(15)
+      call sub.waitpid()
     catch
       " Ignore error.
     endtry
@@ -335,7 +345,8 @@ function! vimshell#interactive#exit()"{{{
       syn match   InteractiveMessage   '\*\%(Exit\|Killed\)\*'
       hi def link InteractiveMessage WarningMsg
 
-      call append(line('$'), '*Exit*')
+      setlocal modifiable
+      call append('$', '*Exit*')
 
       $
       normal! $
@@ -353,19 +364,20 @@ function! vimshell#interactive#force_exit()"{{{
   try
     " 15 == SIGTERM
     call b:interactive.process.kill(15)
+    call b:interactive.process.waitpid()
   catch
   endtry
 
   if &filetype !=# 'vimshell'
     syn match   InteractiveMessage   '\*\%(Exit\|Killed\)\*'
     hi def link InteractiveMessage WarningMsg
-    
+
     setlocal modifiable
-    
-    call append(line('$'), '*Killed*')
+
+    call append('$', '*Killed*')
     $
     normal! $
-    
+
     stopinsert
     setlocal nomodifiable
   endif
@@ -378,18 +390,19 @@ function! vimshell#interactive#hang_up(afile)"{{{
       try
         " 15 == SIGTERM
         call l:vimproc.process.kill(15)
+        call l:vimproc.process.waitpid()
       catch
       endtry
     endif
     let l:vimproc.process.is_valid = 0
-    
+
     if bufname('%') == a:afile && getbufvar(a:afile, '&filetype') !=# 'vimshell'
       syn match   InteractiveMessage   '\*\%(Exit\|Killed\)\*'
       hi def link InteractiveMessage WarningMsg
-      
+
       setlocal modifiable
-      
-      call append(line('$'), '*Killed*')
+
+      call append('$', '*Killed*')
       $
       normal! $
 
@@ -445,28 +458,17 @@ function! vimshell#interactive#print_buffer(fd, string)"{{{
     return
   endif
 
-  if a:fd.stdout != ''
-    if a:fd.stdout == '/dev/null'
-      " Nothing.
-    elseif a:fd.stdout == '/dev/clip'
-      " Write to clipboard.
-      let @+ .= a:string
-    else
-      " Write file.
-      let l:file = extend(readfile(a:fd.stdout), split(a:string, '\r\n\|\n'))
-      call writefile(l:file, a:fd.stdout)
-    endif
-
-    return
+  if !empty(a:fd) && a:fd.stdout != ''
+    return vimproc#write(a:fd.stdout, a:string, 'a')
   endif
 
   " Convert encoding.
   let l:string = (b:interactive.encoding != '' && &encoding != b:interactive.encoding) ?
         \ iconv(a:string, b:interactive.encoding, &encoding) : a:string
 
-  call vimshell#terminal#print(l:string)
+  call vimshell#terminal#print(l:string, 0)
 
-  if getline('$') =~ s:password_regex
+  if getline('.') =~ s:password_regex
         \ && b:interactive.type == 'interactive'
     redraw
 
@@ -482,29 +484,19 @@ function! vimshell#interactive#print_buffer(fd, string)"{{{
     call b:interactive.process.write(l:in . "\<NL>")
   endif
 
-  if has_key(b:interactive, 'prompt_history') && line('$') != b:interactive.echoback_linenr && getline('$') != '' 
-    let b:interactive.prompt_history[line('$')] = getline('$')
+  let b:interactive.output_pos = getpos('.')
+
+  if has_key(b:interactive, 'prompt_history') && line('.') != b:interactive.echoback_linenr && getline('.') != ''
+    let b:interactive.prompt_history[line('.')] = getline('.')
   endif
 endfunction"}}}
-
 function! vimshell#interactive#error_buffer(fd, string)"{{{
   if a:string == ''
     return
   endif
 
-  if a:fd.stderr != ''
-    if a:fd.stderr == '/dev/null'
-      " Nothing.
-    elseif a:fd.stderr == '/dev/clip'
-      " Write to clipboard.
-      let @+ .= a:string
-    else
-      " Write file.
-      let l:file = extend(readfile(a:fd.stderr), split(a:string, '\r\n\|\n'))
-      call writefile(l:file, a:fd.stderr)
-    endif
-
-    return
+  if !empty(a:fd) && a:fd.stderr != ''
+    return vimproc#write(a:fd.stderr, a:string)
   endif
 
   " Convert encoding.
@@ -512,30 +504,9 @@ function! vimshell#interactive#error_buffer(fd, string)"{{{
         \ iconv(a:string, b:interactive.encoding, &encoding) : a:string
 
   " Print buffer.
-  
-  " Strip <CR>.
-  let l:string = substitute(l:string, '\r\+\n', '\n', 'g')
-  if l:string =~ '\r'
-    for l:line in split(getline('$') . l:string, '\n', 1)
-      call append('$', '')
-      for l:l in split(l:line, '\r', 1)
-        call setline('$', '!!!' . l:l . '!!!')
-        redraw
-      endfor
-    endfor
-  else
-    let l:lines = split(l:string, '\n', 1)
+  call vimshell#terminal#print(l:string, 1)
 
-    if l:lines[0] != ''
-      let l:line = getline('$') =~ '!!!$' ?
-            \ getline('$')[: -4] . l:lines[0] . '!!!' : getline('$') . '!!!' . l:lines[0] . '!!!'
-      call setline('$', l:line)
-    endif
-    call append('$', map(l:lines[1:], 'v:val != "" ? "!!!" . v:val . "!!!" : v:val'))
-  endif
-
-  " Set cursor.
-  $
+  let b:interactive.output_pos = getpos('.')
 
   redraw
 endfunction"}}}
@@ -567,7 +538,7 @@ function! s:check_all_output()"{{{
 
     let l:bufnr += 1
   endwhile
-  
+
   if exists('b:interactive') && !empty(b:interactive.process) && b:interactive.process.is_valid
     " Ignore key sequences.
     call feedkeys("g\<ESC>", 'n')
@@ -578,19 +549,32 @@ function! s:check_output(interactive, bufnr, bufnr_save)"{{{
   if a:interactive.type ==# 'less' || !s:cache_output(a:interactive)
     return
   endif
-  
+
   if a:bufnr != a:bufnr_save
     execute bufwinnr(a:bufnr) . 'wincmd w'
   endif
 
-  if mode() !=# 'i'
-    let l:intbuffer_pos = getpos('.')
-    
-    $
-    normal! $
+  let l:type = a:interactive.type
+
+  if l:type ==# 'interactive' && (
+        \ line('.') != a:interactive.echoback_linenr
+        \ && vimshell#interactive#get_cur_line(line('.'), a:interactive) != ''
+        \ )
+    if a:bufnr != a:bufnr_save && bufexists(a:bufnr_save)
+      execute bufwinnr(a:bufnr_save) . 'wincmd w'
+    endif
+
+    return
   endif
 
-  let l:type = a:interactive.type
+  if mode() !=# 'i' && l:type !=# 'execute'
+    let l:intbuffer_pos = getpos('.')
+  endif
+
+  if has_key(a:interactive, 'output_pos')
+    call setpos('.', a:interactive.output_pos)
+  endif
+
   if l:type ==# 'background'
     setlocal modifiable
     call vimshell#interactive#execute_pipe_out()
@@ -598,23 +582,6 @@ function! s:check_output(interactive, bufnr, bufnr_save)"{{{
   elseif l:type ==# 'execute'
     call vimshell#parser#execute_continuation(mode() ==# 'i')
   elseif l:type ==# 'interactive' || l:type ==# 'terminal'
-    if l:type ==# 'interactive' && (
-          \ line('.') != a:interactive.echoback_linenr
-          \ && has_key(a:interactive.prompt_history, line('.'))
-          \ && line('$') == line('.') && vimshell#interactive#get_cur_line(line('.'), a:interactive) != ''
-          \ )
-      " Skip.
-      
-      if mode() !=# 'i'
-        call setpos('.', l:intbuffer_pos)
-      endif
-
-      if a:bufnr != a:bufnr_save && bufexists(a:bufnr_save)
-        execute bufwinnr(a:bufnr_save) . 'wincmd w'
-      endif
-      return
-    endif
-    
     if l:type ==# 'terminal' && mode() !=# 'i'
       setlocal modifiable
     endif
@@ -628,7 +595,7 @@ function! s:check_output(interactive, bufnr, bufnr_save)"{{{
     endif
   endif
 
-  if mode() !=# 'i'
+  if mode() !=# 'i' && l:type !=# 'execute'
     call setpos('.', l:intbuffer_pos)
   endif
 
@@ -640,7 +607,7 @@ function! s:cache_output(interactive)"{{{
   if empty(a:interactive.process) || !a:interactive.process.is_valid
     return 0
   endif
-  
+
   let l:outputed = 0
   if a:interactive.type ==# 'background' || a:interactive.type ==# 'execute'
     " Background.
@@ -648,25 +615,25 @@ function! s:cache_output(interactive)"{{{
     if a:interactive.process.stdout.eof
       let l:outputed = 1
     else
-      let l:read = a:interactive.process.stdout.read(-1, 40)
+      let l:read = a:interactive.process.stdout.read(1000, 40)
       let a:interactive.stdout_cache = l:read
       while l:read != ''
         let l:outputed = 1
 
-        let l:read = a:interactive.process.stdout.read(-1, 40)
+        let l:read = a:interactive.process.stdout.read(1000, 40)
         let a:interactive.stdout_cache .= l:read
       endwhile
     endif
-    
+
     if a:interactive.process.stderr.eof
       let l:outputed = 1
     else
-      let l:read = a:interactive.process.stderr.read(-1, 40)
+      let l:read = a:interactive.process.stderr.read(1000, 40)
       let a:interactive.stderr_cache = l:read
       while l:read != ''
         let l:outputed = 1
-        
-        let l:read = a:interactive.process.stderr.read(-1, 40)
+
+        let l:read = a:interactive.process.stderr.read(1000, 40)
         let a:interactive.stderr_cache .= l:read
       endwhile
     endif
@@ -676,12 +643,12 @@ function! s:cache_output(interactive)"{{{
     if a:interactive.process.eof
       let l:outputed = 1
     else
-      let l:read = a:interactive.process.read(-1, 40)
+      let l:read = a:interactive.process.read(1000, 40)
       let a:interactive.stdout_cache = l:read
       while l:read != ''
         let l:outputed = 1
 
-        let l:read = a:interactive.process.read(-1, 40)
+        let l:read = a:interactive.process.read(1000, 40)
         let a:interactive.stdout_cache .= l:read
       endwhile
     endif
@@ -694,14 +661,14 @@ function! s:winenter(bufnr)"{{{
   if !exists('b:interactive')
     return
   endif
-  
+
   call vimshell#terminal#set_title()
 endfunction"}}}
 function! s:winleave(bufnr)"{{{
   if !exists('b:interactive')
     return
   endif
-  
+
   let s:last_interactive_bufnr = a:bufnr
   call vimshell#terminal#restore_title()
 endfunction"}}}

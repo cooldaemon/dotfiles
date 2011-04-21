@@ -1,7 +1,7 @@
 "=============================================================================
-" FILE: view.vim
+" FILE: gendoc.vim
 " AUTHOR: Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 17 Nov 2010
+" Last Modified: 23 Dec 2010.
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -25,70 +25,28 @@
 "=============================================================================
 
 let s:command = {
-      \ 'name' : 'view',
+      \ 'name' : 'gendoc',
       \ 'kind' : 'internal',
-      \ 'description' : 'view [{filename}]',
+      \ 'description' : 'gendoc {command} {args}',
       \}
-function! s:command.execute(program, args, fd, context)"{{{
-  " View file.
+function! s:command.execute(command, args, fd, context)"{{{
+  " Generate cached doc.
 
   if empty(a:args)
-    if a:fd.stdin == ''
-      vimshell#error_line(a:fd, 'view: Filename required.')
-      return
-    endif
-
-    " Read from stdin.
-    let l:filename = a:fd.stdin
-  else
-    let l:filename = a:args[0]
+    return
   endif
 
-  if !isdirectory(l:filename)
-    let l:lines = readfile(l:filename)
-    if len(l:lines) < winheight(0)
-      " Print lines if one screen.
-      for l:line in l:lines
-        call vimshell#print_line(a:fd, l:line)
-      endfor
+  " Get description.
+  let l:command_name = fnamemodify(a:args[0], ':t:r')
+  let l:output = split(vimproc#system(a:args).vimproc#get_last_errmsg(), '\n')
+  let l:description = empty(l:output) ? '' : l:output[0]
 
-      return
-    endif
-  endif
-
-  " Save current directiory.
-  let l:cwd = getcwd()
-
-  let l:save_winnr = winnr()
-
-  " Split nicely.
-  call vimshell#split_nicely()
-
-  try
-    if len(a:args) > 1
-      execute 'edit +setlocal\ readonly' '+'.a:args[1] l:filename
-    else
-      edit +setlocal\ readonly `=l:filename`
-    endif
-  catch
-    echohl Error | echomsg v:errmsg | echohl None
-  endtry
-
-  " Call explorer.
-  doautocmd BufEnter
-
-  call vimshell#cd(l:cwd)
-
-  let l:last_winnr = winnr()
-  execute l:save_winnr.'wincmd w'
-
-  if has_key(a:context, 'is_single_command') && a:context.is_single_command
-    call vimshell#print_prompt(a:context)
-    execute l:last_winnr.'wincmd w'
-    stopinsert
-  endif
+  " Set cached doc.
+  let l:cached_doc = vimshell#help#get_cached_doc()
+  let l:cached_doc[l:command_name] = l:description
+  call vimshell#help#set_cached_doc(l:cached_doc)
 endfunction"}}}
 
-function! vimshell#commands#view#define()
+function! vimshell#commands#gendoc#define()
   return s:command
 endfunction

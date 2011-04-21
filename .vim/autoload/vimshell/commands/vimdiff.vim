@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: vimdiff.vim
 " AUTHOR: Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 07 Jul 2010
+" Last Modified: 14 Oct 2010
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -38,10 +38,10 @@ function! s:command.execute(program, args, fd, context)"{{{
     return
   endif
 
-  let l:winnr = winnr()
-  
   " Save current directiory.
   let l:cwd = getcwd()
+
+  let l:save_winnr = winnr()
 
   " Split nicely.
   call vimshell#split_nicely()
@@ -52,11 +52,15 @@ function! s:command.execute(program, args, fd, context)"{{{
     echohl Error | echomsg v:errmsg | echohl None
   endtry
 
-  lcd `=l:cwd`
+  call vimshell#cd(l:cwd)
 
   vertical diffsplit `=a:args[1]`
 
-  execute l:winnr.'wincmd w'
+  execute l:save_winnr.'wincmd w'
+
+  if has_key(a:context, 'is_single_command') && a:context.is_single_command
+    stopinsert
+  endif
 endfunction"}}}
 
 function! vimshell#commands#vimdiff#define()

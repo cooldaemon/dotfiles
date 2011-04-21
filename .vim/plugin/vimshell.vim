@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: vimshell.vim
 " AUTHOR: Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 16 Sep 2010
+" Last Modified: 01 Apr 2011.
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -101,6 +101,9 @@ endif
 if !exists('g:vimshell_split_command')
   let g:vimshell_split_command = ''
 endif
+if !exists('g:vimshell_cd_command')
+  let g:vimshell_cd_command = 'lcd'
+endif
 if !exists('g:vimshell_external_history_path')
   let g:vimshell_external_history_path = ''
 endif
@@ -125,8 +128,28 @@ endif
 if !exists('g:vimshell_interactive_prompts')
   let g:vimshell_interactive_prompts = {}
 endif
+if !exists('g:vimshell_interactive_no_echoback_commands')
+  " Note: MinGW gosh and scala is no echoback. Why?
+  if has('win32') || has('win64')
+    let g:vimshell_interactive_no_echoback_commands = {
+          \ 'gosh' : 1, 'python' : 1, 'scala' : 1, 'maxima' : 1,
+          \ 'fsi' : 1,
+          \}
+  else
+    let g:vimshell_interactive_no_echoback_commands = {}
+  endif
+endif
 if !exists('g:vimshell_terminal_cursor')
   let g:vimshell_terminal_cursor = 'i:block-Cursor/lCursor'
+endif
+if !exists('g:vimshell_terminal_commands')
+  let g:vimshell_terminal_commands = {
+        \ 'man' : 1, 'more' : 1, 'screen' : 1, 'tmux' : 1,
+        \ 'vi' : 1, 'emacs' : 1, 'sl' : 1,
+        \}
+endif
+if !exists('g:vimshell_enable_auto_slash')
+  let g:vimshell_enable_auto_slash = 0
 endif
 
 " For Cygwin commands.
@@ -144,6 +167,7 @@ endif
 command! -nargs=? -complete=dir VimShell call vimshell#switch_shell(0, <q-args>)
 command! -nargs=? -complete=dir VimShellCreate call vimshell#create_shell(0, <q-args>)
 command! -nargs=? -complete=dir VimShellPop call vimshell#switch_shell(1, <q-args>)
+command! -nargs=? -complete=dir VimShellTab tabnew | call vimshell#create_shell(0, <q-args>)
 command! -nargs=+ -complete=customlist,s:execute_completefunc VimShellExecute call s:vimshell_execute(<q-args>)
 command! -nargs=* -complete=customlist,s:execute_completefunc VimShellInteractive call s:vimshell_interactive(<q-args>)
 command! -nargs=+ -complete=customlist,s:execute_completefunc VimShellTerminal call s:vimshell_terminal(<q-args>)
@@ -158,7 +182,7 @@ nnoremap <silent> <Plug>(vimshell_create)  :<C-u>call vimshell#create_shell(0, '
 " Command functions:
 function! s:execute_completefunc(lead, cmd, pos)"{{{
   silent! let keys = vimshell#complete#vimshell_execute_complete#completefunc(a:lead, a:cmd, a:pos)
-  return keys 
+  return keys
 endfunction"}}}
 function! s:vimshell_execute(args)"{{{
   call vimshell#execute_internal_command('bg', vimproc#parser#split_args(a:args), { 'stdin' : '', 'stdout' : '', 'stderr' : '' }, 

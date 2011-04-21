@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: iexe.vim
 " AUTHOR: Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 21 Sep 2010
+" Last Modified: 05 Apr 2011.
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -33,17 +33,17 @@ let s:command = {
       \}
 function! s:command.execute(commands, context)"{{{
   " Interactive execute command.
-  
+
   if len(a:commands) > 1
     call vimshell#error_line(a:context.fd, 'iexe: this command is not supported pipe.')
     return
   endif
-  
+
   let l:commands = a:commands
   let [l:args, l:options] = vimshell#parser#getopt(l:commands[0].args, 
         \{ 'arg=' : ['--encoding']
         \})
-  
+
   if empty(l:args)
     return
   endif
@@ -59,7 +59,7 @@ function! s:command.execute(commands, context)"{{{
       call vimshell#error_line(a:context.fd, 'iexe: "fakecygpty.exe" is required. Please install it.')
       return
     endif
-    
+
     " Get program path from g:vimshell_interactive_cygwin_path.
     if len(l:args) < 2
       call vimshell#error_line(a:context.fd, 'iexe: command is required.')
@@ -90,7 +90,7 @@ function! s:command.execute(commands, context)"{{{
 
     let l:args[0] = 'cmdproxy.exe'
   endif
-  
+
   " Encoding conversion.
   if l:options['--encoding'] != '' && l:options['--encoding'] != &encoding
     for l:command in l:commands
@@ -125,7 +125,7 @@ function! s:command.execute(commands, context)"{{{
 
   " Initialize.
   let l:sub = vimproc#ptyopen(l:args)
-  
+
   " Restore environment variables.
   call vimshell#restore_variables(l:environments_save)
 
@@ -133,22 +133,25 @@ function! s:command.execute(commands, context)"{{{
     " Restore $HOME.
     call vimshell#restore_variables(l:home_save)
   endif
-  
+
+  let l:save_winnr = winnr()
+
   call s:init_bg(l:args, a:context)
 
   " Set variables.
   let b:interactive = {
-        \ 'type' : 'interactive', 
+        \ 'type' : 'interactive',
         \ 'syntax' : &syntax,
-        \ 'process' : l:sub, 
-        \ 'fd' : a:context.fd, 
+        \ 'process' : l:sub,
+        \ 'fd' : a:context.fd,
         \ 'encoding' : l:options['--encoding'],
-        \ 'is_secret': 0, 
-        \ 'prompt_history' : {}, 
-        \ 'command_history' : vimshell#history#interactive_read(), 
+        \ 'is_secret': 0,
+        \ 'prompt_history' : {},
         \ 'is_pty' : (!vimshell#iswin() || l:use_cygpty),
         \ 'args' : l:args,
         \ 'echoback_linenr' : 0,
+        \ 'width' : winwidth(0),
+        \ 'height' : winheight(0),
         \ 'stdout_cache' : '',
         \ 'command' : fnamemodify(l:use_cygpty ? l:args[1] : l:args[0], ':t:r'),
         \ 'is_close_immediately' : has_key(a:context, 'is_close_immediately')
@@ -157,13 +160,14 @@ function! s:command.execute(commands, context)"{{{
 
   call vimshell#interactive#execute_pty_out(1)
 
-  wincmd p
+  let l:last_winnr = winnr()
+  execute l:save_winnr.'wincmd w'
 
   if has_key(a:context, 'is_single_command') && a:context.is_single_command
     call vimshell#print_prompt(a:context)
-    wincmd p
+    execute l:last_winnr.'wincmd w'
   endif
-  
+
   if b:interactive.process.is_valid
     startinsert!
   endif
@@ -190,9 +194,11 @@ if vimshell#iswin()
   call vimshell#set_dictionary_helper(g:vimshell_interactive_command_options, 'powershell', '-Command -')
   call vimshell#set_dictionary_helper(g:vimshell_interactive_command_options, 'scala', '-Xnojline')
   call vimshell#set_dictionary_helper(g:vimshell_interactive_command_options, 'nyaos', '-t')
-  
+  call vimshell#set_dictionary_helper(g:vimshell_interactive_command_options, 'fsi', '--gui- --readline-')
+  call vimshell#set_dictionary_helper(g:vimshell_interactive_command_options, 'sbt', '-Djline.WindowsTerminal.directConsole=false')
+
   call vimshell#set_dictionary_helper(g:vimshell_interactive_encodings, 'gosh,fakecygpty', 'utf8')
-  
+
   call vimshell#set_dictionary_helper(g:vimshell_interactive_cygwin_commands, 'tail,zsh,ssh', 1)
 endif
 call vimshell#set_dictionary_helper(g:vimshell_interactive_command_options, 'termtter', '--monochrome')
@@ -230,7 +236,7 @@ function! s:default_settings()"{{{
   setlocal foldmethod=manual
   if has('conceal')
     setlocal conceallevel=3
-    setlocal concealcursor=n
+    setlocal concealcursor=nvi
   endif
 
   " For interactive.
@@ -257,10 +263,10 @@ function! s:init_bg(args, context)"{{{
   endif
 
   edit `='iexe-'.fnamemodify(a:args[0], ':r').'@'.(bufnr('$')+1)`
-  lcd `=l:cwd`
-  
+  call vimshell#cd(l:cwd)
+
   call s:default_settings()
-  
+
   let l:use_cygpty = vimshell#iswin() && a:args[0] =~ '^fakecygpty\%(\.exe\)\?$'
   execute 'set filetype=int-'.fnamemodify(l:use_cygpty ? a:args[1] : a:args[0], ':t:r')
 
@@ -281,6 +287,11 @@ function! s:insert_enter()"{{{
   if &updatetime > g:vimshell_interactive_update_time
     let s:update_time_save = &updatetime
     let &updatetime = g:vimshell_interactive_update_time
+  endif
+
+  if winwidth(0) != b:interactive.width || winheight(0) != b:interactive.height
+    " Set new window size.
+    call b:interactive.process.set_winsize(winwidth(0), winheight(0))
   endif
 endfunction"}}}
 function! s:insert_leave()"{{{
