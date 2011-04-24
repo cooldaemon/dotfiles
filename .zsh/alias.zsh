@@ -3,7 +3,7 @@ alias -g lG='| grep'
 alias -g lM='| more'
 alias -g lX='| xargs'
 
-alias sc='screen -xR'
+alias sudo='sudo -E '
 alias tm='tmux -2 attach-session || tmux -2'
 alias v='vim'
 alias g='git'
@@ -24,16 +24,12 @@ alias du='du -h'
 alias df='df -h'
 alias j='jobs'
 
-alias p='perl'
-alias e='erl'
-alias s='scala'
-
 source ~/bin/cdd
 
 # mac
 if [ `uname` = 'Darwin' ]; then
     alias fcd='source ~/bin/fcd.sh'
-    alias gv='open -a /Applications/MacVim.app'
+    alias gv='mvim'
     alias ls='gls -F --color=auto'
     alias mxmlc='mxmlc -compiler.source-path+=.'
 

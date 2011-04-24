@@ -160,6 +160,9 @@ alias -g lG='| grep'
 alias -g lM='| more'
 alias -g lX='| xargs'
 
+alias sudo='sudo -E '
+
+alias tm='tmux -2 attach-session || tmux -2'
 alias sc='screen -xR'
 
 if test `uname` != 'Linux' ; then
