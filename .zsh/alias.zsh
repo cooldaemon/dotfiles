@@ -24,12 +24,16 @@ alias du='du -h'
 alias df='df -h'
 alias j='jobs'
 
+alias p='perl'
+alias e='erl'
+alias s='scala'
+
 source ~/bin/cdd
 
 # mac
 if [ `uname` = 'Darwin' ]; then
     alias fcd='source ~/bin/fcd.sh'
-    alias gv='mvim'
+    alias gv='open -a /Applications/MacVim.app'
     alias ls='gls -F --color=auto'
     alias mxmlc='mxmlc -compiler.source-path+=.'
 
