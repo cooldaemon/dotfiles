@@ -44,7 +44,8 @@
 export CDD_PWD_FILE=$HOME/.zsh/cdd_pwd_list
 
 if [ "$TMUX" != "" ] ; then
-  export WINDOW=`tmux respawn-window | cut -d ':' -f 3`
+  export WINDOW=`tmux list-windows | tail -1 | cut -d : -f 1`
+  export PANE=`tmux list-panes | tail -1 | cut -d ':' -f 1`
 fi
 
 function _reg_pwd_screennum() {
