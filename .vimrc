@@ -32,8 +32,6 @@ filetype indent on
 
 let mapleader = ','
 
-autocmd BufNewFile,BufRead,BufEnter * exec ':lcd ' . expand("%:p:h")
-
 "==<tabkey>=================================================================
 set cindent
 set expandtab
@@ -48,10 +46,11 @@ set ignorecase
 set smartcase
 "set hlsearch
 set incsearch
-set grepprg=internal
+"set grepprg=internal
+set grepprg=ack\ -a\ --nocolor
 
 "nmap <silent> gh :let @/=''<CR>
-nmap g/ :grep // % \| cw5<LEFT><LEFT><LEFT><LEFT><LEFT><LEFT><LEFT><LEFT><LEFT>
+"nmap g/ :grep // % \| cw5<LEFT><LEFT><LEFT><LEFT><LEFT><LEFT><LEFT><LEFT><LEFT>
 
 nnoremap * g*N
 nnoremap # g#N
@@ -65,7 +64,8 @@ set ruler
 set statusline=%<%f\ %m%r%h%w%{'['.(&fenc!=''?&fenc:&enc).']['.&ff.']['.&ft.']'}%=%l,%c%V%8P
 
 "==<color>==================================================================
-colorscheme molokai
+"colorscheme molokai
+colorscheme xoria256
 
 set listchars=tab:>_
 set list
@@ -237,9 +237,14 @@ let g:rails_devalut_database = 'mysql'
 nmap <silent><Leader>p <Plug>ToggleProject
 
 "unite
-nmap gb :Unite buffer<CR>
-nmap <Leader>fb :Unite buffer<CR>
-nmap <Leader>ff :Unite file<CR>
+nmap ;; :Unite 
+nmap ;s :Unite source<CR>
+nmap ;b :Unite buffer<CR>
+nmap ;f :Unite file<CR>
+nmap ;r :Unite ref/
+nmap ;q :Unite qf<CR>
+
+nmap ;/ :grep  \| Unite qf<LEFT><LEFT><LEFT><LEFT><LEFT><LEFT><LEFT><LEFT><LEFT><LEFT><LEFT>
 
 "git-commit
 let git_diff_spawn_mode=1
