@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: completion.vim
 " AUTHOR:  Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 23 Mar 2011.
+" Last Modified: 10 Jul 2011.
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -23,6 +23,9 @@
 "     SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 " }}}
 "=============================================================================
+
+let s:save_cpo = &cpo
+set cpo&vim
 
 function! unite#kinds#completion#define()"{{{
   return s:kind
@@ -47,7 +50,7 @@ function! s:kind.action_table.insert.func(candidate)"{{{
   let l:context_col = unite#get_current_unite().context.col
   let l:next_line = l:context_col < col('$') ?
         \ getline('.')[l:context_col-1 :] : ''
-  let l:next_line = getline('.')[unite#get_current_unite().context.col :]
+  let l:next_line = getline('.')[l:context_col :]
   call setline(line('.'), split(l:cur_text . l:word . l:next_line, '\n\|\r\n'))
   let l:pos = getpos('.')
   let l:pos[2] = len(l:cur_text)+len(l:word)+1
@@ -69,10 +72,19 @@ function! s:kind.action_table.preview.func(candidate)"{{{
   echo ''
   redraw
 
-  if has_key(a:candidate, 'action__complete_info')
-    echo join(split(a:candidate.action__complete_info, '\n\|\r\n')[: &cmdheight-1], '\n')
+  let complete_info = has_key(a:candidate, 'action__complete_info') ?
+        \ a:candidate.action__complete_info :
+        \ has_key(a:candidate, 'action__complete_info_lazy') ?
+        \ a:candidate.action__complete_info_lazy() :
+        \ ''
+  if complete_info != ''
+    let S = vital#of('unite').import('Data.String')
+    echo join(S.wrap(complete_info)[: &cmdheight-1], "\n")
   endif
 endfunction"}}}
 "}}}
+
+let &cpo = s:save_cpo
+unlet s:save_cpo
 
 " vim: foldmethod=marker

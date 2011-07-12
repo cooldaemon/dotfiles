@@ -1,7 +1,7 @@
 "=============================================================================
-" FILE: output.vim
+" FILE: resume.vim
 " AUTHOR:  Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 11 Jul 2011.
+" Last Modified: 02 Jul 2011.
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -27,33 +27,37 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
-" Variables  "{{{
-"}}}
-
-function! unite#sources#output#define()"{{{
+function! unite#sources#resume#define()"{{{
   return s:source
 endfunction"}}}
 
 let s:source = {
-      \ 'name' : 'output',
-      \ 'description' : 'candidates from Vim command output',
-      \ 'default_action' : 'yank',
-      \ }
+      \ 'name' : 'resume',
+      \ 'description' : 'candidates from resume list',
+      \}
 
 function! s:source.gather_candidates(args, context)"{{{
-  let l:command = get(a:args, 0)
-  if l:command == ''
-    let l:command = input('Please input Vim command: ', '', 'command')
-  endif
+  let a:context.source__buffer_list = filter(range(1, bufnr('$')),
+        \ 'getbufvar(v:val, "&filetype") ==# "unite" && !getbufvar(v:val, "unite").context.temporary')
 
-  redir => l:result
-  silent execute l:command
-  redir END
+  let l:max_width = max(map(copy(a:context.source__buffer_list),
+        \ 'len(getbufvar(v:val, "unite").buffer_name)'))
+  let l:candidates = map(copy(a:context.source__buffer_list), '{
+        \ "word" : getbufvar(v:val, "unite").buffer_name,
+        \ "abbr" : printf("%-".l:max_width."s : "
+        \          . join(map(copy(getbufvar(v:val, "unite").sources), "v:val.name"), ", "),
+        \            getbufvar(v:val, "unite").buffer_name),
+        \ "kind" : "command",
+        \ "action__command" : "UniteResume " . getbufvar(v:val, "unite").buffer_name,
+        \ "source__time" : getbufvar(v:val, "unite").access_time,
+        \}')
 
-  return map(split(l:result, '\r\n\|\n'), '{
-        \ "word" : v:val,
-        \ "kind" : "word",
-        \ }')
+  return sort(l:candidates, 's:compare')
+endfunction"}}}
+
+" Misc.
+function! s:compare(candidate_a, candidate_b)"{{{
+  return a:candidate_b.source__time - a:candidate_a.source__time
 endfunction"}}}
 
 let &cpo = s:save_cpo

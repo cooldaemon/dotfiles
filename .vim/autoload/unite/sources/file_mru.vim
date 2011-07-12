@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: file_mru.vim
 " AUTHOR:  Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 31 Mar 2011.
+" Last Modified: 11 Jul 2011.
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -24,6 +24,9 @@
 " }}}
 "=============================================================================
 
+let s:save_cpo = &cpo
+set cpo&vim
+
 " Variables  "{{{
 " The version of MRU file format.
 let s:VERSION = '0.2.0'
@@ -45,7 +48,8 @@ function! unite#sources#file_mru#define()"{{{
   return s:source
 endfunction"}}}
 function! unite#sources#file_mru#_append()"{{{
-  let l:path = unite#util#substitute_path_separator(simplify(expand('%:p')))
+  let l:path = unite#util#substitute_path_separator(
+        \ simplify(resolve(expand('%:p'))))
 
   " Append the current buffer to the mru list.
   if !s:is_exists_path(path) || &l:buftype =~ 'help'
@@ -58,8 +62,8 @@ function! unite#sources#file_mru#_append()"{{{
   call insert(filter(s:mru_files, 'v:val.action__path !=# l:path'),
   \           s:convert2dictionary([l:path, localtime()]))
 
-  if g:unite_source_file_mru_limit > 0
-    unlet s:mru_files[g:unite_source_file_mru_limit]
+  if g:unite_source_file_mru_limit > len(s:mru_files)
+    let s:mru_files = s:mru_files[ : g:unite_source_file_mru_limit - 1]
   endif
 
   call s:save()
@@ -80,11 +84,15 @@ function! s:source.hooks.on_syntax(args, context)"{{{
 endfunction"}}}
 function! s:source.hooks.on_post_filter(args, context)"{{{
   for l:mru in a:context.candidates
-    let l:path = (g:unite_source_file_mru_filename_format == '') ? '' :
-          \ unite#util#substitute_path_separator(fnamemodify(l:mru.action__path, g:unite_source_file_mru_filename_format))
-    let l:mru.abbr = (g:unite_source_file_mru_filename_format == '' ? '' :
-          \ strftime(g:unite_source_file_mru_time_format, l:mru.source__time)) .
-          \ (l:path == '' ? l:mru.action__path : l:path)
+    let l:path = (g:unite_source_file_mru_filename_format == '') ?
+          \ l:mru.action__path :
+          \ unite#util#substitute_path_separator(
+          \     fnamemodify(l:mru.action__path, g:unite_source_file_mru_filename_format))
+    if l:path == ''
+      let l:path = l:mru.action__path
+    endif
+    let l:mru.abbr = (g:unite_source_file_mru_time_format == '' ? '' :
+          \ strftime(g:unite_source_file_mru_time_format, l:mru.source__time)) .l:path
   endfor
 endfunction"}}}
 
@@ -131,16 +139,22 @@ function! s:load()  "{{{
       return
     endif
 
-    let s:mru_files =
-    \   map(s:mru_files[: g:unite_source_file_mru_limit - 1],
-    \              's:convert2dictionary(split(v:val, "\t"))')
-    call filter(s:mru_files, 's:is_exists_path(v:val.action__path)')
+    try
+      let s:mru_files = map(s:mru_files[: g:unite_source_file_mru_limit - 1],
+            \              's:convert2dictionary(split(v:val, "\t"))')
+    catch
+      call unite#util#print_error('Sorry, MRU file is invalid.  Clears the MRU list.')
+      let s:mru_files = []
+      return
+    endtry
+
+    let s:mru_files = filter(s:mru_files, 's:is_exists_path(v:val.action__path)')
 
     let s:mru_file_mtime = getftime(g:unite_source_file_mru_file)
   endif
 endfunction"}}}
 function! s:is_exists_path(path)  "{{{
-  return filereadable(a:path)
+  return getftype(a:path) != ''
 endfunction"}}}
 function! s:convert2dictionary(list)  "{{{
   let l:path = unite#util#substitute_path_separator(a:list[0])
@@ -155,5 +169,8 @@ endfunction"}}}
 function! s:convert2list(dict)  "{{{
   return [ a:dict.action__path, a:dict.source__time ]
 endfunction"}}}
+
+let &cpo = s:save_cpo
+unlet s:save_cpo
 
 " vim: foldmethod=marker

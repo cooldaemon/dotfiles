@@ -1,7 +1,7 @@
 "=============================================================================
-" FILE: output.vim
+" FILE: mapping.vim
 " AUTHOR:  Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 11 Jul 2011.
+" Last Modified: 27 Apr 2011.
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -30,30 +30,41 @@ set cpo&vim
 " Variables  "{{{
 "}}}
 
-function! unite#sources#output#define()"{{{
+function! unite#sources#mapping#define()"{{{
   return s:source
 endfunction"}}}
 
 let s:source = {
-      \ 'name' : 'output',
-      \ 'description' : 'candidates from Vim command output',
-      \ 'default_action' : 'yank',
+      \ 'name' : 'mapping',
+      \ 'description' : 'candidates from Vim mappings',
+      \ 'max_candidates' : 30,
+      \ 'hooks' : {},
       \ }
 
-function! s:source.gather_candidates(args, context)"{{{
-  let l:command = get(a:args, 0)
-  if l:command == ''
-    let l:command = input('Please input Vim command: ', '', 'command')
-  endif
-
-  redir => l:result
-  silent execute l:command
+let s:cached_result = []
+function! s:source.hooks.on_init(args, context)"{{{
+  " Get mapping list.
+  redir => l:redir
+  silent! nmap
   redir END
 
-  return map(split(l:result, '\r\n\|\n'), '{
-        \ "word" : v:val,
-        \ "kind" : "word",
-        \ }')
+  let s:cached_result = []
+  for line in split(l:redir, '\n')
+    let l:map = matchstr(line, '^\a*\s*\zs\S\+')
+    if l:map !~ '^<' || l:map =~ '^<SNR>'
+      continue
+    endif
+    let l:map = substitute(l:map, '\(<.*>\)', '\\\1', 'g')
+
+    call add(s:cached_result, {
+          \ 'word' : l:line,
+          \ 'kind' : 'command',
+          \ 'action__command' : 'execute "normal ' . l:map . '"',
+          \ })
+  endfor
+endfunction"}}}
+function! s:source.gather_candidates(args, context)"{{{
+  return s:cached_result
 endfunction"}}}
 
 let &cpo = s:save_cpo

@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: register.vim
 " AUTHOR:  Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 15 Apr 2011.
+" Last Modified: 03 Jun 2011.
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -23,6 +23,9 @@
 "     SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 " }}}
 "=============================================================================
+
+let s:save_cpo = &cpo
+set cpo&vim
 
 function! unite#sources#register#define()"{{{
   return s:source
@@ -54,9 +57,12 @@ function! s:source.gather_candidates(args, context)"{{{
 
   for [l:reg, l:register] in l:registers
     if l:register != ''
+      let l:abbr = substitute(l:register[ : l:max_width], '\t', '>---', 'g')
+      let l:abbr = substitute(l:abbr, '\r\?\n', '\\n', 'g')
+
       call add(l:candidates, {
             \ 'word' : l:register,
-            \ 'abbr' : printf('%-7s - %-' . l:max_width . 's', l:reg, l:register[ : l:max_width]),
+            \ 'abbr' : printf('%-7s - %s', l:reg, l:abbr),
             \ 'kind' : 'word',
             \ })
     endif
@@ -64,5 +70,8 @@ function! s:source.gather_candidates(args, context)"{{{
 
   return l:candidates
 endfunction"}}}
+
+let &cpo = s:save_cpo
+unlet s:save_cpo
 
 " vim: foldmethod=marker

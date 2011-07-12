@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: directory_mru.vim
 " AUTHOR:  Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 31 Mar 2011.
+" Last Modified: 11 Jul 2011.
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -23,6 +23,9 @@
 "     SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 " }}}
 "=============================================================================
+
+let s:save_cpo = &cpo
+set cpo&vim
 
 " Variables  "{{{
 " The version of MRU file format.
@@ -53,7 +56,7 @@ function! unite#sources#directory_mru#_append()"{{{
     let l:path = getcwd()
   endif
 
-  let l:path = unite#util#substitute_path_separator(simplify(l:path))
+  let l:path = unite#util#substitute_path_separator(simplify(resolve(l:path)))
   " Chomp last /.
   let l:path = substitute(l:path, '/$', '', '')
 
@@ -68,8 +71,8 @@ function! unite#sources#directory_mru#_append()"{{{
   call insert(filter(s:mru_dirs, 'v:val.action__path !=# l:path'),
   \           s:convert2dictionary([l:path, localtime()]))
 
-  if g:unite_source_directory_mru_limit > 0
-    unlet s:mru_dirs[g:unite_source_directory_mru_limit]
+  if g:unite_source_directory_mru_limit > len(s:mru_dirs)
+    let s:mru_dirs = s:mru_dirs[ : g:unite_source_directory_mru_limit - 1]
   endif
 
   call s:save()
@@ -145,10 +148,16 @@ function! s:load()  "{{{
       return
     endif
 
-    let s:mru_dirs =
-    \   map(s:mru_dirs[: g:unite_source_directory_mru_limit - 1],
-    \              's:convert2dictionary(split(v:val, "\t"))')
-    call filter(s:mru_dirs, 'isdirectory(v:val.action__path)')
+    try
+      let s:mru_dirs = map(s:mru_dirs[: g:unite_source_directory_mru_limit - 1],
+            \              's:convert2dictionary(split(v:val, "\t"))')
+    catch
+      call unite#util#print_error('Sorry, MRU file is invalid.  Clears the MRU list.')
+      let s:mru_dirs = []
+      return
+    endtry
+
+    let s:mru_dirs = filter(s:mru_dirs, 'isdirectory(v:val.action__path)')
 
     let s:mru_file_mtime = getftime(g:unite_source_directory_mru_file)
   endif
@@ -165,5 +174,8 @@ endfunction"}}}
 function! s:convert2list(dict)  "{{{
   return [ a:dict.action__path, a:dict.source__time ]
 endfunction"}}}
+
+let &cpo = s:save_cpo
+unlet s:save_cpo
 
 " vim: foldmethod=marker

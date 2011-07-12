@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: bookmark.vim
 " AUTHOR:  Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 22 Nov 2010
+" Last Modified: 14 May 2011.
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -23,6 +23,9 @@
 "     SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 " }}}
 "=============================================================================
+
+let s:save_cpo = &cpo
+set cpo&vim
 
 " Variables  "{{{
 " The version of bookmark file format.
@@ -179,5 +182,7 @@ function! s:is_exists_path(path)  "{{{
   return isdirectory(a:path) || filereadable(a:path)
 endfunction"}}}
 
+let &cpo = s:save_cpo
+unlet s:save_cpo
 
 " vim: foldmethod=marker

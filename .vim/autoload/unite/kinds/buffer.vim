@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: buffer.vim
 " AUTHOR:  Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 13 Mar 2011.
+" Last Modified: 06 Jul 2011.
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -23,6 +23,9 @@
 "     SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 " }}}
 "=============================================================================
+
+let s:save_cpo = &cpo
+set cpo&vim
 
 function! unite#kinds#buffer#define()"{{{
   return s:kind
@@ -93,6 +96,26 @@ function! s:kind.action_table.unload.func(candidates)"{{{
     call s:delete('unload', l:candidate)
   endfor
 endfunction"}}}
+
+let s:kind.action_table.rename = {
+      \ 'description' : 'rename buffers',
+      \ 'is_invalidate_cache' : 1,
+      \ 'is_quit' : 0,
+      \ 'is_selectable' : 1,
+      \ }
+function! s:kind.action_table.rename.func(candidates)"{{{
+  for l:candidate in a:candidates
+    let l:old_buffer_name = bufname(l:candidate.action__buffer_nr)
+    let l:buffer_name = input(printf('New buffer name: %s -> ', l:old_buffer_name), l:old_buffer_name)
+    if l:buffer_name != '' && l:buffer_name !=# l:old_buffer_name
+      let l:bufnr = bufnr('%')
+      execute 'buffer' l:candidate.action__buffer_nr
+      saveas! `=l:buffer_name`
+      call delete(l:candidate.action__path)
+      execute 'buffer' l:bufnr
+    endif
+  endfor
+endfunction"}}}
 "}}}
 
 " Misc
@@ -137,5 +160,8 @@ function! s:alternate_buffer()"{{{
     endif
   endif
 endfunction"}}}
+
+let &cpo = s:save_cpo
+unlet s:save_cpo
 
 " vim: foldmethod=marker

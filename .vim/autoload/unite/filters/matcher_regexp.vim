@@ -1,7 +1,7 @@
 "=============================================================================
-" FILE: output.vim
+" FILE: matcher_regexp.vim
 " AUTHOR:  Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 11 Jul 2011.
+" Last Modified: 02 Jul 2011.
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -27,33 +27,39 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
-" Variables  "{{{
-"}}}
-
-function! unite#sources#output#define()"{{{
-  return s:source
+function! unite#filters#matcher_regexp#define()"{{{
+  return s:matcher
 endfunction"}}}
 
-let s:source = {
-      \ 'name' : 'output',
-      \ 'description' : 'candidates from Vim command output',
-      \ 'default_action' : 'yank',
-      \ }
+let s:matcher = {
+      \ 'name' : 'matcher_regexp',
+      \ 'description' : 'regular expression matcher',
+      \}
 
-function! s:source.gather_candidates(args, context)"{{{
-  let l:command = get(a:args, 0)
-  if l:command == ''
-    let l:command = input('Please input Vim command: ', '', 'command')
+function! s:matcher.filter(candidates, context)"{{{
+  if a:context.input == ''
+    return a:candidates
   endif
 
-  redir => l:result
-  silent execute l:command
-  redir END
+  let l:candidates = copy(a:candidates)
+  for l:input in split(a:context.input, '\\\@<! ')
+    if l:input !~ '[~\\.^$[\]*]'
+      " Optimized filter.
+      let l:input = substitute(l:input, '\\\(.\)', '\1', 'g')
+      let l:expr = &ignorecase ?
+            \ printf('stridx(tolower(v:val.word), %s) != -1', string(tolower(l:input))) :
+            \ printf('stridx(v:val.word, %s) != -1', string(l:input))
 
-  return map(split(l:result, '\r\n\|\n'), '{
-        \ "word" : v:val,
-        \ "kind" : "word",
-        \ }')
+      call filter(l:candidates, l:expr)
+    else
+      try
+        call filter(l:candidates, 'v:val.word =~ ' . string(l:input))
+      catch
+      endtry
+    endif
+  endfor
+
+  return l:candidates
 endfunction"}}}
 
 let &cpo = s:save_cpo

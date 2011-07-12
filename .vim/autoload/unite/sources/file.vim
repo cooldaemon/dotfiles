@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: file.vim
 " AUTHOR:  Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 17 Apr 2011.
+" Last Modified: 20 Jun 2011.
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -24,6 +24,9 @@
 " }}}
 "=============================================================================
 
+let s:save_cpo = &cpo
+set cpo&vim
+
 " Variables  "{{{
 call unite#util#set_default('g:unite_source_file_ignore_pattern',
       \'^\%(/\|\a\+:/\)$\|\%(^\|/\)\.\.\?$\|\~$\|\.\%(o|exe|dll|bak|sw[po]\)$')
@@ -43,6 +46,11 @@ function! s:source.change_candidates(args, context)"{{{
         \                     '\\\@<! ', 1), 'v:val !~ "!"')
   let l:input = empty(l:input_list) ? '' : l:input_list[0]
   let l:input = substitute(substitute(a:context.input, '\\ ', ' ', 'g'), '^\a\+:\zs\*/', '/', '')
+
+  if l:input !~ '^\%(/\|\a\+:/\)' && get(a:args, 0) != ''
+    let l:input = a:args[0] . '/' .  l:input
+  endif
+  let l:is_relative_path = l:input !~ '^\%(/\|\a\+:/\)' && get(a:args, 0) == ''
 
   " Substitute *. -> .* .
   let l:input = substitute(l:input, '\*\.', '.*', 'g')
@@ -86,8 +94,11 @@ function! s:source.change_candidates(args, context)"{{{
           \ 'word' : l:file,
           \ 'abbr' : l:file, 'source' : 'file',
           \ 'action__path' : unite#util#substitute_path_separator(fnamemodify(l:file, ':p')),
-          \ 'action__directory' : unite#util#path2directory(fnamemodify(l:file, ':p')),
           \}
+    let l:dict.action__directory = l:is_relative_path ?
+          \ unite#util#substitute_path_separator(
+          \    fnamemodify(unite#util#path2directory(l:file), ':.')) :
+          \ unite#util#path2directory(l:dict.action__path)
 
     if isdirectory(l:file)
       if l:file !~ '^\%(/\|\a\+:/\)$'
@@ -111,5 +122,21 @@ function! s:source.change_candidates(args, context)"{{{
 
   return l:candidates_dir + l:candidates_file
 endfunction"}}}
+
+" Add custom action table."{{{
+let s:cdable_action_file = {
+      \ 'description' : 'open this directory by file source',
+      \}
+
+function! s:cdable_action_file.func(candidate)
+  call unite#start([['file', a:candidate.action__directory]])
+endfunction
+
+call unite#custom_action('cdable', 'file', s:cdable_action_file)
+unlet! s:cdable_action_file
+"}}}
+
+let &cpo = s:save_cpo
+unlet s:save_cpo
 
 " vim: foldmethod=marker

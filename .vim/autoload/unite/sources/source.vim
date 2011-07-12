@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: source.vim
 " AUTHOR:  Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 22 Mar 2011.
+" Last Modified: 11 Jul 2011.
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -24,6 +24,9 @@
 " }}}
 "=============================================================================
 
+let s:save_cpo = &cpo
+set cpo&vim
+
 function! unite#sources#source#define()"{{{
   return s:source
 endfunction"}}}
@@ -32,7 +35,7 @@ let s:source = {
       \ 'name' : 'source',
       \ 'description' : 'candidates from sources list',
       \ 'action_table' : {},
-      \ 'default_action' : { 'common' : 'start' },
+      \ 'default_action' : 'start',
       \}
 
 function! s:source.gather_candidates(args, context)"{{{
@@ -51,7 +54,12 @@ let s:action_table.start = {
       \ 'is_selectable' : 1,
       \ }
 function! s:action_table.start.func(candidates)"{{{
-  call unite#start(map(copy(a:candidates), 'v:val.action__source_name'), unite#get_context())
+  let l:context = unite#get_context()
+  let l:context.input = ''
+  let l:context.auto_preview = 0
+  let l:context.default_action = 'default'
+
+  call unite#start(map(copy(a:candidates), 'v:val.action__source_name'), l:context)
 endfunction"}}}
 
 let s:source.action_table['*'] = s:action_table
@@ -61,5 +69,8 @@ function! s:compare_sources(source_a, source_b) "{{{
   return a:source_a.name ==# a:source_b.name ? 0 :
   \      a:source_a.name >#  a:source_b.name ? 1 : -1
 endfunction"}}}
+
+let &cpo = s:save_cpo
+unlet s:save_cpo
 
 " vim: foldmethod=marker

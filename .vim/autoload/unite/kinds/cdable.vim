@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: cdable.vim
 " AUTHOR:  Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 01 Apr 2011.
+" Last Modified: 07 Jun 2011.
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -24,6 +24,9 @@
 " }}}
 "=============================================================================
 
+let s:save_cpo = &cpo
+set cpo&vim
+
 function! unite#kinds#cdable#define()"{{{
   return s:kind
 endfunction"}}}
@@ -31,6 +34,7 @@ endfunction"}}}
 let s:kind = {
       \ 'name' : 'cdable',
       \ 'action_table' : {},
+      \ 'alias_table' : { 'edit' : 'narrow' },
       \}
 
 " Actions"{{{
@@ -90,10 +94,7 @@ function! s:kind.action_table.narrow.func(candidate)"{{{
   if a:candidate.word =~ '^\.\.\?/'
     let l:word = a:candidate.word
   else
-    let l:word = unite#util#substitute_path_separator(fnamemodify(a:candidate.action__directory, ':.'))
-    if l:word == ''
-      let l:word = a:candidate.word
-    endif
+    let l:word = a:candidate.action__directory
   endif
 
   if l:word !~ '[\\/]$'
@@ -136,5 +137,8 @@ if exists(':VimFilerTab')
   endfunction"}}}
 endif
 "}}}
+
+let &cpo = s:save_cpo
+unlet s:save_cpo
 
 " vim: foldmethod=marker
