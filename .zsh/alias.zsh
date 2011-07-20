@@ -1,7 +1,14 @@
 # common
+alias grep='grep --color'
+
 alias -g lG='| grep'
 alias -g lM='| more'
 alias -g lX='| xargs'
+
+function coloring() {
+    perl -pe "s/$1/\\033\\[1;31m\$&\\033\\[0m/gi"
+}
+alias -g lC='| coloring'
 
 alias sudo='sudo -E '
 alias tm='tmux -2 attach-session || tmux -2'
