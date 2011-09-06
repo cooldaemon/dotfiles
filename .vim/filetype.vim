@@ -15,3 +15,5 @@ au BufNewFile,BufRead *.hrl setf erlang
 au BufNewFile,BufRead *.as setf actionscript
 au BufNewFile,BufRead *.mxml setf mxml
 
+" Alloy4
+au BufNewFile,BufRead *.als setf alloy4
