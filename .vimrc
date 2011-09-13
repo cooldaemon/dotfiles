@@ -46,11 +46,9 @@ set ignorecase
 set smartcase
 "set hlsearch
 set incsearch
-"set grepprg=internal
 set grepprg=ack\ -a\ --nocolor
 
-"nmap <silent> gh :let @/=''<CR>
-"nmap g/ :grep // % \| cw5<LEFT><LEFT><LEFT><LEFT><LEFT><LEFT><LEFT><LEFT><LEFT>
+nmap g/ :grep  \| cw5<LEFT><LEFT><LEFT><LEFT><LEFT><LEFT>
 
 nnoremap * g*N
 nnoremap # g#N
@@ -114,7 +112,7 @@ if !has('kaoriya')
   endif
 endif
 
-function! AU_ReCheck_FENC()
+fun! AU_ReCheck_FENC()
   if &fileencoding =~# 'iso-2022-jp' && search("[^\x01-\x7e]", 'n') == 0
     let &fileencoding=&encoding
   endif
@@ -183,7 +181,7 @@ inoremap { {}<ESC>i
 inoremap [ <C-R>=AddPair('[')<CR>
 inoremap < <C-R>=AddPair('<')<CR>
 
-function! AddPair(char)
+fun! AddPair(char)
   if a:char == '['
     if &syntax == 'tt2html'
       return "[%%]\<LEFT>\<LEFT>"
@@ -204,7 +202,7 @@ inoremap } <C-R>=ClosePair('}')<CR>
 inoremap ] <C-R>=ClosePair(']')<CR>
 inoremap > <C-R>=ClosePairHtml('>')<CR>
 
-function! ClosePair(char)
+fun! ClosePair(char)
   if getline('.')[col('.') - 1] == a:char
     return "\<RIGHT>"
   else
@@ -212,7 +210,7 @@ function! ClosePair(char)
   endif
 endf
 
-function! ClosePairHtml(char)
+fun! ClosePairHtml(char)
   if &syntax == 'html' || &syntax == 'xhtml' || &syntax == 'tt2html' || &syntax == 'eruby' || &syntax == 'vim'
     return ClosePair(a:char)
   else
@@ -227,12 +225,29 @@ nmap [ csw[
 nmap ' csw'
 nmap " csw"
 
-"==<plugin>=================================================================
-"rails
-let g:rubycomplete_rails = 1
-let g:rails_level = 4
-let g:rails_devalut_database = 'mysql'
+"==<vundle>=================================================================
+set rtp+=~/.vim/bundle/vundle/
+call vundle#rc()
 
+Bundle 'gmarik/vundle'
+Bundle 'Shougo/unite.vim'
+Bundle 'sgur/unite-qf'
+Bundle 'Shougo/neocomplcache'
+Bundle 'mattn/zencoding-vim'
+Bundle 'Shougo/vimshell'
+Bundle 'Shougo/vimproc'
+Bundle 'thinca/vim-ref'
+Bundle 'kana/vim-smartword'
+Bundle 'sql_iabbr-2'
+Bundle 'eregex.vim'
+Bundle 'errormarker.vim'
+Bundle 'project.tar.gz'
+Bundle 'surround.vim'
+Bundle 'YankRing.vim'
+Bundle 'commentop.vim'
+Bundle 'git-commit'
+
+"==<plugin>=================================================================
 "project
 nmap <silent><Leader>p <Plug>ToggleProject
 
@@ -249,10 +264,6 @@ nmap ;/ :grep  \| Unite qf<LEFT><LEFT><LEFT><LEFT><LEFT><LEFT><LEFT><LEFT><LEFT>
 "git-commit
 let git_diff_spawn_mode=1
 autocmd BufNewFile,BufRead,BufEnter COMMIT_EDITMSG set filetype=git
-
-"haskell
-autocmd BufEnter *.hs compiler ghc
-let g:haddock_browser = "open -a firefox"
 
 "smartword
 map w  <Plug>(smartword-w)
@@ -308,6 +319,10 @@ fun! Filename(...)
   return !a:0 || a:1 == '' ? filename : substitute(a:1, '$1', filename, 'g')
 endf
 
+fun! Close()
+  return stridx(&ft, 'xhtml') == -1 ? '' : ' /'
+endf
+
 autocmd BufFilePost \[ref-* silent execute ":NeoComplCacheCachingBuffer"
 
 "vimshell
@@ -319,10 +334,12 @@ let g:vimshell_user_prompt = 'printf("%s %s", fnamemodify(getcwd(), ":~"), vimsh
 autocmd FileType vimshell
   \ call vimshell#hook#set('chpwd', ['g:chpwd_for_vimshell'])
 
-function! g:chpwd_for_vimshell(args, context)
+fun! g:chpwd_for_vimshell(args, context)
   call vimshell#execute('ls')
-endfunction
+endf
 
-"ref
+"vim-ref
 let g:ref_open = 'tabnew'
 
+"yankring
+let g:yankring_history_dir = '~/.vim/bundle/YankRing.vim/'
