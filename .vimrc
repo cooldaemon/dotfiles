@@ -88,12 +88,9 @@ if !has('kaoriya')
     endif
 
     if &encoding ==# 'utf-8'
-      let s:fileencodings_default = &fileencodings
-      let &fileencodings = s:enc_jis .','. s:enc_euc .',cp932'
-      let &fileencodings = &fileencodings .','. s:fileencodings_default
-      unlet s:fileencodings_default
+      let &fileencodings = 'guess,ucs-bom,utf-8,'. s:enc_jis .','. s:enc_euc .',cp932,euc-jp,latin1'
     else
-      let &fileencodings = &fileencodings .','. s:enc_jis
+      let &fileencodings = 'guess,'. &fileencodings .','. s:enc_jis
       set fileencodings+=utf-8,ucs-2le,ucs-2
       if &encoding =~# '^\(euc-jp\|euc-jisx0213\|eucjp-ms\)$'
         set fileencodings+=cp932
@@ -238,8 +235,8 @@ Bundle 'Shougo/vimshell'
 Bundle 'Shougo/vimproc'
 Bundle 'thinca/vim-ref'
 Bundle 'kana/vim-smartword'
+Bundle 'othree/eregex.vim'
 Bundle 'sql_iabbr-2'
-Bundle 'eregex.vim'
 Bundle 'errormarker.vim'
 Bundle 'project.tar.gz'
 Bundle 'surround.vim'
