@@ -23,8 +23,6 @@ if has('kaoriya')
   set iminsert=1 imsearch=0
 endif
 
-helptags ~/.vim/doc
-
 set nocompatible
 syntax on
 filetype plugin on
