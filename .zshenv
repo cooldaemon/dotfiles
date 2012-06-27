@@ -1,4 +1,4 @@
-path=(~/bin(N) /usr/local/bin(N) /opt/local/bin(N) /usr/local/*/bin(N) $path)
+path=(~/bin(N) /usr/local/bin(N) /opt/local/bin(N) /opt/local/sbin(N) /usr/local/*/bin(N) $path)
 typeset -U path
 
 manpath=($manpath /opt/local/man(N))
