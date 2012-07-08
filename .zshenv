@@ -11,5 +11,6 @@ if [ `uname` = 'Darwin' ]; then
   export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/local/lib
   export LANG=ja_JP.UTF-8
   export JAVA_OPTS='-Xmx256M -Xms32M -Dfile.encoding=UTF-8'
+  path=(~/Library/Haskell/bin(N) $path)
 fi
 
