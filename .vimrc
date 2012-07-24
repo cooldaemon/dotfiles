@@ -168,57 +168,19 @@ nnoremap k gk
 onoremap k gk
 xnoremap k gk
 
-"==<pair>===================================================================
-set showmatch
-
-inoremap ( ()<ESC>i
-inoremap { {}<ESC>i
-inoremap [ <C-R>=AddPair('[')<CR>
-inoremap < <C-R>=AddPair('<')<CR>
-
-fun! AddPair(char)
-  if a:char == '['
-    if &syntax == 'tt2html'
-      return "[%%]\<LEFT>\<LEFT>"
+"==<change dir>=============================================================
+command! -nargs=? -complete=dir -bang CD call s:ChangeCurrentDir('<args>', '<bang>') 
+fun! s:ChangeCurrentDir(directory, bang)
+    if a:directory == ''
+        lcd %:p:h
     else
-      return "[]\<LEFT>"
+        execute 'lcd' . a:directory
     endif
-  elseif a:char == '<'
-    if &syntax == 'html' || &syntax == 'xhtml' || &syntax == 'tt2html' || &syntax == 'eruby' || &syntax == 'vim'
-      return "<>\<LEFT>"
-    else
-      return '<'
+
+    if a:bang == ''
+        pwd
     endif
-  endif
-endf
-
-inoremap ) <C-R>=ClosePair(')')<CR>
-inoremap } <C-R>=ClosePair('}')<CR>
-inoremap ] <C-R>=ClosePair(']')<CR>
-inoremap > <C-R>=ClosePairHtml('>')<CR>
-
-fun! ClosePair(char)
-  if getline('.')[col('.') - 1] == a:char
-    return "\<RIGHT>"
-  else
-    return a:char
-  endif
-endf
-
-fun! ClosePairHtml(char)
-  if &syntax == 'html' || &syntax == 'xhtml' || &syntax == 'tt2html' || &syntax == 'eruby' || &syntax == 'vim'
-    return ClosePair(a:char)
-  else
-    return a:char
-  endif
-endf
-
-nmap ( csw(
-nmap { csw{
-nmap [ csw[
-
-nmap ' csw'
-nmap " csw"
+endfun
 
 "==<vundle>=================================================================
 set rtp+=~/.vim/bundle/vundle/
@@ -228,6 +190,7 @@ Bundle 'gmarik/vundle'
 Bundle 'Shougo/unite.vim'
 Bundle 'sgur/unite-qf'
 Bundle 'Shougo/neocomplcache'
+Bundle 'Shougo/neocomplcache-snippets-complete'
 Bundle 'mattn/zencoding-vim'
 Bundle 'Shougo/vimshell'
 Bundle 'Shougo/vimproc'
@@ -241,6 +204,7 @@ Bundle 'surround.vim'
 Bundle 'YankRing.vim'
 Bundle 'commentop.vim'
 Bundle 'git-commit'
+Bundle 'mitechie/pyflakes-pathogen'
 
 "==<plugin>=================================================================
 "project
