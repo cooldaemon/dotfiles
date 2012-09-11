@@ -14,9 +14,13 @@
 	ad = add
 	ci = commit
 	co = checkout
-	ps = push origin master
-	pl = pull origin master
+	ps = push
+	pl = pull
+	psom = push origin master
+	plom = pull origin master
 	br = branch
+	sub = submodule
+	subu = submodule update
 	sv = svn
 	svr = svn rebase
 	svci = svn dcommit
