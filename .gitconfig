@@ -18,6 +18,7 @@
 	pl = pull
 	psom = push origin master
 	plom = pull origin master
+	plr = pull --rebase
 	br = branch
 	sub = submodule
 	subu = submodule update
