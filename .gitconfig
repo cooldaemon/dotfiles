@@ -18,7 +18,11 @@
 	pl = pull
 	psom = push origin master
 	plom = pull origin master
+	psod = push origin develop
+	plod = pull origin develop
 	plr = pull --rebase
+	plrom = pull --rebase origin master
+	plrod = pull --rebase origin develop
 	br = branch
 	sub = submodule
 	subu = submodule update
@@ -26,6 +30,9 @@
 	svr = svn rebase
 	svci = svn dcommit
 	svf = svn fetch svn
+	fl = flow
+	flfs = flow feature start
+	flff = flow feature finish -k
+	flffr = flow feature finish -kr
 [merge]
-	tool = gvimdiff
-
+	tool = vimdiff
