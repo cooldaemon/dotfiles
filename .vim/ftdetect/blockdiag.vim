@@ -1,1 +1,1 @@
-au BufNewFile,BufRead *.diag setf diag
+au BufNewFile,BufRead,BufReadPre *.diag setf diag

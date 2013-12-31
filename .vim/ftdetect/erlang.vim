@@ -1,2 +1,2 @@
 " Erlang include file
-au BufNewFile,BufRead *.hrl setf erlang
+au BufNewFile,BufRead,BufReadPre *.hrl setf erlang

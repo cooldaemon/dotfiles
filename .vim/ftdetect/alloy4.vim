@@ -1,1 +1,1 @@
-au BufNewFile,BufRead *.als setf alloy4
+au BufNewFile,BufRead,BufReadPre *.als setf alloy4

@@ -1,2 +1,2 @@
 " Template Toolkit
-au BufNewFile,BufRead *.tt setf tt2html
+au BufNewFile,BufRead,BufReadPre *.tt setf tt2html

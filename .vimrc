@@ -10,6 +10,7 @@ set diffopt=filler,icase,iwhite
 
 if exists('+relativenumber')
   set rnu
+  set nu
 else
   set nonu
 endif
@@ -25,8 +26,6 @@ endif
 
 set nocompatible
 syntax on
-filetype plugin on
-filetype indent on
 
 let mapleader = ','
 
@@ -44,7 +43,7 @@ set ignorecase
 set smartcase
 "set hlsearch
 set incsearch
-set grepprg=ack\ -a\ --nocolor
+set grepprg=ack\ -H\ --nocolor\ --nogroup\ --column
 
 nmap g/ :grep  \| cw5<LEFT><LEFT><LEFT><LEFT><LEFT><LEFT>
 
@@ -182,29 +181,49 @@ fun! s:ChangeCurrentDir(directory, bang)
     endif
 endfun
 
-"==<vundle>=================================================================
-set rtp+=~/.vim/bundle/vundle/
-call vundle#rc()
+"==<NeoBundle>=================================================================
+if has('vim_starting')
+    set nocompatible
+    set runtimepath+=~/.vim/bundle/neobundle.vim/
+endif
 
-Bundle 'gmarik/vundle'
-Bundle 'Shougo/unite.vim'
-Bundle 'sgur/unite-qf'
-Bundle 'Shougo/neocomplcache'
-Bundle 'Shougo/neosnippet'
-Bundle 'mattn/zencoding-vim'
-Bundle 'Shougo/vimshell'
-Bundle 'Shougo/vimproc'
-Bundle 'thinca/vim-ref'
-Bundle 'kana/vim-smartword'
-Bundle 'othree/eregex.vim'
-Bundle 'sql_iabbr-2'
-Bundle 'errormarker.vim'
-Bundle 'project.tar.gz'
-Bundle 'surround.vim'
-Bundle 'YankRing.vim'
-Bundle 'commentop.vim'
-Bundle 'git-commit'
-Bundle 'mitechie/pyflakes-pathogen'
+call neobundle#rc(expand('~/.vim/bundle/'))
+
+NeoBundleFetch 'Shougo/neobundle.vim'
+
+NeoBundle 'Shougo/vimproc', {
+    \ 'build' : {
+    \     'windows' : 'make -f make_mingw32.mak',
+    \     'cygwin' : 'make -f make_cygwin.mak',
+    \     'mac' : 'make -f make_mac.mak',
+    \     'unix' : 'make -f make_unix.mak',
+    \     },
+    \ }
+
+NeoBundle 'Shougo/unite.vim'
+NeoBundle 'sgur/unite-qf'
+NeoBundle 'Shougo/neocomplcache'
+NeoBundle 'Shougo/neosnippet'
+NeoBundle 'mattn/zencoding-vim'
+NeoBundle 'Shougo/vimshell'
+NeoBundle 'thinca/vim-ref'
+NeoBundle 'kana/vim-smartword'
+NeoBundle 'othree/eregex.vim'
+NeoBundle 'sql_iabbr-2'
+NeoBundle 'errormarker.vim'
+NeoBundle 'project.tar.gz'
+NeoBundle 'surround.vim'
+NeoBundle 'YankRing.vim'
+NeoBundle 'commentop.vim'
+NeoBundle 'git-commit'
+NeoBundle 'mitechie/pyflakes-pathogen'
+NeoBundle 'nathanaelkane/vim-indent-guides'
+NeoBundle 'kchmck/vim-coffee-script'
+
+filetype plugin on
+filetype indent on
+
+NeoBundleCheck
 
 "==<plugin>=================================================================
 "project
@@ -221,8 +240,8 @@ nmap ;q :Unite qf<CR>
 nmap ;/ :grep  \| Unite qf<LEFT><LEFT><LEFT><LEFT><LEFT><LEFT><LEFT><LEFT><LEFT><LEFT><LEFT>
 
 "git-commit
-let git_diff_spawn_mode=1
-autocmd BufNewFile,BufRead,BufEnter COMMIT_EDITMSG set filetype=git
+"let git_diff_spawn_mode=1
+"autocmd BufNewFile,BufRead,BufEnter COMMIT_EDITMSG set filetype=git
 
 "smartword
 map w  <Plug>(smartword-w)
@@ -231,8 +250,12 @@ map e  <Plug>(smartword-e)
 map ge <Plug>(smartword-ge)
 
 "neocomplcache
-imap <expr><TAB> neocomplcache#sources#snippets_complete#expandable() ? "\<Plug>(neocomplcache_snippets_expand)" : pumvisible() ? "\<C-n>" : "\<TAB>"
-smap <expr><TAB> neocomplcache#sources#snippets_complete#expandable() ? "\<Plug>(neocomplcache_snippets_expand)" : pumvisible() ? "\<C-n>" : "\<TAB>"
+imap <expr><TAB> neosnippet#expandable_or_jumpable() ?
+\ "\<Plug>(neosnippet_expand_or_jump)"
+\: pumvisible() ? "\<C-n>" : "\<TAB>"
+smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
+\ "\<Plug>(neosnippet_expand_or_jump)"
+\: "\<TAB>"
 
 let g:neocomplcache_enable_at_startup = 1
 let g:neocomplcache_plugin_completion_length = {
@@ -302,3 +325,9 @@ let g:ref_open = 'tabnew'
 
 "yankring
 let g:yankring_history_dir = '~/.vim/bundle/YankRing.vim/'
+
+"vim-indent-guides
+let g:indent_guides_guide_size=1
+let g:indent_guides_auto_colors=0
+autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd guibg=#262626 ctermbg=darkgray
+autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=#3c3c3c ctermbg=black
