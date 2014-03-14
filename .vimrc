@@ -240,8 +240,7 @@ nmap ;q :Unite qf<CR>
 nmap ;/ :grep  \| Unite qf<LEFT><LEFT><LEFT><LEFT><LEFT><LEFT><LEFT><LEFT><LEFT><LEFT><LEFT>
 
 "git-commit
-"let git_diff_spawn_mode=1
-"autocmd BufNewFile,BufRead,BufEnter COMMIT_EDITMSG set filetype=git
+let git_diff_spawn_mode=1
 
 "smartword
 map w  <Plug>(smartword-w)
