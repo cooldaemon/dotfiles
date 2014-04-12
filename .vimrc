@@ -217,8 +217,10 @@ NeoBundle 'YankRing.vim'
 NeoBundle 'commentop.vim'
 NeoBundle 'git-commit'
 NeoBundle 'mitechie/pyflakes-pathogen'
+NeoBundle 'tell-k/vim-autopep8'
 NeoBundle 'nathanaelkane/vim-indent-guides'
 NeoBundle 'kchmck/vim-coffee-script'
+NeoBundle 'elixir-lang/vim-elixir'
 
 filetype plugin on
 filetype indent on
