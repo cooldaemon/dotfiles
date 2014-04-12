@@ -1,0 +1,1 @@
+KERL_CONFIGURE_OPTIONS="--disable-hipe --enable-smp-support --enable-threads --enable-kernel-poll --enable-darwin-64bit"
