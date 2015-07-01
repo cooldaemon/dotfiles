@@ -216,7 +216,7 @@ NeoBundle 'surround.vim'
 NeoBundle 'YankRing.vim'
 NeoBundle 'commentop.vim'
 NeoBundle 'git-commit'
-NeoBundle 'mitechie/pyflakes-pathogen'
+NeoBundle "scrooloose/syntastic"
 NeoBundle 'tell-k/vim-autopep8'
 NeoBundle 'nathanaelkane/vim-indent-guides'
 NeoBundle 'kchmck/vim-coffee-script'
@@ -243,6 +243,12 @@ nmap ;/ :grep  \| Unite qf<LEFT><LEFT><LEFT><LEFT><LEFT><LEFT><LEFT><LEFT><LEFT>
 
 "git-commit
 let git_diff_spawn_mode=1
+
+"syntastic
+let g:syntastic_python_checkers = ["flake8"] " pip install hacking
+let g:syntastic_coffee_checkers = ['coffeelint']
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_wq = 0
 
 "smartword
 map w  <Plug>(smartword-w)
