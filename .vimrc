@@ -189,23 +189,12 @@ endif
 
 call neobundle#begin(expand('~/.vim/bundle/'))
 NeoBundleFetch 'Shougo/neobundle.vim'
-call neobundle#end()
-
-NeoBundle 'Shougo/vimproc', {
-    \ 'build' : {
-    \     'windows' : 'make -f make_mingw32.mak',
-    \     'cygwin' : 'make -f make_cygwin.mak',
-    \     'mac' : 'make -f make_mac.mak',
-    \     'unix' : 'make -f make_unix.mak',
-    \     },
-    \ }
 
 NeoBundle 'Shougo/unite.vim'
 NeoBundle 'sgur/unite-qf'
-NeoBundle 'Shougo/neocomplcache'
+NeoBundle 'Shougo/neocomplete'
 NeoBundle 'Shougo/neosnippet'
 NeoBundle 'mattn/emmet-vim'
-NeoBundle 'Shougo/vimshell'
 NeoBundle 'thinca/vim-ref'
 NeoBundle 'kana/vim-smartword'
 NeoBundle 'othree/eregex.vim'
@@ -221,6 +210,8 @@ NeoBundle 'tell-k/vim-autopep8'
 NeoBundle 'nathanaelkane/vim-indent-guides'
 NeoBundle 'kchmck/vim-coffee-script'
 NeoBundle 'elixir-lang/vim-elixir'
+
+call neobundle#end()
 
 filetype plugin on
 filetype indent on
@@ -256,7 +247,8 @@ map b  <Plug>(smartword-b)
 map e  <Plug>(smartword-e)
 map ge <Plug>(smartword-ge)
 
-"neocomplcache
+"neosnippet
+let g:neosnippet#snippets_directory = $HOME . '/.vim/snippets'
 imap <expr><TAB> neosnippet#expandable_or_jumpable() ?
 \ "\<Plug>(neosnippet_expand_or_jump)"
 \: pumvisible() ? "\<C-n>" : "\<TAB>"
@@ -264,18 +256,11 @@ smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
 \ "\<Plug>(neosnippet_expand_or_jump)"
 \: "\<TAB>"
 
-let g:neocomplcache_enable_at_startup = 1
-let g:neocomplcache_plugin_completion_length = {
-  \ 'buffer_complete'   : 2,
-  \ 'include_complete'  : 2,
-  \ 'syntax_complete'   : 2,
-  \ 'filename_complete' : 2,
-  \ 'keyword_complete'  : 2,
-  \ 'omni_complete'     : 1
-  \ }
-let g:neocomplcache_min_keyword_length = 3
-let g:neocomplcache_min_syntax_length = 3
-let g:neocomplcache_dictionary_filetype_lists = {
+"neocomplete
+let g:neocomplete#enable_at_startup = 1
+let g:neocomplete#min_keyword_length = 3
+let g:neocomplete#sources#syntax#min_keyword_length = 3
+let g:neocomplete#sources#dictionary#dictionaries = {
   \ 'default'    : '',
   \ 'erlang'     : $HOME . '/.vim/dict/erlang.dict',
   \ 'objc'       : $HOME . '/.vim/dict/objc.dict',
@@ -289,43 +274,19 @@ let g:neocomplcache_dictionary_filetype_lists = {
   \ 'int-irb'    : $HOME . '/.vim/dict/ruby.dict',
   \ 'int-perlsh' : $HOME . '/.vim/dict/perl.dict'
   \ }
-let g:neocomplcache_same_filetype_lists = {
-  \ 'c'          : 'ref-man,ref-erlang',
-  \ 'perl'       : 'ref-perldoc',
-  \ 'ruby'       : 'ref-refe',
-  \ 'erlang'     : 'ref-erlang',
-  \ 'objc'       : 'c',
-  \ 'tt2html'    : 'html,perl',
-  \ 'int-erl'    : 'erlang,ref-erlang',
-  \ 'int-perlsh' : 'perl,ref-perldoc',
-  \ 'int-irb'    : 'ruby,ref-refe'
-  \ }
-let g:neocomplcache_snippets_dir = $HOME . '/.vim/snippets'
 
-fun! Filename(...)
-  let filename = expand('%:t:r')
-  if filename == '' | return a:0 == 2 ? a:2 : '' | endif
-  return !a:0 || a:1 == '' ? filename : substitute(a:1, '$1', filename, 'g')
-endf
-
-fun! Close()
-  return stridx(&ft, 'xhtml') == -1 ? '' : ' /'
-endf
-
-autocmd BufFilePost \[ref-* silent execute ":NeoComplCacheCachingBuffer"
-
-"vimshell
-let g:vimshell_split_command = 'split'
-let g:vimshell_smart_case = 1
-let g:vimshell_prompt = $USER."% "
-let g:vimshell_user_prompt = 'printf("%s %s", fnamemodify(getcwd(), ":~"), vimshell#vcs#info("(%s)-[%b]"))'
-
-autocmd FileType vimshell
-  \ call vimshell#hook#set('chpwd', ['g:chpwd_for_vimshell'])
-
-fun! g:chpwd_for_vimshell(args, context)
-  call vimshell#execute('ls')
-endf
+if !exists('g:neocomplete#same_filetypes')
+  let g:neocomplete#same_filetypes = {}
+endif
+let g:neocomplete#same_filetypes.c = 'ref-man,ref-erlang'
+let g:neocomplete#same_filetypes.perl = 'ref-perldoc'
+let g:neocomplete#same_filetypes.ruby = 'ref-refe'
+let g:neocomplete#same_filetypes.erlang = 'ref-erlang'
+let g:neocomplete#same_filetypes.objc = 'c'
+let g:neocomplete#same_filetypes.tt2html = 'html,perl'
+let g:neocomplete#same_filetypes['int-erl'] = 'erlang,ref-erlang'
+let g:neocomplete#same_filetypes['int-perlsh'] = 'perl,ref-perldoc'
+let g:neocomplete#same_filetypes['int-irb'] = 'ruby,ref-refe'
 
 "vim-ref
 let g:ref_open = 'tabnew'
