@@ -132,8 +132,6 @@ set completeopt=menu,preview,menuone
 set isfname-=-
 set complete=.,w,b,u,t,i
 
-set omnifunc=syntaxcomplete#Complete
-
 imap <C-o> <C-x><C-o>
 imap <C-l> <C-x><C-l>
 
@@ -210,6 +208,7 @@ NeoBundle 'tell-k/vim-autopep8'
 NeoBundle 'nathanaelkane/vim-indent-guides'
 NeoBundle 'kchmck/vim-coffee-script'
 NeoBundle 'elixir-lang/vim-elixir'
+NeoBundle 'davidhalter/jedi-vim'
 
 call neobundle#end()
 
@@ -246,6 +245,11 @@ map w  <Plug>(smartword-w)
 map b  <Plug>(smartword-b)
 map e  <Plug>(smartword-e)
 map ge <Plug>(smartword-ge)
+
+"jedi-vim
+autocmd FileType python setlocal omnifunc=jedi#completions
+let g:jedi#completions_enabled = 0
+let g:jedi#auto_vim_configuration = 0
 
 "neosnippet
 let g:neosnippet#snippets_directory = $HOME . '/.vim/snippets'
@@ -287,6 +291,11 @@ let g:neocomplete#same_filetypes.tt2html = 'html,perl'
 let g:neocomplete#same_filetypes['int-erl'] = 'erlang,ref-erlang'
 let g:neocomplete#same_filetypes['int-perlsh'] = 'perl,ref-perldoc'
 let g:neocomplete#same_filetypes['int-irb'] = 'ruby,ref-refe'
+
+if !exists('g:neocomplete#force_omni_input_patterns')
+  let g:neocomplete#force_omni_input_patterns = {}
+endif
+let g:neocomplete#force_omni_input_patterns.python = '\h\w*\|[^. \t]\.\w*'
 
 "vim-ref
 let g:ref_open = 'tabnew'
