@@ -236,7 +236,8 @@ nmap ;/ :grep  \| Unite qf<LEFT><LEFT><LEFT><LEFT><LEFT><LEFT><LEFT><LEFT><LEFT>
 let git_diff_spawn_mode=1
 
 "syntastic
-let g:syntastic_python_checkers = ["flake8"] " pip install hacking
+let g:syntastic_python_checkers = ['flake8'] " pip install hacking
+let g:syntastic_python_flake8_args = '--max-line-length=120 --ignore=H304'
 let g:syntastic_coffee_checkers = ['coffeelint']
 let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_wq = 0
@@ -249,17 +250,28 @@ map ge <Plug>(smartword-ge)
 
 "jedi-vim
 autocmd FileType python setlocal omnifunc=jedi#completions
+autocmd FileType python setlocal completeopt-=preview
 let g:jedi#completions_enabled = 0
 let g:jedi#auto_vim_configuration = 0
 
 "neosnippet
+let g:neosnippet#disable_runtime_snippets = {
+  \ '_' : 1,
+  \ }
 let g:neosnippet#snippets_directory = $HOME . '/.vim/snippets'
+
 imap <expr><TAB> neosnippet#expandable_or_jumpable() ?
 \ "\<Plug>(neosnippet_expand_or_jump)"
 \: pumvisible() ? "\<C-n>" : "\<TAB>"
 smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
 \ "\<Plug>(neosnippet_expand_or_jump)"
 \: "\<TAB>"
+
+fun! Filename(...)
+  let filename = expand('%:t:r')
+  if filename == '' | return a:0 == 2 ? a:2 : '' | endif
+  return !a:0 || a:1 == '' ? filename : substitute(a:1, '$1', filename, 'g')
+endf
 
 "neocomplete
 let g:neocomplete#enable_at_startup = 1
@@ -298,6 +310,12 @@ if !exists('g:neocomplete#force_omni_input_patterns')
 endif
 let g:neocomplete#force_omni_input_patterns.python = '\h\w*\|[^. \t]\.\w*'
 
+inoremap <expr><C-h> neocomplete#smart_close_popup()."\<C-h>"
+inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
+inoremap <expr><C-y> neocomplete#close_popup()
+inoremap <expr><C-e> neocomplete#cancel_popup()
+inoremap <expr><Space> pumvisible() ? neocomplete#close_popup() : "\<Space>"
+
 "vim-ref
 let g:ref_open = 'tabnew'
 
@@ -308,4 +326,4 @@ let g:yankring_history_dir = '~/.vim/bundle/YankRing.vim/'
 let g:indent_guides_guide_size=1
 let g:indent_guides_auto_colors=0
 autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd guibg=#262626 ctermbg=darkgray
-autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=#3c3c3c ctermbg=black
+autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=#3c3c3c ctermbg=darkgray
