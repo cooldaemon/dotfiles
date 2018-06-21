@@ -15,10 +15,14 @@ function cdgr
   cd (git rev-parse --show-cdup)
 end
 
+function memo
+    nvim $argv[1]_(date -jn +%Y-%m-%d).md
+end
+
 alias grep 'grep --color'
 alias sudo 'sudo -E'
 alias tm tmux
-alias v vim
+alias v nvim
 alias g git
 
 alias cp 'cp -i'
