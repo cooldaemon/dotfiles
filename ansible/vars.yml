@@ -1,0 +1,7 @@
+src_path: ~/git/dotfiles
+bin_path: ~/bin
+config_files:
+  - '.config'
+  - '.gitconfig'
+  - '.tmux.conf'
+  - '.kerlrc'
