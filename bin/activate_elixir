@@ -1,2 +1,0 @@
-. ~/erlang/17.0/activate
-export PATH=~/git/other/elixir/bin:$PATH
