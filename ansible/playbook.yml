@@ -4,5 +4,6 @@
   become: no
   roles:
     - dotfiles
+    - homebrew
     - kerl
     - anyenv

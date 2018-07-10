@@ -1,0 +1,8 @@
+- name: Update homebrew
+  homebrew: update_homebrew=yes
+
+- name: Install homebrew formulas
+  homebrew: 
+    name: "{{ item }}"
+  with_items:
+    - "{{ formulas }}"
