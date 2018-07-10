@@ -1,0 +1,15 @@
+- name: Create bin directory for user
+  file:
+    path: "{{ bin_path }}"
+    state: directory
+
+- name: Download kerl
+  get_url:
+    url: https://raw.githubusercontent.com/kerl/kerl/master/kerl
+    dest: "{{ bin_path }}/kerl"
+    force: True
+
+- name: Changing perm of kerl, adding "a+x"
+  file:
+    dest: "{{ bin_path }}/kerl"
+    mode: a+x

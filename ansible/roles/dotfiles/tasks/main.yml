@@ -1,0 +1,7 @@
+- name: Link config files
+  file:
+    src: "{{ src_path }}/{{ item }}"
+    dest: "~/{{ item }}"
+    state: link
+  with_items:
+    - "{{ config_files }}"

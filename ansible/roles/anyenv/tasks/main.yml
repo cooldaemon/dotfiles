@@ -1,0 +1,6 @@
+- name: Download anyenv
+  git:
+    repo: "{{ repo }}"
+    dest: "{{ dest_dir }}"
+    version: master
+    accept_hostkey: yes
