@@ -3,8 +3,3 @@ setlocal shiftwidth=2
 setlocal tabstop=2
 
 setlocal omnifunc=csscomplete#CompleteCSS
-
-setlocal makeprg=~/.vim/tools/css_checker.pl\ %
-
-nmap <silent> <buffer> <leader>f :w<CR>:!~/bin/reload_firefox.sh<CR>
-

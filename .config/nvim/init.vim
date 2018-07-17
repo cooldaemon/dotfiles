@@ -204,3 +204,12 @@ endif
 
 filetype plugin on
 filetype indent on
+
+"==<plugin>================================================================
+" denite
+nmap ;; :Denite
+nmap ;b :Denite buffer
+nmap ;f :Denite file
+
+" deoplate
+let g:deoplete#enable_at_startup = 1

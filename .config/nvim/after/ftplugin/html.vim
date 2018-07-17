@@ -7,6 +7,3 @@ setlocal matchpairs+=<:>
 setlocal omnifunc=htmlcomplete#CompleteTags
 
 setlocal makeprg=tidy\ -quiet\ --errors\ --gnu-emacs\ yes\ %
-
-nmap <silent> <buffer> <leader>f :w<CR>:!~/bin/reload_firefox.sh<CR>
-
