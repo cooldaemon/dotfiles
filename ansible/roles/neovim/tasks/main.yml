@@ -1,0 +1,18 @@
+- name: Create cache directory for neovim
+  file:
+    path: "{{ item }}"
+    state: directory
+  with_items:
+    - "{{ neovim_dirs }}"
+
+- name: Create cache directory for dein
+  file:
+    path: "{{ dein_dir }}"
+    state: directory
+
+- name: Download dein
+  git:
+    repo: "{{ repo }}"
+    dest: "{{ dein_dir }}"
+    version: master
+    accept_hostkey: yes

@@ -1,0 +1,222 @@
+# header
+snippet head_default
+	%% @author Masahito Ikuta <cooldaemon@gmail.com> [http://d.hatena.ne.jp/cooldaemon/]
+	%% @copyright Masahito Ikuta `strftime("%Y")`
+	%% @doc This Module is ${1}
+
+	-module(${2:`Filename()`}).
+	-author('cooldaemon@gmail.com').
+
+	-export([${3:function names}]).
+	${4}
+
+snippet head_supervisor
+	%% @author Masahito Ikuta <cooldaemon@gmail.com> [http://d.hatena.ne.jp/cooldaemon/]
+	%% @copyright Masahito Ikuta `strftime("%Y")`
+	%% @doc This Module is supervisor for ${1}
+
+	-module(${2:`Filename()`}).
+	-author('cooldaemon@gmail.com').
+
+	-behaviour(supervisor).
+
+	-export([start_link/0, stop/0]).
+	-export([init/1]).
+
+	%% External APIs
+	start_link() ->
+	  supervisor:start_link(?MODULE, {}).
+
+	stop() ->
+	  case whereis(?MODULE) of
+	    Pid when is_pid(Pid) ->
+	      exit(Pid, normal),
+	      ok;
+	    _ -> not_started
+	  end.
+
+	%% Callbacks
+	init({}) ->
+	  {
+	    % {ok, {{RestartStrategy, MaxR, MaxT}, [ChildSpec]}} | ignore
+	    % RestartStrategy
+	    %   = one_for_all | one_for_one | rest_for_one | simple_one_for_one
+	    % ChildSpec = {Id, StartFunc, Restart, Shutdown, Type, Modules}
+	    % StartFunc = {M,F,A}
+	    % Restart = permanent | transient | temporary
+	    % Shutdown = brutal_kill | int()>=0 | infinity
+	    % Type = worker | supervisor
+	    % Modules = [Module] | dynamic
+	    ${3:spec}
+	  }.
+
+	%% Internal Functions
+
+snippet head_gen_server
+	%% @author Masahito Ikuta <cooldaemon@gmail.com> [http://d.hatena.ne.jp/cooldaemon/]
+	%% @copyright Masahito Ikuta `strftime("%Y")`
+	%% @doc This Module is server for ${1}
+
+	-module(${2:`Filename()`}).
+	-author('cooldaemon@gmail.com').
+
+	-behaviour(gen_server).
+
+	-export([start_link/0, stop/0]).
+	-export([
+	  init/1,
+	  handle_call/3, handle_cast/2, handle_info/2,
+	  terminate/2, code_change/3
+	]).
+
+	%% External APIs
+	start_link() ->
+	  gen_server:start_link(?MODULE, {}, []).
+
+	stop() ->
+	  gen_server:call(?MODULE, stop).
+
+	%% Callbacks
+	init({}) ->
+	  process_flag(trap_exit, true),
+	  %   {ok, State} | {ok, State, Timeout} | {ok, State, hibernate}
+	  % | {stop, Reason} | ignore
+	  {${3:result}}.
+
+	handle_call(stop, _From, State) ->
+	  {stop, normal, stopped, State};
+
+	handle_call(_Request, _From, State) ->
+	  {reply, ok, State}.
+
+	handle_cast(_Request, State) ->
+	  {noreply, State}.
+
+	handle_info(_Info, State) ->
+	  {noreply, State}.
+
+	terminate(_Reason, _State) ->
+	  ok.
+
+	code_change(_OldVsn, State, _Extra) ->
+	  {ok, State}.
+
+	%% Internal Functions
+
+snippet moddule
+	-module(${1:`Filename()`}).
+	${2}
+
+snippet author
+	-author('cooldaemon@gmail.com').
+	${1}
+
+snippet behaviour
+	-behaviour(${1:behaviour name}).
+	${2}
+
+snippet export
+	-export([${1:function names}]).
+	${2}
+
+snippet export_all
+	-compile(export_all).
+	${1}
+
+snippet include
+	-include(${1:module name}).
+	${2}
+
+snippet include_lib
+	-include_lib(${1:module name}).
+	${2}
+
+snippet define 
+	-define(${1:name}, ${2:value}).
+	${3}
+
+snippet record
+	-record(${1:record name}, {${2:field name1}, ${3:field name2}}).
+
+# function
+snippet function_anon
+	fun (${1}) -> ${2:code} end.
+
+snippet let
+	(fun (${1}) -> ${3:code} end)(${2}).
+
+snippet function
+	${1:function name} (${2}) ->
+		${3:code}.
+
+snippet function_guard
+	${1:function name} (${2}) when ${3:guard} ->
+		${4:code}.
+
+# conditional branch
+snippet case
+	case ${1:condition code} of
+		${2:value} -> ${3:code};
+		_ -> ${4:other code}
+	end.
+
+snippet if
+	if
+		${1:condition} -> ${2:code};
+		true -> ${3:other code}
+	end.
+
+snippet receive
+	receive
+		${1:condition} -> ${3:code};
+		_ -> ${4:other code}
+		after ${2:timeout} -> ${5:timeout code}
+	end.
+
+# list
+snippet forearch
+	lists:foreach(fun (${2:Elem}) -> ${3:code} end, ${1:List}).
+
+snippet map
+	lists:map(fun (${2:Elem}) -> ${3:code} end, ${1:List}).
+
+snippet any
+	lists:any(fun (${2:Elem}) -> ${3:code} end, ${1:List}).
+
+snippet filter
+	lists:filter(
+		fun
+			(${2:Elem}) when ${3:guard} -> true;
+			(_) -> false
+		end,
+		${1:List}
+	).
+
+snippet foldl
+	lists:foldl(fun (${3:Elem}, ${4:AccIn}) -> ${5:code} end, ${2:Acc0}, ${1:List}).
+
+snippet foldr
+	lists:foldr(fun (${3:Elem}, ${4:AccIn}) -> ${5:code} end, ${2:Acc0}, ${1::ist}).
+
+snippet list
+	[${1:Elem} || ${2:Elem} <- ${3:List}].
+
+# etc..
+snippet puts
+	io:fwrite("${1:message}~n").
+
+snippet dump
+	io:fwrite("${2:~p}~n", [${1:value}]).
+
+snippet spawn
+	spawn(${1:module}, ${2:function}, [${3:arg}]).
+
+snippet spawn_link
+	spawn_link(${1:module}, ${2:function}, [${3:arg}]).
+
+snippet register
+	register(${1:name}, ${2:pid}).
+
+snippet trap_exit
+	process_flag(trap_exit, true).
+
