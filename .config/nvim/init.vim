@@ -2,6 +2,8 @@
 set backupdir=~/.cache/nvim/backup
 let &directory = &backupdir
 
+let g:netrw_home='~/.cache/nvim/netrw'
+
 set shortmess+=I
 set cmdheight=1
 set hidden
@@ -211,5 +213,11 @@ nmap ;; :Denite
 nmap ;b :Denite buffer
 nmap ;f :Denite file
 
-" deoplate
+" deoplete
 let g:deoplete#enable_at_startup = 1
+
+"jedi-vim
+autocmd FileType python setlocal omnifunc=jedi#completions
+autocmd FileType python setlocal completeopt-=preview
+let g:jedi#completions_enabled = 0
+let g:jedi#auto_vim_configuration = 0

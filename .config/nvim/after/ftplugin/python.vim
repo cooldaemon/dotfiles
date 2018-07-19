@@ -9,5 +9,3 @@ setlocal textwidth=80
 setlocal colorcolumn=80
 
 setlocal makeprg=pep8\ %
-
-IndentGuidesEnable
