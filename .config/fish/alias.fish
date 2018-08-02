@@ -23,6 +23,7 @@ alias grep 'grep --color'
 alias sudo 'sudo -E'
 alias tm tmux
 alias v nvim
+alias vi nvim
 alias g git
 
 alias cp 'cp -i'
