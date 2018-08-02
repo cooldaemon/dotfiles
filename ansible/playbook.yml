@@ -5,6 +5,5 @@
   roles:
     - dotfiles
     - homebrew
-    - kerl
-    - anyenv
+    - asdf
     - neovim

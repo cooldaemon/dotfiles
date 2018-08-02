@@ -1,1 +1,1 @@
-KERL_CONFIGURE_OPTIONS="--disable-hipe --enable-smp-support --enable-threads --enable-kernel-poll --enable-darwin-64bit --without-javac --without-odbc --without-wx"
+KERL_CONFIGURE_OPTIONS="--disable-hipe --enable-smp-support --enable-threads --enable-kernel-poll --enable-darwin-64bit --without-javac --without-odbc"

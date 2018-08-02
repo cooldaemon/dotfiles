@@ -1,4 +1,7 @@
 formulas:
+  - 'autoconf'
+  - 'wxmac'
+  - 'gpg'
   - 'tmux'
   - 'fish'
   - 'peco'

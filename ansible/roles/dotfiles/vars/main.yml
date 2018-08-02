@@ -3,4 +3,3 @@ config_files:
   - '.config'
   - '.gitconfig'
   - '.tmux.conf'
-  - '.kerlrc'
