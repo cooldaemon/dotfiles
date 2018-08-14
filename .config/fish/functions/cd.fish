@@ -6,5 +6,9 @@ function cd
     return 1
   end
 
+  if test $TMUX
+    tmux rename-window (basename (pwd))
+  end
+
   ls
 end

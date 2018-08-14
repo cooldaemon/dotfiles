@@ -8,3 +8,5 @@ source $HOME/.config/fish/alias.fish
 if test -f $HOME/.asdf/asdf.fish
   source $HOME/.asdf/asdf.fish
 end
+
+cdd_init
