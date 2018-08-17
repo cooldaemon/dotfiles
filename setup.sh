@@ -1,5 +1,8 @@
 #!/usr/bin/env fish
 
+# You need install the Docker for Mac.
+# https://store.docker.com/editions/community/docker-ce-desktop-mac
+
 brew install ansible
 ansible-playbook -i localhost, -c local ansible/playbook.yml
 
