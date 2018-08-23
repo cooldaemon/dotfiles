@@ -14,3 +14,11 @@ on_ft = 'python'
 [[plugins]]
 repo = 'zchee/deoplete-jedi'
 on_ft = 'python'
+
+[[plugins]]
+repo = 'rhysd/committia.vim'
+on_ft = 'gitcommit'
+
+[[plugins]]
+repo = 'elixir-editors/vim-elixir'
+on_ft = 'elixir'
