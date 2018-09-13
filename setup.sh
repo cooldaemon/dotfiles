@@ -15,3 +15,9 @@ ansible-playbook -i localhost, -c local ansible/playbook.yml
 # sh ~/.asdf/plugins/nodejs/bin/import-release-team-keyring
 # asdf install nodejs 10.8.0
 # asdf global nodejs 10.8.0
+
+# asdf install golang 1.11
+# asdf global golang 1.11
+# go get golang.org/x/tools/cmd/goimports
+# go get -u -v github.com/nsf/gocode
+# asdf reshim golang

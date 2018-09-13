@@ -8,6 +8,37 @@ repo = 'Shougo/denite.nvim'
 repo = 'Shougo/deoplete.nvim'
 
 [[plugins]]
+repo = 'Shougo/neosnippet.vim'
+depends = ['neosnippet-snippets', 'context_filetype.vim']
+on_i = 1
+hook_source = '''
+" Plugin key-mappings.
+" Note: It must be "imap" and "smap".  It uses <Plug> mappings.
+imap <C-k>     <Plug>(neosnippet_expand_or_jump)
+smap <C-k>     <Plug>(neosnippet_expand_or_jump)
+xmap <C-k>     <Plug>(neosnippet_expand_target)
+
+" SuperTab like snippets behavior.
+" Note: It must be "imap" and "smap".  It uses <Plug> mappings.
+imap <expr><TAB>
+ \ pumvisible() ? "\<C-n>" :
+ \ neosnippet#expandable_or_jumpable() ?
+ \    "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
+
+smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
+ \ "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
+
+imap <expr><CR>
+ \ (pumvisible() && neosnippet#expandable()) ? 
+ \ "\<Plug>(neosnippet_expand_or_jump)" : "\<CR>"
+
+" For conceal markers.
+if has('conceal')
+  set conceallevel=2 concealcursor=niv
+endif
+'''
+
+[[plugins]]
 repo = 'davidhalter/jedi-vim'
 on_ft = 'python'
 
@@ -22,3 +53,11 @@ on_ft = 'gitcommit'
 [[plugins]]
 repo = 'elixir-editors/vim-elixir'
 on_ft = 'elixir'
+
+[[plugins]]
+repo = 'fatih/vim-go'
+on_ft = 'go'
+
+[[plugins]]
+repo = 'zchee/deoplete-go'
+on_ft = 'go'
