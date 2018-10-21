@@ -6,3 +6,11 @@
     name: "{{ item }}"
   with_items:
     - "{{ formulas }}"
+
+- name: Setup homebrew tap
+  homebrew_tap:
+    name: homebrew/cask-fonts
+
+- name: Install homebrew cask fonts
+  homebrew_cask:
+    name: font-ricty-diminished
