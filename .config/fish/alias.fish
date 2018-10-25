@@ -16,7 +16,16 @@ function cdgr
 end
 
 function memo
-    nvim $argv[1]_(date -jn +%Y-%m-%d).md
+  set filename $argv[1]_(date -jn +%Y-%m-%d).md
+
+  if type idea > /dev/null 2>&1
+    set editor idea
+    touch $filename
+  else
+    set editor nvim
+  end
+
+  eval $editor $filename
 end
 
 alias grep 'grep --color'
