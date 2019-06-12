@@ -33,6 +33,7 @@ alias sudo 'sudo -E'
 alias tm tmux
 alias v nvim
 alias vi nvim
+alias e 'emacs -nw'
 alias g git
 
 alias cp 'cp -i'
