@@ -1,6 +1,0 @@
-neovim_dirs:
-  - '~/.cache/nvim/backup'
-  - '~/.cache/nvim/undo'
-  - '~/.cache/nvim/netrw'
-dein_dir: "~/.cache/dein/repos/github.com/Shougo/dein.vim"
-repo: "https://github.com/Shougo/dein.vim"

@@ -1,1 +1,0 @@
-/Users/masahito.ikuta/.config/fisherman/docker-fish-completion/docker-compose.fish

@@ -5,5 +5,3 @@
   roles:
     - dotfiles
     - homebrew
-    - asdf
-    - neovim

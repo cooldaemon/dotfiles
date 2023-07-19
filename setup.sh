@@ -1,23 +1,11 @@
-#!/usr/bin/env fish
+#!/usr/bin/env bash
 
-# You need install the Docker for Mac.
-# https://store.docker.com/editions/community/docker-ce-desktop-mac
+# https://docs.brew.sh/Installation
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
+
+eval "$(/opt/homebrew/bin/brew shellenv)"
 
 brew install ansible
 ansible-playbook -i localhost, -c local ansible/playbook.yml
 
-# asdf install python 3.7.0
-# asdf global python 3.7.0
-# pip install neovim
-# pip install powerline-status
-# asdf reshim python
-
-# sh ~/.asdf/plugins/nodejs/bin/import-release-team-keyring
-# asdf install nodejs 10.8.0
-# asdf global nodejs 10.8.0
-
-# asdf install golang 1.11
-# asdf global golang 1.11
-# go get golang.org/x/tools/cmd/goimports
-# go get -u -v github.com/nsf/gocode
-# asdf reshim golang
+echo /opt/homebrew/bin/fish | sudo tee -a /etc/shells

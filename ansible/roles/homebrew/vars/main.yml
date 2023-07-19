@@ -1,9 +1,6 @@
 formulas:
-  - 'autoconf'
-  - 'wxmac'
-  - 'gpg'
-  - 'tmux'
   - 'fish'
-  - 'peco'
-  - 'neovim'
-  - 'freetype'
+  - 'asdf'
+  - 'wxwidgets'
+  - 'openjdk'
+  - 'fop'
