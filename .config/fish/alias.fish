@@ -8,7 +8,7 @@ end
 alias grep 'grep --color'
 alias sudo 'sudo -E'
 alias v vi
-alias c code
+alias c cursor
 alias g git
 
 alias cp 'cp -i'
