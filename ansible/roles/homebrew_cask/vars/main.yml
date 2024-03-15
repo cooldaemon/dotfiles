@@ -1,0 +1,8 @@
+casks:
+  - docker
+  - visual-studio-code
+  - dropbox
+  - google-drive
+  # - cursor
+  # I want to add this line, but I must install it after setting up Copilot in VSCode if Copilot is to be used with Cursor.
+  # I hope this issue will be resolved with an updated version of Cursor.

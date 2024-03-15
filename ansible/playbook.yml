@@ -5,3 +5,4 @@
   roles:
     - dotfiles
     - homebrew
+    - homebrew_cask
