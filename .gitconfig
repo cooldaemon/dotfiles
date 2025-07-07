@@ -38,3 +38,5 @@
 	flffr = flow feature finish -kr
 [merge]
 	tool = vimdiff
+[branch]
+	autoSetupMerge = always
