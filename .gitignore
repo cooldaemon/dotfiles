@@ -1,3 +1,11 @@
 .DS_Store
 .config/fish/fish_variables
 .config/grammarly-languageserver
+.config/gcloud/
+.config/gh/
+.config/git/
+.config/mise/
+.config/nix/
+.config/omf/
+.config/shell_gpt/
+.config/vllm/
