@@ -1,0 +1,55 @@
+---
+- name: Install mise via Homebrew
+  homebrew:
+    name: mise
+    state: present
+
+- name: Ensure mise config directory exists
+  file:
+    path: "{{ lookup('env', 'HOME') }}/.config/mise"
+    state: directory
+    mode: '0755'
+
+- name: Copy mise global configuration
+  copy:
+    src: "{{ playbook_dir }}/../.mise.toml"
+    dest: "{{ lookup('env', 'HOME') }}/.mise.toml"
+    mode: '0644'
+
+- name: Copy tool-versions for compatibility
+  copy:
+    src: "{{ playbook_dir }}/../.tool-versions"
+    dest: "{{ lookup('env', 'HOME') }}/.tool-versions"
+    mode: '0644'
+
+- name: Install all mise tools
+  shell: |
+    export PATH="/opt/homebrew/bin:$PATH"
+    mise trust {{ lookup('env', 'HOME') }}/.mise.toml --all
+    mise install --yes
+  environment:
+    PATH: "/opt/homebrew/bin:{{ lookup('env', 'PATH') }}"
+  register: mise_install
+  changed_when: mise_install.rc == 0
+
+- name: Trust mise configuration
+  shell: |
+    export PATH="/opt/homebrew/bin:$PATH"
+    mise trust {{ lookup('env', 'HOME') }}/.mise.toml
+  environment:
+    PATH: "/opt/homebrew/bin:{{ lookup('env', 'PATH') }}"
+  changed_when: false
+
+- name: Verify mise installation
+  shell: |
+    export PATH="/opt/homebrew/bin:$PATH"
+    mise doctor
+  environment:
+    PATH: "/opt/homebrew/bin:{{ lookup('env', 'PATH') }}"
+  register: mise_doctor
+  changed_when: false
+
+- name: Display mise status
+  debug:
+    var: mise_doctor.stdout_lines
+  when: mise_doctor is defined

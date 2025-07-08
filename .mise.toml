@@ -1,0 +1,13 @@
+[tools]
+# Programming languages
+node = "20.4.0"
+python = "3.13.5"
+ruby = "3.3.4"
+go = "1.23.4"
+
+# npm global packages
+"npm:@anthropic-ai/claude-code" = "latest"
+"npm:@playwright/mcp" = "latest"
+"npm:@steipete/peekaboo-mcp" = "latest"
+"npm:@upstash/context7-mcp" = "latest"
+"npm:aws-cdk" = "latest"

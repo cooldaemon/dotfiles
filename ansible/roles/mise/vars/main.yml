@@ -1,0 +1,5 @@
+---
+# mise tools to be installed
+# These are defined in .mise.toml file in the repository root
+mise_config_file: ".mise.toml"
+mise_tool_versions_file: ".tool-versions"

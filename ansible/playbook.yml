@@ -3,6 +3,7 @@
   gather_facts: no
   become: no
   roles:
-    - dotfiles
     - homebrew
     - homebrew_cask
+    - mise
+    - dotfiles
