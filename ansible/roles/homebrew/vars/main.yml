@@ -1,9 +1,5 @@
 formulas:
   - 'fish'
-  - 'asdf'
-  - 'wxwidgets'
-  - 'openjdk'
-  - 'fop'
   - 'gpg'
   - 'gawk'
   - 'peco'

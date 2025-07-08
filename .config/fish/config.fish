@@ -4,14 +4,6 @@ source $HOME/.config/fish/alias.fish
 eval "$(/opt/homebrew/bin/brew shellenv)"
 
 
-# For Erlang
-if test -d (brew --prefix openjdk)/bin
-  set -gx PATH (brew --prefix openjdk)/bin $PATH
-end
-
-set -x KERL_CONFIGURE_OPTIONS --with-ssl=(brew --prefix openssl@3) --with-odbc=(brew --prefix unixodbc)
-set -x CC /usr/bin/gcc -I(brew --prefix unixodbc)/include
-set -x LDFLAGS -L(brew --prefix unixodbc)/lib
 
 # For nodejs
 if test -d (brew --prefix gawk)/libexec/gnubin
