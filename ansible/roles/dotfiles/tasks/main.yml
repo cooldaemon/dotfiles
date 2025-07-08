@@ -5,3 +5,32 @@
     state: link
   with_items:
     - "{{ config_files }}"
+
+- name: Ensure .claude directory exists
+  file:
+    path: "~/.claude"
+    state: directory
+    mode: '0755'
+
+- name: Link .claude settings files
+  file:
+    src: "{{ src_path }}/.claude/{{ item }}"
+    dest: "~/.claude/{{ item }}"
+    state: link
+    force: yes
+  with_items:
+    - settings.json
+    - settings.local.json
+
+- name: Remove existing commands directory if not a link
+  file:
+    path: "~/.claude/commands"
+    state: absent
+  when: ansible_check_mode is not defined
+
+- name: Link .claude/commands directory
+  file:
+    src: "{{ src_path }}/.claude/commands"
+    dest: "~/.claude/commands"
+    state: link
+    force: yes
