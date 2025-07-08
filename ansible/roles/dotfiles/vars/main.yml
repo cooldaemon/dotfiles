@@ -3,3 +3,4 @@ config_files:
   - '.config'
   - '.gitconfig'
   - '.gitignore_global'
+  - '.tool-versions'
