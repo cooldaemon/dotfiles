@@ -22,7 +22,10 @@
       "Bash(diff:*)",
       "Bash(true)",
       "Bash(brew info:*)",
-      "Bash(brew uses:*)"
+      "Bash(brew uses:*)",
+      "Bash(mise reshim:*)",
+      "Bash(mise which:*)",
+      "Bash(mise doctor:*)"
     ],
     "deny": []
   }
