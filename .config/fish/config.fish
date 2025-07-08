@@ -3,9 +3,7 @@ source $HOME/.config/fish/alias.fish
 
 eval "$(/opt/homebrew/bin/brew shellenv)"
 
-
-
-# For nodejs
+# For gawk
 if test -d (brew --prefix gawk)/libexec/gnubin
   set -gx PATH (brew --prefix gawk)/libexec/gnubin $PATH
 end
