@@ -6,4 +6,6 @@
     - homebrew
     - homebrew_cask
     - mise
+    - vscode
+    - fish
     - dotfiles

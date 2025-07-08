@@ -17,32 +17,24 @@ This is a dotfiles repository for automated macOS development environment setup 
 ansible-playbook -i localhost, -c local ansible/playbook.yml
 ```
 
-### After VS Code/Cursor Installation
-```bash
-# Copy settings to VS Code and Cursor
-./setup_after_install_vscode_and_cursor.sh
-```
-
-### Fish Shell Setup (after switching to fish)
-```fish
-# Install Oh My Fish and configurations
-./install_omf_after_run_fish.fish
-```
 
 ## Architecture
 
 ### Ansible-Based Configuration
 The repository uses Ansible for automation with the following roles:
 - **homebrew**: Installs command-line tools (fish, gpg, gawk, peco)
-- **homebrew_cask**: Installs GUI applications (Docker, VS Code, Dropbox, Google Drive)
+- **homebrew_cask**: Installs GUI applications (Docker, VS Code, Cursor, Dropbox, Google Drive)
 - **mise**: Manages development languages (Node.js 20.4.0, Python 3.13.5, Ruby 3.3.4, Go 1.23.4) and global npm packages
+- **vscode**: Configures VS Code and Cursor editors (disables Apple Press and Hold, creates settings.json symlinks)
+- **fish**: Installs Oh My Fish framework and peco plugin
 - **dotfiles**: Creates symlinks for configuration files and Claude settings
 
 ### Key Configuration Files
 - `.mise.toml`: Defines tool versions and global npm packages
 - `.config/fish/`: Fish shell configurations
+- `vscode/settings.json`: VS Code editor settings
+- `cursor/settings.json`: Cursor editor settings with Copilot and Vim configurations
 - `.claude/`: Claude Code settings and custom commands
-- `settings.json`: VS Code/Cursor editor settings with Copilot and Vim configurations
 
 ### Claude Code Integration
 The repository includes custom Claude commands in `.claude/commands/`:

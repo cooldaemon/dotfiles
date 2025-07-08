@@ -12,7 +12,17 @@
       "Bash(ansible-playbook:*)",
       "Bash(brew list:*)",
       "Bash(mise ls-remote:*)",
-      "Bash(find:*)"
+      "Bash(find:*)",
+      "Bash(grep:*)",
+      "Bash(git remote get-url:*)",
+      "Bash(ssh-add:*)",
+      "Bash(git ls-tree:*)",
+      "Bash(git fetch:*)",
+      "Bash(brew search:*)",
+      "Bash(diff:*)",
+      "Bash(true)",
+      "Bash(brew info:*)",
+      "Bash(brew uses:*)"
     ],
     "deny": []
   }

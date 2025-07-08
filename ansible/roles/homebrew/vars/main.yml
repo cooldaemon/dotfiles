@@ -3,3 +3,4 @@ formulas:
   - 'gpg'
   - 'gawk'
   - 'peco'
+  - 'icu4c'

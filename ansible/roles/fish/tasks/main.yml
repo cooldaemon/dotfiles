@@ -1,0 +1,30 @@
+---
+- name: Check if Oh My Fish is installed
+  stat:
+    path: "{{ lookup('env', 'HOME') }}/.local/share/omf"
+  register: omf_installed
+
+- name: Download Oh My Fish installer
+  get_url:
+    url: https://raw.githubusercontent.com/oh-my-fish/oh-my-fish/master/bin/install
+    dest: /tmp/omf-install
+    mode: '0755'
+  when: not omf_installed.stat.exists
+
+- name: Install Oh My Fish
+  shell: /tmp/omf-install --noninteractive
+  args:
+    executable: /opt/homebrew/bin/fish
+  when: not omf_installed.stat.exists
+
+- name: Clean up OMF installer
+  file:
+    path: /tmp/omf-install
+    state: absent
+  when: not omf_installed.stat.exists
+
+- name: Install peco plugin for Oh My Fish
+  shell: omf install peco
+  args:
+    executable: /opt/homebrew/bin/fish
+  changed_when: false

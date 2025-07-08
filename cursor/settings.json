@@ -15,14 +15,12 @@
     "terminal.integrated.defaultProfile.osx": "fish",
     "editor.inlineSuggest.enabled": true,
     "github.copilot.advanced": {},
-    "python.envFile": "~/.local/share/virtualenvs/${workspaceFolder}/",
     "github.copilot.enable": {
-        "*": true,
+        "*": false,
         "plaintext": false,
         "markdown": true,
         "scminput": false
     },
-    "git.openRepositoryInParentFolders": "always",
     "editor.accessibilitySupport": "off",
     "vim.leader": "g",
     "vim.normalModeKeyBindingsNonRecursive": [
@@ -38,5 +36,18 @@
     "cursor.cpp.disabledLanguages": [
         "plaintext",
         "scminput"
-    ]
+    ],
+    "git.openRepositoryInParentFolders": "never",
+    "makefile.configureOnOpen": false,
+    "cmake.showOptionsMovedNotification": false,
+    "gitlens.advanced.messages": {
+        "suppressLineUncommittedWarning": true
+    },
+    "python.defaultInterpreterPath": "${workspaceFolder}/.venv/bin/python",
+    "python.venvPath": "${workspaceFolder}/.venv",
+    "python.analysis.autoImportCompletions": true,
+    "go.toolsManagement.autoUpdate": true,
+    "redhat.telemetry.enabled": true,
+    "files.autoSave": "afterDelay",
+    "git.autofetch": true
 }
