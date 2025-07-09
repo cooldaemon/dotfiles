@@ -3,9 +3,17 @@
   gather_facts: no
   become: no
   roles:
-    - homebrew
-    - homebrew_cask
-    - mise
-    - vscode
-    - fish
-    - dotfiles
+    - role: homebrew
+      tags: homebrew
+    - role: homebrew_cask
+      tags: homebrew_cask
+    - role: mise
+      tags: mise
+    - role: vscode
+      tags: vscode
+    - role: fish
+      tags: fish
+    - role: dotfiles
+      tags: dotfiles
+    - role: claude_mcp
+      tags: mcp

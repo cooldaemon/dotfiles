@@ -15,6 +15,14 @@ This is a dotfiles repository for automated macOS development environment setup 
 
 # Update environment after changes
 ansible-playbook -i localhost, -c local ansible/playbook.yml
+
+# Run specific roles with tags
+ansible-playbook -i localhost, -c local ansible/playbook.yml --tags homebrew
+ansible-playbook -i localhost, -c local ansible/playbook.yml --tags mise
+ansible-playbook -i localhost, -c local ansible/playbook.yml --tags mcp
+
+# Run multiple tags
+ansible-playbook -i localhost, -c local ansible/playbook.yml --tags "homebrew,mise"
 ```
 
 
@@ -28,6 +36,9 @@ The repository uses Ansible for automation with the following roles:
 - **vscode**: Configures VS Code and Cursor editors (disables Apple Press and Hold, creates settings.json symlinks)
 - **fish**: Installs Oh My Fish framework and peco plugin
 - **dotfiles**: Creates symlinks for configuration files and Claude settings
+- **claude_mcp**: Configures Claude MCP (Model Context Protocol) servers (playwright, context7, peekaboo)
+
+Each role is tagged in the playbook for individual execution (e.g., `--tags homebrew`, `--tags mcp`)
 
 ### Key Configuration Files
 - `.mise.toml`: Defines tool versions and global npm packages
@@ -50,3 +61,8 @@ The repository includes custom Claude commands in `.claude/commands/`:
 2. Use Ansible playbook to apply changes (don't manually edit symlinked files)
 3. The repository manages both development tools (via mise) and editor configurations
 4. Claude Code settings are automatically symlinked from the repository
+
+## Important Notes
+
+- MCP servers are installed at user scope and managed by the `claude_mcp` Ansible role
+- Use tags to run specific Ansible roles for faster updates during development

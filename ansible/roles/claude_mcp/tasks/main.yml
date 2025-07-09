@@ -1,0 +1,41 @@
+---
+- name: Check if Claude Code is installed
+  command: which claude
+  register: claude_installed
+  changed_when: false
+  failed_when: false
+
+- name: Get list of configured MCP servers
+  command: claude mcp list
+  register: mcp_list
+  changed_when: false
+  when: claude_installed.rc == 0
+
+- name: Configure Playwright MCP server
+  command: claude mcp add playwright -s user -- npx @playwright/mcp@latest
+  when:
+    - claude_installed.rc == 0
+    - "'playwright:' not in mcp_list.stdout"
+  register: playwright_result
+  changed_when: playwright_result.rc == 0
+
+- name: Configure Context7 MCP server
+  command: claude mcp add context7 -s user -- npx -y @upstash/context7-mcp@latest
+  when:
+    - claude_installed.rc == 0
+    - "'context7:' not in mcp_list.stdout"
+  register: context7_result
+  changed_when: context7_result.rc == 0
+
+- name: Configure Peekaboo MCP server
+  command: claude mcp add peekaboo -s user -- npx peekaboo-mcp@latest
+  when:
+    - claude_installed.rc == 0
+    - "'peekaboo:' not in mcp_list.stdout"
+  register: peekaboo_result
+  changed_when: peekaboo_result.rc == 0
+
+- name: Display MCP configuration results
+  debug:
+    msg: "MCP servers configured: playwright={{ 'already configured' if 'playwright:' in mcp_list.stdout else 'configured' }}, context7={{ 'already configured' if 'context7:' in mcp_list.stdout else 'configured' }}, peekaboo={{ 'already configured' if 'peekaboo:' in mcp_list.stdout else 'configured' }}"
+  when: claude_installed.rc == 0
