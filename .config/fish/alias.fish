@@ -11,6 +11,7 @@ alias v vi
 alias c claude
 alias e cursor
 alias g git
+alias t tmux
 
 alias cp 'cp -i'
 alias mv 'mv -i'
