@@ -5,3 +5,4 @@ formulas:
   - 'peco'
   - 'icu4c'
   - 'uv'
+  - 'direnv'
