@@ -6,3 +6,4 @@ formulas:
   - 'icu4c'
   - 'uv'
   - 'direnv'
+  - 'gh'
