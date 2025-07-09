@@ -4,3 +4,4 @@ config_files:
   - '.gitconfig'
   - '.gitignore_global'
   - '.tool-versions'
+  - '.mise.toml'

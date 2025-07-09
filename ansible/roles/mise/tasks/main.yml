@@ -10,17 +10,23 @@
     state: directory
     mode: '0755'
 
-- name: Copy mise global configuration
-  copy:
-    src: "{{ playbook_dir }}/../.mise.toml"
-    dest: "{{ lookup('env', 'HOME') }}/.mise.toml"
-    mode: '0644'
+- name: Enable uvx backend for pipx
+  shell: |
+    export PATH="/opt/homebrew/bin:$PATH"
+    mise settings set pipx_uvx true
+  environment:
+    PATH: "/opt/homebrew/bin:{{ lookup('env', 'PATH') }}"
+  changed_when: false
 
-- name: Copy tool-versions for compatibility
-  copy:
-    src: "{{ playbook_dir }}/../.tool-versions"
-    dest: "{{ lookup('env', 'HOME') }}/.tool-versions"
-    mode: '0644'
+- name: Check if mise configuration exists
+  stat:
+    path: "{{ lookup('env', 'HOME') }}/.mise.toml"
+  register: mise_config
+
+- name: Check if tool-versions exists
+  stat:
+    path: "{{ lookup('env', 'HOME') }}/.tool-versions"
+  register: tool_versions
 
 - name: Install all mise tools
   shell: |
@@ -31,6 +37,7 @@
     PATH: "/opt/homebrew/bin:{{ lookup('env', 'PATH') }}"
   register: mise_install
   changed_when: mise_install.rc == 0
+  when: mise_config.stat.exists and tool_versions.stat.exists
 
 - name: Trust mise configuration
   shell: |
@@ -39,6 +46,7 @@
   environment:
     PATH: "/opt/homebrew/bin:{{ lookup('env', 'PATH') }}"
   changed_when: false
+  when: mise_config.stat.exists
 
 - name: Verify mise installation
   shell: |

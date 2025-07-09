@@ -4,3 +4,4 @@ formulas:
   - 'gawk'
   - 'peco'
   - 'icu4c'
+  - 'uv'
