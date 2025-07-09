@@ -7,3 +7,4 @@ formulas:
   - 'uv'
   - 'direnv'
   - 'gh'
+  - 'tmux'

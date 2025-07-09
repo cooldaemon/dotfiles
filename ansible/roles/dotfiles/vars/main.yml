@@ -5,3 +5,4 @@ config_files:
   - '.gitignore_global'
   - '.tool-versions'
   - '.mise.toml'
+  - '.tmux.conf'
