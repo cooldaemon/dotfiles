@@ -1,3 +1,4 @@
 {
-  "model": "opus"
+  "model": "opus",
+  "editorMode": "vim"
 }
