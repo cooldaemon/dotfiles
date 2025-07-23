@@ -18,3 +18,5 @@ if command -v direnv > /dev/null
   set -g direnv_fish_mode eval_on_arrow
   direnv hook fish | source
 end
+
+string match -q "$TERM_PROGRAM" "kiro" and . (kiro --locate-shell-integration-path fish)

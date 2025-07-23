@@ -8,3 +8,4 @@ formulas:
   - 'direnv'
   - 'gh'
   - 'tmux'
+  - 'jj'
