@@ -2,6 +2,7 @@ src_path: ~/git/dotfiles
 config_files:
   - '.config'
   - '.gitconfig'
+  - '.gitconfig-work'
   - '.gitignore_global'
   - '.tool-versions'
   - '.mise.toml'

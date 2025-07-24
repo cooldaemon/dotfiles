@@ -1,5 +1,5 @@
 [core]
-	excludesfile = ~/.gitignore_global
+	excludesfile = /Users/ikuta/git/dotfiles/.gitignore_global
 [user]
 	name = cooldaemon
 	email = cooldaemon@gmail.com
@@ -40,3 +40,6 @@
 	tool = vimdiff
 [branch]
 	autoSetupMerge = always
+
+[includeIf "gitdir:~/git/work/"]
+	path = ~/.gitconfig-work
