@@ -1,2 +1,28 @@
-.idea
-*.iml
+# Jujutsu
+.jj/
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+Icon
+Thumbs.db
+
+# Editors
+## Vim
+*.swp
+*.swo
+*.swn
+*~
+.*.sw?
+
+## Emacs
+*~
+\#*\#
+.\#*
+auto-save-list
+tramp
+
+## VS Code
+.vscode/

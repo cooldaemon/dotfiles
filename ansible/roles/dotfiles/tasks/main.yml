@@ -34,3 +34,12 @@
     dest: "~/.claude/commands"
     state: link
     force: yes
+
+- name: Get current global gitignore setting
+  shell: git config --global --get core.excludesfile || echo ""
+  register: current_gitignore
+  changed_when: false
+
+- name: Set global gitignore file
+  shell: git config --global core.excludesfile {{ lookup('env', 'HOME') }}/git/dotfiles/.gitignore_global
+  when: current_gitignore.stdout != lookup('env', 'HOME') + '/git/dotfiles/.gitignore_global'
