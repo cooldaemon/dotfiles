@@ -1,6 +1,14 @@
 - name: Update homebrew
   homebrew: update_homebrew=yes
 
+- name: Add homebrew taps
+  homebrew_tap:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - "{{ taps | default([]) }}"
+  when: taps is defined
+
 - name: Install homebrew formulas
   homebrew: 
     name: "{{ item }}"

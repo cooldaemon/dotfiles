@@ -5,6 +5,8 @@ casks:
   - google-drive
   - cursor
   - iterm2
+  - alacritty
+  - font-jetbrains-mono-nerd-font
 
 sudo_casks:
   - karabiner-elements

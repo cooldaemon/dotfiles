@@ -1,6 +1,9 @@
 set -gx fish_escape_delay_ms 10
 source $HOME/.config/fish/alias.fish
 
+# Add /usr/local/bin to PATH for VS Code, Cursor, and Kiro commands
+fish_add_path /usr/local/bin
+
 eval "$(/opt/homebrew/bin/brew shellenv)"
 
 # For gawk
@@ -19,4 +22,7 @@ if command -v direnv > /dev/null
   direnv hook fish | source
 end
 
-string match -q "$TERM_PROGRAM" "kiro" and . (kiro --locate-shell-integration-path fish)
+# Kiro editor integration (only if kiro is installed and running in kiro)
+if command -v kiro > /dev/null
+  string match -q "$TERM_PROGRAM" "kiro" and . (kiro --locate-shell-integration-path fish)
+end
