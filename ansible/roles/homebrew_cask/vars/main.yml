@@ -5,3 +5,6 @@ casks:
   - google-drive
   - cursor
   - iterm2
+
+sudo_casks:
+  - karabiner-elements

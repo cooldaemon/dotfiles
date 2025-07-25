@@ -5,3 +5,25 @@
   with_items:
     - "{{ casks }}"
   ignore_errors: yes
+
+- name: Check if Karabiner-Elements is installed
+  command: brew list --cask karabiner-elements
+  register: karabiner_check
+  failed_when: false
+  changed_when: false
+
+- name: Notify about Karabiner-Elements manual installation
+  debug:
+    msg: |
+      ============================================
+      Karabiner-Elements is not installed.
+      
+      Manual installation required because:
+      - It needs system-level permissions to intercept keyboard events
+      - The installer requires sudo password interactively
+      - Homebrew prohibits running as root for security
+      
+      Please run manually:
+      brew install --cask karabiner-elements
+      ============================================
+  when: karabiner_check.rc != 0
