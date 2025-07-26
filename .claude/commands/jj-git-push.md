@@ -1,6 +1,6 @@
 ---
 description: "Safely fetch remote changes, rebase if necessary, and push local jj changes to git remote."
-allowed-tools: Bash(jj status), Bash(jj git fetch), Bash(jj git push), Bash(jj log), Bash(jj rebase), Bash(jj bookmark), Read
+allowed-tools: Bash(jj status), Bash(jj git fetch), Bash(jj git push), Bash(jj log), Bash(jj rebase), Bash(jj bookmark), Bash(git checkout), Bash(git status), Read
 ---
 
 You are an excellent developer. Check for remote changes, rebase if necessary, and push local jj changes to the git remote repository.
@@ -12,8 +12,10 @@ You are an excellent developer. Check for remote changes, rebase if necessary, a
 2. Fetch remote changes with `jj git fetch`
 3. Check if local changes need rebasing by comparing bookmarks
 4. If behind remote, rebase onto the remote bookmark
-5. Update the appropriate bookmark to point to current revision
-6. Push changes to remote with `jj git push`
+5. Find the latest meaningful revision to push (handling multiple changes)
+6. Update the appropriate bookmark to point to the target revision
+7. Push changes to remote with `jj git push`
+8. Ensure git is on the correct branch (not detached HEAD)
 
 # Typical Workflow
 
@@ -22,8 +24,17 @@ You are an excellent developer. Check for remote changes, rebase if necessary, a
 jj git fetch
 jj log -r 'main | main@origin' --no-graph  # Compare local and remote
 jj rebase -d main@origin  # If behind
-jj bookmark set main -r @
+
+# Find the latest meaningful revision (not empty)
+jj log --limit 10 --no-graph | grep -v "(empty)" | head -1
+# Or check descendants of current bookmark
+jj log -r '::@ & descendants(main)'
+
+jj bookmark set main -r <target-revision>
 jj git push --branch main
+
+# Ensure git is on the branch (not detached HEAD)
+git checkout main
 ```
 
 ## For feature branches:
@@ -65,11 +76,25 @@ If `jj log -r @` shows "(empty) (no description set)":
 jj bookmark set main -r @-  # or @-- for two commits back
 ```
 
-## Scenario 2: Multiple commits to push
+## Scenario 2: Multiple commits to push (COMMON)
+When you have multiple related changes (e.g., created with multiple `jj new`):
 ```bash
-# Check what will be pushed
+# View all your unpushed changes
 jj log -r '::@ & ~::main@origin'
-# Then proceed with normal push
+
+# Find the latest meaningful revision
+# Option 1: Look for the last non-empty revision
+jj log --limit 10 --no-graph -r '::@' | grep -v "(empty)" | head -1
+
+# Option 2: If you know the revision ID or pattern
+jj log -r '::@ & description(glob:"*")' --no-graph
+
+# Move bookmark to the appropriate revision
+jj bookmark set main -r <revision-id>
+
+# Push and ensure git follows
+jj git push --branch main
+git checkout main
 ```
 
 ## Scenario 3: Diverged from remote
@@ -95,3 +120,12 @@ Common issues:
 - No need to "commit" - changes are already saved in jj
 - Bookmarks in jj are equivalent to branches in git
 - Always fetch before pushing to ensure you have latest remote state
+- After pushing, always run `git checkout <branch>` to avoid git's detached HEAD state
+- When you have multiple changes, make sure to push the latest meaningful revision, not an empty one
+
+# Best Practices
+
+1. **Always check what you're pushing**: Use `jj log` to understand your revision graph
+2. **Handle multiple revisions**: When using multiple `jj new`, remember to set bookmark to the latest complete change
+3. **Keep git in sync**: After jj operations, ensure git sees the correct branch state
+4. **Track remote bookmarks**: First time pushing requires `jj bookmark track <name>@origin`
