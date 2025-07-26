@@ -11,17 +11,22 @@ This is a dotfiles repository for automated macOS development environment setup 
 ### Setup and Installation
 ```bash
 # Initial setup for fresh macOS installation
-./setup.sh
+make setup
 
 # Update environment after changes
+make update
+
+# Run specific roles with make targets
+make homebrew-update
+make mise-update
+make mcp-update
+make vscode-update
+
+# Show all available commands
+make help
+
+# Direct Ansible commands (if needed)
 ansible-playbook -i localhost, -c local ansible/playbook.yml
-
-# Run specific roles with tags
-ansible-playbook -i localhost, -c local ansible/playbook.yml --tags homebrew
-ansible-playbook -i localhost, -c local ansible/playbook.yml --tags mise
-ansible-playbook -i localhost, -c local ansible/playbook.yml --tags mcp
-
-# Run multiple tags
 ansible-playbook -i localhost, -c local ansible/playbook.yml --tags "homebrew,mise"
 ```
 
