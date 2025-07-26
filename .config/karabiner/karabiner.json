@@ -29,6 +29,22 @@
                                 "type": "basic"
                             }
                         ]
+                    },
+                    {
+                        "description": "Caps Lock to Control",
+                        "manipulators": [
+                            {
+                                "from": {
+                                    "key_code": "caps_lock"
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "left_control"
+                                    }
+                                ],
+                                "type": "basic"
+                            }
+                        ]
                     }
                 ]
             },
