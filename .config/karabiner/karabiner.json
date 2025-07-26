@@ -31,17 +31,21 @@
                         ]
                     },
                     {
-                        "description": "Caps Lock to Control",
+                        "description": "Caps Lock to Control with English input",
                         "manipulators": [
                             {
                                 "from": {
-                                    "key_code": "caps_lock"
+                                    "key_code": "caps_lock",
+                                    "modifiers": { "optional": ["any"] }
                                 },
                                 "to": [
+                                    { "key_code": "japanese_eisuu" },
                                     {
-                                        "key_code": "left_control"
+                                        "key_code": "left_control",
+                                        "lazy": true
                                     }
                                 ],
+                                "to_if_alone": [{ "key_code": "japanese_eisuu" }],
                                 "type": "basic"
                             }
                         ]
