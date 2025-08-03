@@ -62,6 +62,10 @@ vscode-update:
 	@eval "$$(/opt/homebrew/bin/brew shellenv)" && \
 	ansible-playbook -i localhost, -c local ansible/playbook.yml --tags vscode
 
+gpg-setup:
+	@eval "$$(/opt/homebrew/bin/brew shellenv)" && \
+	ansible-playbook -i localhost, -c local ansible/playbook.yml --tags gpg
+
 # Help target
 help:
 	@echo "Available targets:"
@@ -71,4 +75,5 @@ help:
 	@echo "  make mise-update    - Update only mise tools"
 	@echo "  make mcp-update     - Update only MCP servers"
 	@echo "  make vscode-update  - Update only VS Code/Cursor settings"
+	@echo "  make gpg-setup      - Setup GPG keys for Git commit signing"
 	@echo "  make help           - Show this help message"

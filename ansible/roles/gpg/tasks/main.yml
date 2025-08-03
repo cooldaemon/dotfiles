@@ -1,0 +1,165 @@
+---
+- name: Install expect for GPG key generation
+  homebrew:
+    name: expect
+    state: present
+  tags: gpg
+
+- name: Check if GPG key exists for personal email
+  command: gpg --list-secret-keys --keyid-format=long cooldaemon@gmail.com
+  register: personal_gpg_check
+  failed_when: false
+  changed_when: false
+  tags: gpg
+
+- name: Check if GPG key exists for work email
+  command: gpg --list-secret-keys --keyid-format=long ikuta@wovn.io
+  register: work_gpg_check
+  failed_when: false
+  changed_when: false
+  tags: gpg
+
+- name: Create GPG batch file for personal key
+  template:
+    src: gpg-batch.j2
+    dest: /tmp/gpg-personal-batch.txt
+    mode: '0600'
+  vars:
+    gpg_name: "cooldaemon"
+    gpg_email: "cooldaemon@gmail.com"
+  when: personal_gpg_check.rc != 0
+  tags: gpg
+
+- name: Generate personal GPG key
+  command: gpg --batch --generate-key /tmp/gpg-personal-batch.txt
+  when: personal_gpg_check.rc != 0
+  tags: gpg
+
+- name: Remove personal batch file
+  file:
+    path: /tmp/gpg-personal-batch.txt
+    state: absent
+  when: personal_gpg_check.rc != 0
+  tags: gpg
+
+- name: Create GPG batch file for work key
+  template:
+    src: gpg-batch.j2
+    dest: /tmp/gpg-work-batch.txt
+    mode: '0600'
+  vars:
+    gpg_name: "masahito-ikuta"
+    gpg_email: "ikuta@wovn.io"
+  when: work_gpg_check.rc != 0
+  tags: gpg
+
+- name: Generate work GPG key
+  command: gpg --batch --generate-key /tmp/gpg-work-batch.txt
+  when: work_gpg_check.rc != 0
+  tags: gpg
+
+- name: Remove work batch file
+  file:
+    path: /tmp/gpg-work-batch.txt
+    state: absent
+  when: work_gpg_check.rc != 0
+  tags: gpg
+
+- name: Get personal GPG key ID
+  shell: gpg --list-secret-keys --keyid-format=long cooldaemon@gmail.com | grep -E "^sec" | awk -F'/' '{print $2}' | awk '{print $1}'
+  register: personal_gpg_key_id
+  changed_when: false
+  tags: gpg
+
+- name: Get work GPG key ID
+  shell: gpg --list-secret-keys --keyid-format=long ikuta@wovn.io | grep -E "^sec" | awk -F'/' '{print $2}' | awk '{print $1}'
+  register: work_gpg_key_id
+  changed_when: false
+  tags: gpg
+
+- name: Create local GPG config for personal
+  copy:
+    dest: ~/.gitconfig-gpg-local
+    content: |
+      [user]
+      	signingkey = {{ personal_gpg_key_id.stdout }}
+      [commit]
+      	gpgsign = true
+  when: personal_gpg_key_id.stdout != ""
+  tags: gpg
+
+- name: Create local GPG config for work
+  copy:
+    dest: ~/.gitconfig-gpg-work-local
+    content: |
+      [user]
+      	signingkey = {{ work_gpg_key_id.stdout }}
+      [commit]
+      	gpgsign = true
+  when: work_gpg_key_id.stdout != ""
+  tags: gpg
+
+- name: Ensure GPG local configs are in dotfiles .gitignore
+  blockinfile:
+    path: ~/git/dotfiles/.gitignore
+    marker: "# {mark} ANSIBLE MANAGED BLOCK - GPG"
+    block: |
+      # Machine-specific GPG config
+      .gitconfig-gpg-local
+      .gitconfig-gpg-work-local
+    create: yes
+  tags: gpg
+
+- name: Export personal GPG public key
+  shell: gpg --armor --export {{ personal_gpg_key_id.stdout }}
+  register: personal_gpg_public_key
+  when: personal_gpg_key_id.stdout != ""
+  changed_when: false
+  tags: gpg
+
+- name: Export work GPG public key
+  shell: gpg --armor --export {{ work_gpg_key_id.stdout }}
+  register: work_gpg_public_key
+  when: work_gpg_key_id.stdout != ""
+  changed_when: false
+  tags: gpg
+
+- name: Save personal GPG public key to file
+  copy:
+    content: "{{ personal_gpg_public_key.stdout }}"
+    dest: ~/gpg-personal-public.asc
+    mode: '0644'
+  when: personal_gpg_key_id.stdout != ""
+  tags: gpg
+
+- name: Save work GPG public key to file
+  copy:
+    content: "{{ work_gpg_public_key.stdout }}"
+    dest: ~/gpg-work-public.asc
+    mode: '0644'
+  when: work_gpg_key_id.stdout != ""
+  tags: gpg
+
+- name: Display GPG setup summary
+  debug:
+    msg: |
+      GPG Setup Complete!
+      
+      Personal GPG Key ID: {{ personal_gpg_key_id.stdout | default('Not created') }}
+      Work GPG Key ID: {{ work_gpg_key_id.stdout | default('Not created') }}
+      
+      Public keys exported to:
+      - Personal: ~/gpg-personal-public.asc
+      - Work: ~/gpg-work-public.asc
+      
+      To add keys to GitHub:
+      1. Go to https://github.com/settings/keys
+      2. Click "New GPG key"
+      3. Copy the contents of the appropriate .asc file
+      4. Paste and save
+      
+      Or use GitHub CLI manually:
+      gh gpg-key add ~/gpg-personal-public.asc
+      gh gpg-key add ~/gpg-work-public.asc
+  when: personal_gpg_key_id.stdout != "" or work_gpg_key_id.stdout != ""
+  tags: gpg

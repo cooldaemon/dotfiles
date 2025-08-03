@@ -11,3 +11,8 @@
 .config/vllm/
 .config/iterm2/
 .jj/
+# BEGIN ANSIBLE MANAGED BLOCK - GPG
+# Machine-specific GPG config
+.gitconfig-gpg-local
+.gitconfig-gpg-work-local
+# END ANSIBLE MANAGED BLOCK - GPG

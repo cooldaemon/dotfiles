@@ -1,3 +1,7 @@
 [user]
 	name = masahito-ikuta
 	email = ikuta@wovn.io
+
+# GPG signing for work (machine-specific)
+[include]
+	path = ~/.gitconfig-gpg-work-local
