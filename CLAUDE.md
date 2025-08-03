@@ -41,7 +41,7 @@ The repository uses Ansible for automation with the following roles:
 - **vscode**: Configures VS Code and Cursor editors (disables Apple Press and Hold, creates settings.json symlinks)
 - **fish**: Installs Oh My Fish framework and peco plugin
 - **dotfiles**: Creates symlinks for configuration files and Claude settings
-- **claude_mcp**: Configures Claude MCP (Model Context Protocol) servers (playwright, context7, peekaboo)
+- **claude_mcp**: Configures Claude MCP (Model Context Protocol) servers (playwright, context7, peekaboo, serena)
 
 Each role is tagged in the playbook for individual execution (e.g., `--tags homebrew`, `--tags mcp`)
 

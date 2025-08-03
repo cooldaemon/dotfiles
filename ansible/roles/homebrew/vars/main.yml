@@ -9,3 +9,4 @@ formulas:
   - 'gh'
   - 'tmux'
   - 'jj'
+  - 'mkcert'
