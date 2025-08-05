@@ -37,7 +37,7 @@ ansible-playbook -i localhost, -c local ansible/playbook.yml --tags "homebrew,mi
 The repository uses Ansible for automation with the following roles:
 - **homebrew**: Installs command-line tools (fish, gpg, gawk, peco)
 - **homebrew_cask**: Installs GUI applications (Docker, VS Code, Cursor, Dropbox, Google Drive)
-- **mise**: Manages development languages (Node.js 20.4.0, Python 3.13.5, Ruby 3.3.4, Go 1.23.4) and global npm packages
+- **mise**: Manages development languages (Node.js 20.18.2, Python 3.13.5, Ruby 3.3.4, Go 1.23.4) and global npm packages
 - **vscode**: Configures VS Code and Cursor editors (disables Apple Press and Hold, creates settings.json symlinks)
 - **fish**: Installs Oh My Fish framework and peco plugin
 - **dotfiles**: Creates symlinks for configuration files and Claude settings

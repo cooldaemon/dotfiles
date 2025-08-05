@@ -1,6 +1,6 @@
 [tools]
 # Programming languages
-node = "20.4.0"
+node = "20.18.2"
 python = "3.13.5"
 ruby = "3.3.4"
 go = "1.23.4"
