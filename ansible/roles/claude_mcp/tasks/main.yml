@@ -41,7 +41,7 @@
   changed_when: false
 
 - name: Configure Serena MCP server
-  command: claude mcp add serena -- uvx --from git+https://github.com/oraios/serena serena start-mcp-server --context ide-assistant --project {{ pwd_result.stdout }}
+  command: claude mcp add serena -s user -- uvx --from git+https://github.com/oraios/serena serena start-mcp-server --context ide-assistant --project {{ pwd_result.stdout }}
   when:
     - claude_installed.rc == 0
     - "'serena:' not in mcp_list.stdout"
