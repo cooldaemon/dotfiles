@@ -41,9 +41,9 @@
 [branch]
 	autoSetupMerge = always
 
-[includeIf "gitdir:~/git/work/"]
-	path = ~/.gitconfig-work
-
 # GPG signing configuration (machine-specific)
 [include]
 	path = ~/.gitconfig-gpg-local
+
+[includeIf "gitdir:~/git/work/"]
+	path = ~/.gitconfig-work
