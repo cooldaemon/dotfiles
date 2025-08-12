@@ -10,3 +10,4 @@ casks:
 
 sudo_casks:
   - karabiner-elements
+  - session-manager-plugin
