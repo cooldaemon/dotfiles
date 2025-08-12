@@ -35,6 +35,13 @@
     state: link
     force: yes
 
+- name: Link setup-serena-mcp.sh script
+  file:
+    src: "{{ src_path }}/.claude/setup-serena-mcp.sh"
+    dest: "~/.claude/setup-serena-mcp.sh"
+    state: link
+    force: yes
+
 - name: Get current global gitignore setting
   shell: git config --global --get core.excludesfile || echo ""
   register: current_gitignore

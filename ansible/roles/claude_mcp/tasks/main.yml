@@ -35,20 +35,7 @@
   register: peekaboo_result
   changed_when: peekaboo_result.rc == 0
 
-- name: Get current working directory
-  command: pwd
-  register: pwd_result
-  changed_when: false
-
-- name: Configure Serena MCP server
-  command: claude mcp add serena -s user -- uvx --from git+https://github.com/oraios/serena serena start-mcp-server --context ide-assistant --project {{ pwd_result.stdout }}
-  when:
-    - claude_installed.rc == 0
-    - "'serena:' not in mcp_list.stdout"
-  register: serena_result
-  changed_when: serena_result.rc == 0
-
 - name: Display MCP configuration results
   debug:
-    msg: "MCP servers configured: playwright={{ 'already configured' if 'playwright:' in mcp_list.stdout else 'configured' }}, context7={{ 'already configured' if 'context7:' in mcp_list.stdout else 'configured' }}, peekaboo={{ 'already configured' if 'peekaboo:' in mcp_list.stdout else 'configured' }}, serena={{ 'already configured' if 'serena:' in mcp_list.stdout else 'configured' }}"
+    msg: "MCP servers configured: playwright={{ 'already configured' if 'playwright:' in mcp_list.stdout else 'configured' }}, context7={{ 'already configured' if 'context7:' in mcp_list.stdout else 'configured' }}, peekaboo={{ 'already configured' if 'peekaboo:' in mcp_list.stdout else 'configured' }}"
   when: claude_installed.rc == 0
