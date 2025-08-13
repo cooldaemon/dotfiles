@@ -62,6 +62,10 @@ vscode-update:
 	@eval "$$(/opt/homebrew/bin/brew shellenv)" && \
 	ansible-playbook -i localhost, -c local ansible/playbook.yml --tags vscode
 
+dotfiles-update:
+	@eval "$$(/opt/homebrew/bin/brew shellenv)" && \
+	ansible-playbook -i localhost, -c local ansible/playbook.yml --tags dotfiles
+
 gpg-setup:
 	@eval "$$(/opt/homebrew/bin/brew shellenv)" && \
 	ansible-playbook -i localhost, -c local ansible/playbook.yml --tags gpg
@@ -75,5 +79,6 @@ help:
 	@echo "  make mise-update    - Update only mise tools"
 	@echo "  make mcp-update     - Update only MCP servers"
 	@echo "  make vscode-update  - Update only VS Code/Cursor settings"
+	@echo "  make dotfiles-update - Update only dotfiles symlinks"
 	@echo "  make gpg-setup      - Setup GPG keys for Git commit signing"
 	@echo "  make help           - Show this help message"
