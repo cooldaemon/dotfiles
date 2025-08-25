@@ -28,7 +28,9 @@
       "Bash(mise doctor:*)",
       "mcp__context7__get-library-docs",
       "mcp__context7__resolve-library-id",
-      "WebFetch(domain:docs.anthropic.com)"
+      "WebFetch(domain:docs.anthropic.com)",
+      "mcp__serena__list_memories",
+      "WebSearch"
     ],
     "deny": []
   }

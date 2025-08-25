@@ -35,6 +35,19 @@
     state: link
     force: yes
 
+- name: Remove existing agents directory if not a link
+  file:
+    path: "~/.claude/agents"
+    state: absent
+  when: ansible_check_mode is not defined
+
+- name: Link .claude/agents directory
+  file:
+    src: "{{ src_path }}/.claude/agents"
+    dest: "~/.claude/agents"
+    state: link
+    force: yes
+
 - name: Link setup-serena-mcp.sh script
   file:
     src: "{{ src_path }}/.claude/setup-serena-mcp.sh"
