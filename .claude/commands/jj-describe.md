@@ -1,18 +1,15 @@
 ---
-description: "Generate a message and update the current jj change description with semantic commit message."
-allowed-tools: Bash(jj status), Bash(jj diff), Bash(jj describe), Bash(jj log), Read, Grep, Glob
+description: "Generate a message and update the current jj change description with semantic commit message using a subagent."
 ---
- 
-You are an excellent developer. Review the content of this session and the modifications made, generate a semantic message, and update the current jj change description.
 
-**IMPORTANT**: Commit messages must be written in English.
+I'll use the jj-describe subagent to update the change description with a semantic commit message.
 
-# Process
-1. Check the current status using `jj status` to see what files have been modified.
-2. Review the changes using `jj diff` to understand what was changed.
-3. Generate a [Semantic Message] for the changes.
-4. Update the change description using `jj describe -m "<message>"`.
-5. Show the updated change with `jj log -r @` to confirm.
+The jj-describe subagent will:
+- Analyze the current jj status and changes
+- Generate a semantic commit message based on the modifications
+- Update the change description appropriately
+- Handle multi-line messages if needed
+- Verify the description was updated successfully
 
 # What is a Semantic Message?
 

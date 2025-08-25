@@ -1,21 +1,17 @@
 ---
-description: "Safely fetch remote changes, rebase if necessary, and push local jj changes to git remote."
-allowed-tools: Bash(jj status), Bash(jj git fetch), Bash(jj git push), Bash(jj log), Bash(jj rebase), Bash(jj bookmark), Bash(git checkout), Bash(git status), Read
+description: "Safely fetch remote changes, rebase if necessary, and push local jj changes to git remote using a subagent."
 ---
 
-You are an excellent developer. Check for remote changes, rebase if necessary, and push local jj changes to the git remote repository.
+I'll use the jj-git-push subagent to safely synchronize your jj changes with the remote git repository.
 
-**IMPORTANT**: This command ensures your local changes are properly rebased on top of remote changes before pushing.
-
-# Process
-1. Check current status and changes with `jj status`
-2. Fetch remote changes with `jj git fetch`
-3. Check if local changes need rebasing by comparing bookmarks
-4. If behind remote, rebase onto the remote bookmark
-5. Find the latest meaningful revision to push (handling multiple changes)
-6. Update the appropriate bookmark to point to the target revision
-7. Push changes to remote with `jj git push`
-8. Ensure git is on the correct branch (not detached HEAD)
+The jj-git-push subagent will:
+- Fetch the latest remote changes
+- Check if rebasing is needed and perform it
+- Find the latest meaningful revision to push
+- Update bookmarks appropriately
+- Push changes to the remote repository
+- Ensure git remains on the correct branch (not detached HEAD)
+- Handle any conflicts or errors that arise
 
 # Typical Workflow
 
