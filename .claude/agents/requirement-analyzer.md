@@ -222,4 +222,4 @@ After analysis, suggest the appropriate next command based on scale:
 ### For Large Features (6+ files):
 - `/create-product-requirements` - Document business requirements
 - `/create-technical-design` - Design the architecture
-- `/create-adr` - Document key decisions
+- `/create-architecture-decision` - Document key decisions

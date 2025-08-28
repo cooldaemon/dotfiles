@@ -15,4 +15,4 @@ The screenshot subagent will:
 After capturing screenshot:
 - `/implement-task` - Fix visual issues found
 - `/generate-tests` - Create visual regression tests
-- `/create-adr` - Document UI decisions
+- `/create-architecture-decision` - Document UI decisions

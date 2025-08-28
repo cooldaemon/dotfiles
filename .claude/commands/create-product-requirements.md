@@ -16,4 +16,4 @@ For Medium/Large features that need business requirements documentation.
 After creating product requirements:
 - `/create-technical-design` - Design the technical implementation
 - `/create-work-plan` - Break down into tasks
-- `/create-adr` - Document architectural decisions
+- `/create-architecture-decision` - Document architectural decisions

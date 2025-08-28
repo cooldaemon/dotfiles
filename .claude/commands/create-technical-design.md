@@ -16,4 +16,4 @@ For Medium/Large features that need detailed technical planning.
 After creating technical design:
 - `/create-work-plan` - Break down into implementable tasks
 - `/generate-tests` - Generate tests from acceptance criteria
-- `/create-adr` - Document key architectural decisions
+- `/create-architecture-decision` - Document key architectural decisions
