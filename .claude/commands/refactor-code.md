@@ -10,3 +10,13 @@ The refactor subagent will:
 - Apply clean code principles and tidyings
 - Run verification tests to ensure functionality
 - Maintain backward compatibility
+
+## Prerequisites
+- All tests passing (green)
+- Working implementation
+
+## Next Commands
+After refactoring:
+- `/git-commit` - Commit the improvements
+- `/implement-task` - Continue with next task
+- `/update-claude-md` - Update project docs if needed

@@ -10,3 +10,12 @@ The git-commit subagent will:
 - Generate a semantic commit message
 - Handle any pre-commit hook failures
 - Complete the commit successfully
+
+## Prerequisites
+- Changes staged or ready to stage
+- Tests passing
+
+## Next Commands
+After committing:
+- `/git-rebase-push` - Push to remote repository
+- `/implement-task` - Continue with next task

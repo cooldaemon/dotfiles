@@ -10,3 +10,12 @@ The update-claude-md subagent will:
 - Update or create the file with organized sections
 - Preserve existing valuable information
 - Ensure the documentation remains current and useful
+
+## Prerequisites
+- Changes that affect project understanding
+- New conventions or patterns established
+
+## Next Commands
+After updating documentation:
+- `/git-commit` - Commit the documentation updates
+- `/git-rebase-push` - Share with the team

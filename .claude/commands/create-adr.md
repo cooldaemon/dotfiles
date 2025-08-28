@@ -10,3 +10,14 @@ The adr subagent will:
 - Generate new ADR files with proper numbering
 - Update the index.md file automatically
 - Ensure all ADRs follow the standard template format
+
+## Prerequisites
+- Clear understanding of the problem
+- Options considered
+- Decision rationale
+
+## Next Commands
+After creating ADR:
+- `/create-technical-design` - Continue with detailed design
+- `/implement-task` - Start implementation
+- `/git-commit` - Commit the ADR document

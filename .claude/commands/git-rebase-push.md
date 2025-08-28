@@ -10,3 +10,12 @@ The git-rebase-push subagent will:
 - Handle conflicts interactively if they occur
 - Push local commits to the remote repository
 - Ensure a clean, linear git history
+
+## Prerequisites
+- Local commits ready
+- Remote repository accessible
+
+## Next Commands
+After pushing:
+- `/implement-task` - Continue with next feature
+- `/update-claude-md` - Update project documentation

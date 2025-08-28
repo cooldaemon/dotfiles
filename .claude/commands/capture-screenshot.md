@@ -10,3 +10,9 @@ The screenshot subagent will:
 - Analyze the image locally (without external LLMs)
 - Provide detailed visual analysis
 - Save the image to an appropriate location
+
+## Next Commands
+After capturing screenshot:
+- `/implement-task` - Fix visual issues found
+- `/generate-tests` - Create visual regression tests
+- `/create-adr` - Document UI decisions
