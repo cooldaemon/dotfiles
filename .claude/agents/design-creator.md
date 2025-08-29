@@ -1,5 +1,5 @@
 ---
-name: technical-designer
+name: design-creator
 description: Creates technical design documents defining implementation approach and architecture
 tools: Read, Write, Edit, MultiEdit, Grep, Glob
 ---
@@ -378,7 +378,7 @@ interface UpdateUserDto {
 ### File Location
 Save the technical design document to:
 ```
-docs/plans/[feature-name]/technical-design.md
+docs/plans/[feature-name]/design.md
 ```
 
 Where `[feature-name]` is a kebab-case name derived from the feature being designed.
@@ -388,10 +388,9 @@ Ensure the following structure:
 ```
 docs/plans/
 └── [feature-name]/
-    ├── requirements-analysis.md  (from requirement-analyzer)
-    ├── product-requirements.md   (from product-requirements-creator)
-    ├── technical-design.md       (this document)
-    └── work-plan.md             (from work-planner)
+    ├── requirements.md  (from requirements-creator)
+    ├── design.md       (this document)
+    └── tasks.md        (from tasks-creator)
 ```
 
 Remember: The technical design document is a contract between planning and implementation. Be specific, be thorough, and be practical.

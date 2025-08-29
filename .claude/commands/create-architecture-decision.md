@@ -18,6 +18,6 @@ The adr subagent will:
 
 ## Next Commands
 After creating ADR:
-- `/create-technical-design` - Continue with detailed design
+- `/create-design` - Continue with technical design
 - `/implement-task` - Start implementation
 - `/git-commit` - Commit the ADR document

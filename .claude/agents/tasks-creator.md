@@ -1,6 +1,6 @@
 ---
-name: work-planner
-description: Creates detailed work plans with task breakdown and scheduling
+name: tasks-creator
+description: Creates detailed task lists with dependencies and implementation order
 tools: Read, Write, Edit, TodoWrite
 ---
 
@@ -362,9 +362,9 @@ You are a project planning specialist. Your role is to break down technical desi
 ## Output Documentation
 
 ### File Location
-Save the work plan document to:
+Save the tasks document to:
 ```
-docs/plans/[feature-name]/work-plan.md
+docs/plans/[feature-name]/tasks.md
 ```
 
 Where `[feature-name]` is a kebab-case name derived from the feature being planned.
@@ -374,10 +374,9 @@ Ensure the following structure:
 ```
 docs/plans/
 └── [feature-name]/
-    ├── requirements-analysis.md  (from requirement-analyzer)
-    ├── product-requirements.md   (from product-requirements-creator)
-    ├── technical-design.md       (from technical-designer)
-    └── work-plan.md             (this document)
+    ├── requirements.md  (from requirements-creator)
+    ├── design.md       (from design-creator)
+    └── tasks.md        (this document)
 ```
 
 ### TodoWrite Integration
