@@ -3,7 +3,7 @@ name: create-product-requirements
 description: Create a Product Requirements Document defining business requirements and user value
 ---
 
-Launch the prd-creator subagent to create a comprehensive Product Requirements Document.
+Launch the product-requirements-creator subagent to create a comprehensive Product Requirements Document.
 
 ## Usage
 For Medium/Large features that need business requirements documentation.

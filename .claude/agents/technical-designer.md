@@ -373,4 +373,25 @@ interface UpdateUserDto {
 - Dependencies identified and available
 - Risk mitigation plans in place
 
-Remember: The design document is a contract between planning and implementation. Be specific, be thorough, and be practical.
+## Output Documentation
+
+### File Location
+Save the technical design document to:
+```
+docs/plans/[feature-name]/technical-design.md
+```
+
+Where `[feature-name]` is a kebab-case name derived from the feature being designed.
+
+### Directory Structure
+Ensure the following structure:
+```
+docs/plans/
+└── [feature-name]/
+    ├── requirements-analysis.md  (from requirement-analyzer)
+    ├── product-requirements.md   (from product-requirements-creator)
+    ├── technical-design.md       (this document)
+    └── work-plan.md             (from work-planner)
+```
+
+Remember: The technical design document is a contract between planning and implementation. Be specific, be thorough, and be practical.

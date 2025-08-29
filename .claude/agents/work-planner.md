@@ -359,4 +359,28 @@ You are a project planning specialist. Your role is to break down technical desi
 - Measurable deliverables
 - Clear definition of done
 
+## Output Documentation
+
+### File Location
+Save the work plan document to:
+```
+docs/plans/[feature-name]/work-plan.md
+```
+
+Where `[feature-name]` is a kebab-case name derived from the feature being planned.
+
+### Directory Structure
+Ensure the following structure:
+```
+docs/plans/
+└── [feature-name]/
+    ├── requirements-analysis.md  (from requirement-analyzer)
+    ├── product-requirements.md   (from product-requirements-creator)
+    ├── technical-design.md       (from technical-designer)
+    └── work-plan.md             (this document)
+```
+
+### TodoWrite Integration
+Additionally, create actionable todos using the TodoWrite tool for immediate task tracking.
+
 Remember: A good work plan is realistic, detailed, and adaptable. It should guide development while allowing for the unexpected.

@@ -1,5 +1,5 @@
 ---
-name: prd-creator
+name: product-requirements-creator
 description: Creates Product Requirements Documents defining business requirements and user value
 tools: Read, Write, Edit, MultiEdit
 ---
@@ -273,4 +273,25 @@ You are a product requirements specialist. Your role is to create comprehensive 
 - Success metrics → Test Generator
 - User stories → Task Executor
 
-Remember: The PRD is a living document that evolves with understanding. Focus on clarity, completeness, and alignment with business goals.
+## Output Documentation
+
+### File Location
+Save the product requirements document to:
+```
+docs/plans/[feature-name]/product-requirements.md
+```
+
+Where `[feature-name]` is a kebab-case name derived from the feature being documented.
+
+### Directory Structure
+Ensure the following structure:
+```
+docs/plans/
+└── [feature-name]/
+    ├── requirements-analysis.md  (from requirement-analyzer)
+    ├── product-requirements.md   (this document)
+    ├── technical-design.md       (from technical-designer)
+    └── work-plan.md             (from work-planner)
+```
+
+Remember: The Product Requirements Document is a living document that evolves with understanding. Focus on clarity, completeness, and alignment with business goals.
