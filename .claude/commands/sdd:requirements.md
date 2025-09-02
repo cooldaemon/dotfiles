@@ -1,5 +1,5 @@
 ---
-name: create-requirements
+name: sdd:requirements
 description: Create requirements document using EARS format
 ---
 

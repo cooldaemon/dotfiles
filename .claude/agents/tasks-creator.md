@@ -364,7 +364,7 @@ You are a project planning specialist. Your role is to break down technical desi
 ### File Location
 Save the tasks document to:
 ```
-docs/plans/[feature-name]/tasks.md
+docs/specs/[feature-name]/tasks.md
 ```
 
 Where `[feature-name]` is a kebab-case name derived from the feature being planned.
@@ -372,11 +372,81 @@ Where `[feature-name]` is a kebab-case name derived from the feature being plann
 ### Directory Structure
 Ensure the following structure:
 ```
-docs/plans/
+docs/specs/
 └── [feature-name]/
     ├── requirements.md  (from requirements-creator)
     ├── design.md       (from design-creator)
-    └── tasks.md        (this document)
+    ├── tasks.md        (this document)
+    └── spec.json       (project specification)
+```
+
+### Spec.json Update Process
+After creating tasks.md, update the project specification:
+
+1. **Read existing spec.json**: Use the Read tool to load `docs/specs/[feature-name]/spec.json`
+2. **Parse and update**: Parse the JSON and update these fields:
+   - `current_phase`: Set to "tasks"
+   - `tasks.generated`: Set to true
+   - `tasks.generated_at`: Set to current ISO timestamp
+   - `updated_at`: Set to current ISO timestamp
+3. **Handle missing file**: If spec.json doesn't exist, create a basic structure:
+   ```json
+   {
+     "project_name": "[feature-name]",
+     "current_phase": "tasks",
+     "phases": {
+       "requirements": {
+         "generated": false,
+         "generated_at": null
+       },
+       "design": {
+         "generated": false,
+         "generated_at": null
+       },
+       "tasks": {
+         "generated": true,
+         "generated_at": "[current-iso-timestamp]"
+       }
+     },
+     "created_at": "[current-iso-timestamp]",
+     "updated_at": "[current-iso-timestamp]"
+   }
+   ```
+4. **Save updated spec.json**: Use the Write tool to save the updated JSON back to `docs/specs/[feature-name]/spec.json`
+
+### Example Update Process
+```javascript
+// Read existing spec.json
+const specPath = `docs/specs/${featureName}/spec.json`;
+let spec;
+try {
+  const specContent = await read(specPath);
+  spec = JSON.parse(specContent);
+} catch (error) {
+  // Create new spec if file doesn't exist
+  spec = {
+    project_name: featureName,
+    current_phase: "tasks",
+    phases: {
+      requirements: { generated: false, generated_at: null },
+      design: { generated: false, generated_at: null },
+      tasks: { generated: false, generated_at: null }
+    },
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString()
+  };
+}
+
+// Update spec for tasks completion
+const now = new Date().toISOString();
+spec.current_phase = "tasks";
+spec.tasks = spec.tasks || {};
+spec.tasks.generated = true;
+spec.tasks.generated_at = now;
+spec.updated_at = now;
+
+// Save updated spec
+await write(specPath, JSON.stringify(spec, null, 2));
 ```
 
 ### TodoWrite Integration

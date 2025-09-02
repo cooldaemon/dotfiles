@@ -1,5 +1,5 @@
 ---
-name: create-design
+name: sdd:design
 description: Create technical design document
 ---
 

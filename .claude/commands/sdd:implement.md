@@ -1,5 +1,5 @@
 ---
-name: implement-task
+name: sdd:implement
 description: Implement a task using test-first development approach
 ---
 
@@ -16,4 +16,4 @@ When tests are ready and you need to implement the functionality.
 After implementation:
 - `/refactor-code` - Clean up and improve code quality
 - `/git-commit` - Create a semantic commit
-- `/implement-task` - Continue with next task
+- `/sdd:implement` - Continue with next task

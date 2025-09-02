@@ -1,5 +1,5 @@
 ---
-name: create-tasks
+name: sdd:tasks
 description: Create implementation task list with dependencies
 ---
 

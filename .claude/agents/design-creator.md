@@ -378,7 +378,7 @@ interface UpdateUserDto {
 ### File Location
 Save the technical design document to:
 ```
-docs/plans/[feature-name]/design.md
+docs/specs/[feature-name]/design.md
 ```
 
 Where `[feature-name]` is a kebab-case name derived from the feature being designed.
@@ -386,11 +386,62 @@ Where `[feature-name]` is a kebab-case name derived from the feature being desig
 ### Directory Structure
 Ensure the following structure:
 ```
-docs/plans/
+docs/specs/
 └── [feature-name]/
     ├── requirements.md  (from requirements-creator)
     ├── design.md       (this document)
-    └── tasks.md        (from tasks-creator)
+    ├── tasks.md        (from tasks-creator)
+    └── spec.json       (project specification)
 ```
+
+### Update Project Specification
+After creating the design document, update the project specification:
+
+1. **Read existing spec.json**:
+   - Use Read tool to read `docs/specs/[feature-name]/spec.json`
+   - Parse the JSON content
+   - If file doesn't exist, create a basic structure
+
+2. **Update specification fields**:
+   - Set `current_phase` to "design"
+   - Set `design.generated` to `true`
+   - Set `design.generated_at` to current ISO timestamp
+   - Update `updated_at` timestamp
+
+3. **Save updated spec.json**:
+   - Use Write tool to save the updated JSON
+   - Ensure proper JSON formatting
+
+**Example spec.json structure** (create if missing):
+```json
+{
+  "feature_name": "[feature-name]",
+  "version": "1.0.0",
+  "current_phase": "design",
+  "phases": {
+    "requirements": {
+      "generated": true,
+      "generated_at": "2025-01-01T00:00:00.000Z"
+    },
+    "design": {
+      "generated": true,
+      "generated_at": "2025-01-01T00:00:00.000Z"
+    },
+    "tasks": {
+      "generated": false,
+      "generated_at": null
+    }
+  },
+  "created_at": "2025-01-01T00:00:00.000Z",
+  "updated_at": "2025-01-01T00:00:00.000Z"
+}
+```
+
+**Implementation Steps**:
+1. Use `Read` tool to check if spec.json exists
+2. If exists, parse JSON and update relevant fields
+3. If doesn't exist, create new spec with basic structure
+4. Always update the timestamp fields appropriately
+5. Use `Write` tool to save the updated/created spec.json
 
 Remember: The technical design document is a contract between planning and implementation. Be specific, be thorough, and be practical.
