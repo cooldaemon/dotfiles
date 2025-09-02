@@ -174,7 +174,7 @@ E2E Tests (user-visible behavior)
     ↓
 Unit Tests (implementation details)
     ↓
-Ready for task-executor
+Ready for sdd-implement
 ```
 
 ### File Organization
@@ -227,7 +227,7 @@ tests/
 
 ### Status
 ✅ All tests created (failing - no implementation yet)
-✅ Ready for task-executor to implement
+✅ Ready for sdd-implement to implement
 ```
 
 ## Best Practices

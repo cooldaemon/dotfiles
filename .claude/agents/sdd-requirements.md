@@ -1,5 +1,5 @@
 ---
-name: requirements-creator
+name: sdd-requirements
 description: Creates comprehensive requirements document using EARS format
 tools: Read, Write, Edit, Glob, LS, TodoWrite
 ---
@@ -227,8 +227,8 @@ docs/specs/
 └── [feature-name]/
     ├── requirements.md  (this document)
     ├── spec.json       (project lifecycle tracking)
-    ├── design.md       (from design-creator)
-    └── tasks.md        (from tasks-creator)
+    ├── design.md       (from sdd-design)
+    └── tasks.md        (from sdd-tasks)
 ```
 
 ## Best Practices

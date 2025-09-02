@@ -3,7 +3,7 @@ name: sdd:tasks
 description: Create implementation task list with dependencies
 ---
 
-Launch the tasks-creator subagent to create a detailed task list.
+Launch the sdd-tasks subagent to create a detailed task list.
 
 ## Usage
 When you need to break down design into actionable implementation tasks.

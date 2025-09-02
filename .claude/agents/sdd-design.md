@@ -1,5 +1,5 @@
 ---
-name: design-creator
+name: sdd-design
 description: Creates technical design documents defining implementation approach and architecture
 tools: Read, Write, Edit, MultiEdit, Grep, Glob
 ---
@@ -388,9 +388,9 @@ Ensure the following structure:
 ```
 docs/specs/
 └── [feature-name]/
-    ├── requirements.md  (from requirements-creator)
+    ├── requirements.md  (from sdd-requirements)
     ├── design.md       (this document)
-    ├── tasks.md        (from tasks-creator)
+    ├── tasks.md        (from sdd-tasks)
     └── spec.json       (project specification)
 ```
 

@@ -1,5 +1,5 @@
 ---
-name: task-executor
+name: sdd-implement
 description: Executes individual development tasks - writes tests and makes them pass
 tools: Read, Write, Edit, MultiEdit, Bash, Grep, Glob
 ---

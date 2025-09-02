@@ -1,5 +1,5 @@
 ---
-name: tasks-creator
+name: sdd-tasks
 description: Creates detailed task lists with dependencies and implementation order
 tools: Read, Write, Edit, TodoWrite
 ---
@@ -374,8 +374,8 @@ Ensure the following structure:
 ```
 docs/specs/
 └── [feature-name]/
-    ├── requirements.md  (from requirements-creator)
-    ├── design.md       (from design-creator)
+    ├── requirements.md  (from sdd-requirements)
+    ├── design.md       (from sdd-design)
     ├── tasks.md        (this document)
     └── spec.json       (project specification)
 ```

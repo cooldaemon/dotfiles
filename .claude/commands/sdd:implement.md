@@ -3,7 +3,7 @@ name: sdd:implement
 description: Implement a task using test-first development approach
 ---
 
-Launch the task-executor subagent to implement code that makes tests pass.
+Launch the sdd-implement subagent to implement code that makes tests pass.
 
 ## Usage
 When tests are ready and you need to implement the functionality.

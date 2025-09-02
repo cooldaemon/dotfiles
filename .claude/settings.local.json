@@ -30,7 +30,8 @@
       "mcp__context7__resolve-library-id",
       "WebFetch(domain:docs.anthropic.com)",
       "mcp__serena__list_memories",
-      "WebSearch"
+      "WebSearch",
+      "Bash(git mv:*)"
     ],
     "deny": []
   }

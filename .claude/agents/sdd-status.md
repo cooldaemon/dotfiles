@@ -1,5 +1,5 @@
 ---
-name: spec-status
+name: sdd-status
 description: Display comprehensive status of feature specifications
 tools: Read, Glob, Bash
 ---

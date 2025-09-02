@@ -3,7 +3,7 @@ name: sdd:status
 description: Check the status of feature specifications using a subagent
 ---
 
-Launch the spec-status subagent to display comprehensive feature specification status.
+Launch the sdd-status subagent to display comprehensive feature specification status.
 
 ## Usage
 Check the status of features tracked in docs/plans/ with spec.json files.
