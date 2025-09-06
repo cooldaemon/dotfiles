@@ -13,6 +13,7 @@
 .config/zed/conversations/
 .config/zed/prompts/
 .config/zed/themes/
+.claude/settings.local.json
 .jj/
 # BEGIN ANSIBLE MANAGED BLOCK - GPG
 # Machine-specific GPG config

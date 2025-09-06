@@ -12,15 +12,12 @@
     state: directory
     mode: '0755'
 
-- name: Link .claude settings files
+- name: Link .claude settings.json
   file:
-    src: "{{ src_path }}/.claude/{{ item }}"
-    dest: "~/.claude/{{ item }}"
+    src: "{{ src_path }}/.claude/settings.json"
+    dest: "~/.claude/settings.json"
     state: link
     force: yes
-  with_items:
-    - settings.json
-    - settings.local.json
 
 - name: Remove existing commands directory if not a link
   file:
