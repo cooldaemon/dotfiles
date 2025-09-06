@@ -1,12 +1,7 @@
 casks:
   - docker
-  - visual-studio-code
   - dropbox
   - google-drive
-  - cursor
-  - iterm2
-  - alacritty
-  - font-jetbrains-mono-nerd-font
   - zed
 
 sudo_casks:

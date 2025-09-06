@@ -9,8 +9,6 @@
       tags: homebrew_cask
     - role: mise
       tags: mise
-    - role: vscode
-      tags: vscode
     - role: fish
       tags: fish
     - role: dotfiles
