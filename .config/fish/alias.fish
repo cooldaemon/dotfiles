@@ -7,9 +7,8 @@ end
 
 alias grep 'grep --color'
 alias sudo 'sudo -E'
-alias v vi
 alias c claude
-alias e cursor
+alias z zed
 alias g git
 alias t tmux
 
