@@ -10,6 +10,9 @@
 .config/shell_gpt/
 .config/vllm/
 .config/iterm2/
+.config/zed/conversations/
+.config/zed/prompts/
+.config/zed/themes/
 .jj/
 # BEGIN ANSIBLE MANAGED BLOCK - GPG
 # Machine-specific GPG config
