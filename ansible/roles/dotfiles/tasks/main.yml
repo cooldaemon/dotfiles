@@ -55,6 +55,19 @@
     state: link
     force: yes
 
+- name: Ensure .config/zed directory exists
+  file:
+    path: "~/.config/zed"
+    state: directory
+    mode: '0755'
+
+- name: Link Zed settings.json
+  file:
+    src: "{{ src_path }}/editors/zed/settings.json"
+    dest: "~/.config/zed/settings.json"
+    state: link
+    force: yes
+
 - name: Get current global gitignore setting
   shell: git config --global --get core.excludesfile || echo ""
   register: current_gitignore

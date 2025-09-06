@@ -7,6 +7,7 @@ casks:
   - iterm2
   - alacritty
   - font-jetbrains-mono-nerd-font
+  - zed
 
 sudo_casks:
   - karabiner-elements

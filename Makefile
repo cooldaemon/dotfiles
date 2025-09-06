@@ -50,6 +50,10 @@ homebrew-update:
 	@eval "$$(/opt/homebrew/bin/brew shellenv)" && \
 	ansible-playbook -i localhost, -c local ansible/playbook.yml --tags homebrew
 
+homebrew-cask-update:
+	@eval "$$(/opt/homebrew/bin/brew shellenv)" && \
+	ansible-playbook -i localhost, -c local ansible/playbook.yml --tags homebrew_cask
+
 mise-update:
 	@eval "$$(/opt/homebrew/bin/brew shellenv)" && \
 	ansible-playbook -i localhost, -c local ansible/playbook.yml --tags mise
@@ -76,6 +80,7 @@ help:
 	@echo "  make setup          - Full initial setup (installs brew, ansible, runs playbook, configures fish)"
 	@echo "  make update         - Run ansible playbook to update environment"
 	@echo "  make homebrew-update - Update only homebrew packages"
+	@echo "  make homebrew-cask-update - Update only homebrew cask applications"
 	@echo "  make mise-update    - Update only mise tools"
 	@echo "  make mcp-update     - Update only MCP servers"
 	@echo "  make vscode-update  - Update only VS Code/Cursor settings"
