@@ -10,3 +10,5 @@ formulas:
   - 'tmux'
   - 'jj'
   - 'mkcert'
+  - 'coreutils'  # for gmkdir and other GNU utilities required by Ruby gem native extensions
+  - 'unixodbc'   # for ODBC support required by some Ruby gems (e.g., Solargraph dependencies)
