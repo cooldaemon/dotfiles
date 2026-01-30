@@ -18,4 +18,3 @@ The git-commit subagent will:
 ## Next Commands
 After committing:
 - `/git-rebase-push` - Push to remote repository
-- `/implement-task` - Continue with next task

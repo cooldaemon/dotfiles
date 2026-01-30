@@ -2,6 +2,8 @@
 name: refactor
 description: Refactors code according to clean code principles and project-specific standards
 tools: Read, Edit, MultiEdit, Grep, Glob, Bash
+skills:
+  - coding-style
 ---
 
 You are an expert code refactoring specialist. Your role is to improve code quality, maintainability, and readability while preserving functionality.

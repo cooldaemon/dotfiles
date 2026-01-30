@@ -1,15 +1,11 @@
 ---
-description: "Refactor code according to general coding standards and project-specific CLAUDE.md using a subagent"
+description: "Refactor code and remove dead code using subagents"
 ---
 
-I'll use the refactor subagent to improve the code quality of the specified files.
+I'll use two subagents to improve code quality:
 
-The refactor subagent will:
-- Check for project-specific CLAUDE.md standards
-- Analyze code for improvement opportunities
-- Apply clean code principles and tidyings
-- Run verification tests to ensure functionality
-- Maintain backward compatibility
+1. **refactor-cleaner** - Remove dead code, unused dependencies
+2. **refactor** - Improve code quality, apply clean code principles
 
 ## Prerequisites
 - All tests passing (green)
@@ -18,5 +14,4 @@ The refactor subagent will:
 ## Next Commands
 After refactoring:
 - `/git-commit` - Commit the improvements
-- `/implement-task` - Continue with next task
 - `/update-claude-md` - Update project docs if needed

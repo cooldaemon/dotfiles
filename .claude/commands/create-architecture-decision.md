@@ -1,23 +1,17 @@
 ---
-description: "Manage Architecture Decision Records (ADRs) using a specialized subagent"
+description: "Create Architecture Decision Records (ADRs) using the architect agent"
 ---
 
-I'll use the adr subagent to manage Architecture Decision Records for your project.
+I'll use the architect agent to create an Architecture Decision Record for your project.
 
-The adr subagent will:
+The architect agent will:
 - Check and create the docs/adr directory structure if needed
-- Analyze git history and session context for technical decisions
-- Generate new ADR files with proper numbering
+- Analyze the technical decision context
+- Generate a new ADR file with proper numbering
 - Update the index.md file automatically
-- Ensure all ADRs follow the standard template format
+- Follow the standard ADR template from adr-patterns skill
 
 ## Prerequisites
 - Clear understanding of the problem
 - Options considered
 - Decision rationale
-
-## Next Commands
-After creating ADR:
-- `/create-design` - Continue with technical design
-- `/implement-task` - Start implementation
-- `/git-commit` - Commit the ADR document

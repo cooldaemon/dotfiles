@@ -17,5 +17,4 @@ The git-rebase-push subagent will:
 
 ## Next Commands
 After pushing:
-- `/implement-task` - Continue with next feature
 - `/update-claude-md` - Update project documentation

@@ -1,0 +1,170 @@
+---
+name: git-workflow
+description: Git workflow patterns including commit messages, rebase strategy, and pre-commit hooks. Use when committing, creating PRs, or managing git history.
+---
+
+# Git Workflow Patterns
+
+## Commit Message Format
+
+```
+<type>(<scope>): <subject>
+
+<body>
+
+<footer>
+```
+
+### Types
+
+| Type | Description |
+|------|-------------|
+| feat | New feature implementation |
+| fix | Bug fixes |
+| docs | Documentation changes only |
+| style | Code formatting, missing semicolons, etc. |
+| refactor | Code restructuring without behavior changes |
+| perf | Performance improvements |
+| test | Test additions or corrections |
+| chore | Build process, auxiliary tools, dependencies |
+
+### Rules
+
+- Subject line: Max 50 characters, imperative mood, no period
+- Body: Wrap at 72 characters, explain WHY not WHAT
+- Write in English
+- Be specific and descriptive
+
+### Examples
+
+```
+feat(auth): add OAuth2 integration with Google
+
+Implemented Google OAuth2 authentication flow to allow users
+to sign in with their Google accounts. This includes:
+- OAuth2 configuration and middleware setup
+- User profile synchronization
+- Session management with JWT tokens
+
+Closes #123
+```
+
+```
+fix(api): resolve race condition in payment processing
+
+The payment webhook handler was not properly locking the
+transaction record, causing duplicate charges when webhooks
+arrived simultaneously. Added database-level locking to
+ensure atomic transaction updates.
+```
+
+## Pre-commit Hook Handling
+
+**CRITICAL: NEVER use `--no-verify` flag**
+
+### Language-specific Checks
+
+**JavaScript/TypeScript:**
+- Linting: `npm run lint`, `eslint`
+- Type checking: `npm run typecheck`, `tsc`
+- Formatting: `prettier --check`, `npm run format`
+- Tests: `npm test`, `jest`, `vitest`
+
+**Python:**
+- Linting: `ruff check`, `flake8`, `pylint`
+- Type checking: `mypy`, `pyright`
+- Formatting: `black --check`, `ruff format`
+- Tests: `pytest`, `python -m unittest`
+
+**Ruby:**
+- Linting: `rubocop`
+- Tests: `rspec`, `rake test`
+
+**Go:**
+- Formatting: `go fmt`, `gofmt`
+- Linting: `golangci-lint run`
+- Tests: `go test`
+
+**General:**
+- Check Makefile targets: `make test`, `make lint`, `make format`
+- Check package.json scripts section
+- Review project documentation
+
+### Fixing Pre-commit Failures
+
+1. Analyze the error message
+2. Fix automatically if possible (formatting, linting)
+3. For type errors: Modify code to fix
+4. For test failures: Debug and fix
+5. Stage fixed files and retry commit
+
+## Rebase Strategy
+
+### When to Rebase
+
+Use `git pull --rebase` to maintain linear history:
+- Before pushing local commits
+- When local branch is behind remote
+
+### How Rebase Works
+
+1. Fetches remote changes
+2. Temporarily removes your local commits
+3. Applies remote commits to your branch
+4. Re-applies your local commits on top
+5. Creates linear history without merge commits
+
+### Conflict Resolution
+
+When conflicts occur:
+1. `git status` to identify conflicted files
+2. Resolve each conflict (ours/theirs/manual)
+3. Remove conflict markers (`<<<<<<<`, `=======`, `>>>>>>>`)
+4. `git add` resolved files
+5. `git rebase --continue`
+6. Or `git rebase --abort` to give up
+
+## Safety Checks
+
+Before git operations:
+- **Uncommitted changes**: Stash or commit before proceeding
+- **Remote tracking**: Ensure branch tracks a remote
+- **Network connectivity**: Verify connection to remote
+- **Branch protection**: Check if branch has push restrictions
+
+## Error Handling Patterns
+
+**No remote tracking:**
+```bash
+git branch --set-upstream-to=origin/branch-name
+```
+
+**Uncommitted changes:**
+```bash
+# Option 1: Stash changes
+git stash push -m "Temporary stash for rebase"
+# ... perform rebase ...
+git stash pop
+
+# Option 2: Commit changes first
+```
+
+**Network issues:**
+- Retry with clear error messages
+- Check remote URL with `git remote -v`
+- Verify credentials if authentication fails
+
+## Pull Request Workflow
+
+1. Analyze full commit history (not just latest commit)
+2. Use `git diff [base-branch]...HEAD` to see all changes
+3. Draft comprehensive PR summary
+4. Include test plan with TODOs
+5. Push with `-u` flag if new branch
+
+## Related Commands
+
+- `/git-commit` - Commit with semantic message
+- `/git-rebase-push` - Rebase and push workflow
+- `/jj-describe` - Update jj change description (if using jj)
+- `/jj-git-push` - Push jj changes to git remote (if using jj)

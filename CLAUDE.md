@@ -60,6 +60,38 @@ The repository includes custom Claude commands in `.claude/commands/`:
 - `screenshot.md`: Screenshot handling
 - `update-claude-md.md`: Updates project CLAUDE.md files
 
+### Rules / Skills / Agents Design Principles
+
+#### Rules (`.claude/rules/`)
+- **Always loaded** - Keep lightweight to minimize context consumption
+- **Principles only** - No implementation details
+- **Language-agnostic** - Universal guidelines
+
+#### Skills (`.claude/skills/`)
+- **Conditionally loaded** - Auto-selected based on frontmatter `description`
+- **Include implementation details** - Language/tool-specific patterns and code examples
+- **Skip well-known APIs** - Don't create Skills for Playwright, Cypress alone (Claude knows these)
+- **Focus on integrations** - e.g., Cucumber + Playwright combinations
+- **Verify with context7** - Before writing library-specific code examples, verify against official docs
+
+#### Agents (`.claude/agents/`)
+- **Do NOT auto-inherit Skills/Rules** - Confirmed via official documentation
+- **To use Skills**: Explicitly specify in frontmatter
+  ```yaml
+  skills:
+    - cucumber-playwright
+    - typescript-testing
+  ```
+- **Focus on workflow and decision criteria** - Omit implementation details defined in Skills
+
+#### Sharing Content Between Main Session and Agents
+- **Rules** are only loaded in the main session, not in agents
+- **Skills** can be loaded in both (main via auto-detection, agents via explicit `skills:` field)
+- **For content needed in both contexts**: Use Skills instead of Rules
+  - Example: Testing principles (TDD, Test Pyramid) → Create `testing-principles` Skill
+  - Main session: Auto-loads when working on tests
+  - Agent: Loads via `skills: [testing-principles]` in frontmatter
+
 ## Development Workflow
 
 1. All configuration changes should be made in the source dotfiles
@@ -71,3 +103,4 @@ The repository includes custom Claude commands in `.claude/commands/`:
 
 - MCP servers are installed at user scope and managed by the `claude_mcp` Ansible role
 - Use tags to run specific Ansible roles for faster updates during development
+- **All generated files must be written in English** (code, comments, documentation, commit messages)
