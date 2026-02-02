@@ -58,6 +58,10 @@ mise-update:
 	@eval "$$(/opt/homebrew/bin/brew shellenv)" && \
 	ansible-playbook -i localhost, -c local ansible/playbook.yml --tags mise
 
+claude-update:
+	@eval "$$(/opt/homebrew/bin/brew shellenv)" && \
+	ansible-playbook -i localhost, -c local ansible/playbook.yml --tags claude
+
 mcp-update:
 	@eval "$$(/opt/homebrew/bin/brew shellenv)" && \
 	ansible-playbook -i localhost, -c local ansible/playbook.yml --tags mcp
@@ -78,6 +82,7 @@ help:
 	@echo "  make homebrew-update - Update only homebrew packages"
 	@echo "  make homebrew-cask-update - Update only homebrew cask applications"
 	@echo "  make mise-update    - Update only mise tools"
+	@echo "  make claude-update  - Install/update Claude Code via Native installer"
 	@echo "  make mcp-update     - Update only MCP servers"
 	@echo "  make dotfiles-update - Update only dotfiles symlinks"
 	@echo "  make gpg-setup      - Setup GPG keys for Git commit signing"

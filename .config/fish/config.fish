@@ -1,6 +1,9 @@
 set -gx fish_escape_delay_ms 10
 source $HOME/.config/fish/alias.fish
 
+# Add ~/.local/bin to PATH for Claude Code and other native installers
+fish_add_path $HOME/.local/bin
+
 # Add /usr/local/bin to PATH for VS Code, Cursor, and Kiro commands
 fish_add_path /usr/local/bin
 

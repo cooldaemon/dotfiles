@@ -13,6 +13,8 @@
       tags: fish
     - role: dotfiles
       tags: dotfiles
+    - role: claude_code
+      tags: claude
     - role: claude_mcp
       tags: mcp
     - role: gpg

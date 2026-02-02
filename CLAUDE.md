@@ -19,6 +19,7 @@ make update
 # Run specific roles with make targets
 make homebrew-update
 make mise-update
+make claude-update
 make mcp-update
 make vscode-update
 
@@ -41,9 +42,10 @@ The repository uses Ansible for automation with the following roles:
 - **vscode**: Configures VS Code and Cursor editors (disables Apple Press and Hold, creates settings.json symlinks)
 - **fish**: Installs Oh My Fish framework and peco plugin
 - **dotfiles**: Creates symlinks for configuration files and Claude settings
+- **claude_code**: Installs Claude Code via Native installer (auto-updates enabled, removes legacy npm version)
 - **claude_mcp**: Configures Claude MCP (Model Context Protocol) servers (playwright, context7, peekaboo, serena)
 
-Each role is tagged in the playbook for individual execution (e.g., `--tags homebrew`, `--tags mcp`)
+Each role is tagged in the playbook for individual execution (e.g., `--tags homebrew`, `--tags claude`, `--tags mcp`)
 
 ### Key Configuration Files
 - `.mise.toml`: Defines tool versions and global npm packages

@@ -1,0 +1,51 @@
+---
+# Phase 0: Clean up npm-based installation
+- name: Check if npm-based Claude Code shim exists
+  stat:
+    path: "{{ lookup('env', 'HOME') }}/.local/share/mise/shims/claude"
+  register: npm_claude_shim
+
+- name: Check if npm-based Claude Code is installed via mise
+  shell: mise list 2>/dev/null | grep -q '@anthropic-ai/claude-code'
+  register: npm_claude_installed
+  changed_when: false
+  failed_when: false
+
+- name: Uninstall npm-based Claude Code via mise
+  shell: mise uninstall npm:@anthropic-ai/claude-code
+  when: npm_claude_installed.rc == 0
+
+- name: Remove npm Claude Code artifacts
+  file:
+    path: "{{ item }}"
+    state: absent
+  loop:
+    - "{{ lookup('env', 'HOME') }}/Library/Caches/claude-cli-nodejs"
+    - "{{ lookup('env', 'HOME') }}/.local/share/mise/shims/claude"
+
+# Phase 1: Install via Native installer
+- name: Check if Claude Code native binary exists
+  stat:
+    path: "{{ lookup('env', 'HOME') }}/.local/bin/claude"
+  register: claude_native
+
+- name: Ensure ~/.local/bin directory exists
+  file:
+    path: "{{ lookup('env', 'HOME') }}/.local/bin"
+    state: directory
+    mode: '0755'
+
+- name: Install Claude Code via Native installer
+  shell: curl -fsSL https://claude.ai/install.sh | bash
+  args:
+    creates: "{{ lookup('env', 'HOME') }}/.local/bin/claude"
+  when: not claude_native.stat.exists
+
+- name: Verify Claude Code installation
+  shell: "{{ lookup('env', 'HOME') }}/.local/bin/claude --version"
+  register: claude_version
+  changed_when: false
+
+- name: Display Claude Code version
+  debug:
+    var: claude_version.stdout_lines
