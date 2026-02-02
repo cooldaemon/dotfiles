@@ -23,6 +23,36 @@
     - "{{ lookup('env', 'HOME') }}/Library/Caches/claude-cli-nodejs"
     - "{{ lookup('env', 'HOME') }}/.local/share/mise/shims/claude"
 
+- name: Find npm-installed Claude Code in mise Node.js installations
+  find:
+    paths: "{{ lookup('env', 'HOME') }}/.local/share/mise/installs/node"
+    patterns: "claude-code"
+    file_type: directory
+    recurse: true
+  register: npm_claude_dirs
+
+- name: Remove npm-installed Claude Code packages
+  file:
+    path: "{{ item.path }}"
+    state: absent
+  loop: "{{ npm_claude_dirs.files }}"
+  when: npm_claude_dirs.matched > 0
+
+- name: Find npm Claude Code symlinks in mise Node.js bins
+  find:
+    paths: "{{ lookup('env', 'HOME') }}/.local/share/mise/installs/node"
+    patterns: "claude"
+    file_type: link
+    recurse: true
+  register: npm_claude_links
+
+- name: Remove npm Claude Code symlinks
+  file:
+    path: "{{ item.path }}"
+    state: absent
+  loop: "{{ npm_claude_links.files }}"
+  when: npm_claude_links.matched > 0
+
 # Phase 1: Install via Native installer
 - name: Check if Claude Code native binary exists
   stat:
