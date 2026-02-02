@@ -146,25 +146,17 @@ def calculate_compound_interest(principal, annual_rate, years):
 
 ## Build Automation (Makefile)
 
-**ALWAYS use Makefile** - Never run commands directly:
+**ALWAYS use Makefile** - Never run commands directly.
 
-```makefile
-# CORRECT: Makefile as interface and documentation
-.PHONY: build test lint check
+### When Makefile Doesn't Exist
 
-build:
-	npm run build
+| Situation | Action |
+|-----------|--------|
+| New project (creating from scratch) | Create Makefile |
+| Existing codebase | Ask user before creating Makefile |
 
-test:
-	npm run test -- --coverage
+### Why Makefile
 
-lint:
-	npm run lint
-
-check: lint test build  ## Run all checks before PR
-```
-
-**Why Makefile:**
 - Single entry point for all operations
 - Self-documenting (serves as handover documentation)
 - Language-agnostic interface
