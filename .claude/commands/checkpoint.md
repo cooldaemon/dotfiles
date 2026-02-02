@@ -43,12 +43,6 @@ Save important state before context compaction.
    - Project-specific important discoveries → Propose adding to CLAUDE.md
    - Temporary work state → Checkpoint file only
 
-## Directory Setup
-
-```bash
-mkdir -p ~/.claude/checkpoints
-```
-
 ## Usage
 
 ```
