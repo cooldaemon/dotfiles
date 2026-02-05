@@ -23,6 +23,27 @@
     - "{{ lookup('env', 'HOME') }}/Library/Caches/claude-cli-nodejs"
     - "{{ lookup('env', 'HOME') }}/.local/share/mise/shims/claude"
 
+# Find all mise Node.js version directories (actual installs, not symlinks)
+- name: Find mise Node.js installation directories
+  find:
+    paths: "{{ lookup('env', 'HOME') }}/.local/share/mise/installs/node"
+    file_type: directory
+    recurse: false
+  register: mise_node_dirs
+
+- name: Filter actual Node.js installations (exclude symlinks)
+  set_fact:
+    mise_node_versions: "{{ mise_node_dirs.files | selectattr('islnk', 'equalto', false) | map(attribute='path') | list }}"
+
+# Uninstall npm global claude-code from each mise Node.js version
+- name: Uninstall npm global claude-code from mise Node.js versions
+  shell: |
+    if [ -x "{{ item }}/bin/npm" ]; then
+      "{{ item }}/bin/npm" uninstall -g @anthropic-ai/claude-code 2>/dev/null || true
+    fi
+  loop: "{{ mise_node_versions }}"
+  changed_when: false
+
 - name: Find npm-installed Claude Code in mise Node.js installations
   find:
     paths: "{{ lookup('env', 'HOME') }}/.local/share/mise/installs/node"
