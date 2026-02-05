@@ -42,7 +42,7 @@ The repository uses Ansible for automation with the following roles:
 - **vscode**: Configures VS Code and Cursor editors (disables Apple Press and Hold, creates settings.json symlinks)
 - **fish**: Installs Oh My Fish framework and peco plugin
 - **dotfiles**: Creates symlinks for configuration files and Claude settings
-- **claude_code**: Installs Claude Code via Native installer (auto-updates enabled, removes legacy npm version)
+- **claude_code**: Installs Claude Code via Native installer (auto-updates enabled, removes legacy npm version from both mise and all mise Node.js global installations)
 - **claude_mcp**: Configures Claude MCP (Model Context Protocol) servers (playwright, context7, peekaboo, serena)
 
 Each role is tagged in the playbook for individual execution (e.g., `--tags homebrew`, `--tags claude`, `--tags mcp`)
@@ -58,9 +58,15 @@ Each role is tagged in the playbook for individual execution (e.g., `--tags home
 The repository includes custom Claude commands in `.claude/commands/`:
 - `git-commit.md`: Git commit helper
 - `git-rebase-push.md`: Git rebase and push workflow
-- `refactor.md`: Code refactoring guide
-- `screenshot.md`: Screenshot handling
+- `refactor-code.md`: Code refactoring guide
+- `capture-screenshot.md`: Screenshot handling
 - `update-claude-md.md`: Updates project CLAUDE.md files
+- `checkpoint.md`: Create checkpoint commits
+- `code-review.md`: Code review workflow
+- `plan.md`: Planning workflow
+- `tdd.md`: Test-driven development guide
+- `fix-build.md`: Build error resolution
+- `verify.md`: Verification workflow
 
 ### Rules / Skills / Agents Design Principles
 
@@ -75,6 +81,11 @@ The repository includes custom Claude commands in `.claude/commands/`:
 - **Skip well-known APIs** - Don't create Skills for Playwright, Cypress alone (Claude knows these)
 - **Focus on integrations** - e.g., Cucumber + Playwright combinations
 - **Verify with context7** - Before writing library-specific code examples, verify against official docs
+
+**Skill Content Guidelines**:
+- **DO include**: Policies/directions (what to do), information requiring context7 or web search
+- **DO NOT include**: General knowledge Claude already knows (standard library commands, language syntax)
+- Example: A Python skill should specify "use uv for new projects" but NOT document uv commands
 
 #### Agents (`.claude/agents/`)
 - **Do NOT auto-inherit Skills/Rules** - Confirmed via official documentation
