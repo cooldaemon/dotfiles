@@ -74,6 +74,51 @@
   loop: "{{ npm_claude_links.files }}"
   when: npm_claude_links.matched > 0
 
+# Remove hidden .claude-* files and directories (from failed/partial installs)
+- name: Find hidden .claude-* entries in mise Node.js installations
+  find:
+    paths: "{{ lookup('env', 'HOME') }}/.local/share/mise/installs/node"
+    patterns: ".claude-*,.claude*"
+    file_type: any
+    recurse: true
+    hidden: true
+  register: hidden_claude_entries
+
+- name: Remove hidden .claude-* entries
+  file:
+    path: "{{ item.path }}"
+    state: absent
+  loop: "{{ hidden_claude_entries.files }}"
+  when: hidden_claude_entries.matched > 0
+
+# Remove mise npm package installation directory
+- name: Remove mise npm claude-code installation directory
+  file:
+    path: "{{ lookup('env', 'HOME') }}/.local/share/mise/installs/npm-anthropic-ai-claude-code"
+    state: absent
+
+# Clean up empty @anthropic-ai directories
+- name: Find @anthropic-ai directories in mise Node.js installations
+  find:
+    paths: "{{ lookup('env', 'HOME') }}/.local/share/mise/installs/node"
+    patterns: "@anthropic-ai"
+    file_type: directory
+    recurse: true
+  register: anthropic_dirs
+
+- name: Remove empty @anthropic-ai directories
+  shell: |
+    if [ -d "{{ item.path }}" ] && [ -z "$(ls -A '{{ item.path }}')" ]; then
+      rm -rf "{{ item.path }}"
+      echo "removed"
+    else
+      echo "skipped"
+    fi
+  loop: "{{ anthropic_dirs.files }}"
+  when: anthropic_dirs.matched > 0
+  register: remove_anthropic_result
+  changed_when: "'removed' in remove_anthropic_result.stdout"
+
 # Phase 1: Install via Native installer
 - name: Check if Claude Code native binary exists
   stat:
