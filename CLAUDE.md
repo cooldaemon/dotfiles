@@ -4,7 +4,15 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Repository Overview
 
-This is a dotfiles repository for automated macOS development environment setup using Ansible. It manages development tools, configurations, and settings for a consistent development environment.
+This repository serves two purposes:
+
+1. **Claude Code Configuration Management**: Manages Rules, Skills, Agents, Commands, and Hooks that define how Claude Code behaves across ALL projects. These configurations are symlinked to `~/.claude/` and apply globally to any project Claude works on.
+
+2. **macOS Development Environment Setup**: Uses Ansible to automate installation of development tools, applications, and configurations.
+
+### Global Scope
+
+The `.claude/` directory is symlinked to `~/.claude/`, making all configurations (Rules, Skills, Agents, Commands, Hooks) apply system-wide. These are NOT just for this repository—they define Claude's behavior across ALL projects on this machine.
 
 ## Commands
 
