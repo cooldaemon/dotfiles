@@ -18,23 +18,10 @@
     state: directory
     mode: '0755'
 
-- name: Ensure .codex directory exists
-  file:
-    path: "~/.codex"
-    state: directory
-    mode: '0755'
-
 - name: Link .claude settings.json
   file:
     src: "{{ src_path }}/.claude/settings.json"
     dest: "~/.claude/settings.json"
-    state: link
-    force: yes
-
-- name: Link .codex config.toml
-  file:
-    src: "{{ src_path }}/.codex/config.toml"
-    dest: "~/.codex/config.toml"
     state: link
     force: yes
 
