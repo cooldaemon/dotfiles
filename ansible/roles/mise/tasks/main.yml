@@ -23,11 +23,6 @@
     path: "{{ lookup('env', 'HOME') }}/.mise.toml"
   register: mise_config
 
-- name: Check if tool-versions exists
-  stat:
-    path: "{{ lookup('env', 'HOME') }}/.tool-versions"
-  register: tool_versions
-
 - name: Install all mise tools
   shell: |
     export PATH="/opt/homebrew/bin:$PATH"
@@ -37,7 +32,7 @@
     PATH: "/opt/homebrew/bin:{{ lookup('env', 'PATH') }}"
   register: mise_install
   changed_when: mise_install.rc == 0
-  when: mise_config.stat.exists and tool_versions.stat.exists
+  when: mise_config.stat.exists
 
 - name: Trust mise configuration
   shell: |
