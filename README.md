@@ -27,8 +27,8 @@ xcode-select --install
 git clone https://github.com/[your-username]/dotfiles.git ~/git/dotfiles
 cd ~/git/dotfiles
 
-# 3. Run the setup script
-./setup.sh
+# 3. Run the setup
+make setup
 
 # 4. Change default shell to fish
 chsh -s /opt/homebrew/bin/fish
@@ -39,29 +39,40 @@ chsh -s /opt/homebrew/bin/fish
 ## What Gets Installed
 
 ### Development Languages
-- Node.js 20.4.0
+- Node.js 20.18.2
 - Python 3.13.5
 - Ruby 3.3.4
 - Go 1.23.4
 
 ### Global npm Packages
-- [@anthropic-ai/claude-code](https://github.com/anthropics/claude-code) - AI code assistant
 - [@playwright/mcp](https://github.com/microsoft/playwright) - Browser automation MCP server
 - [@steipete/peekaboo-mcp](https://github.com/steipete/peekaboo-mcp) - Screen capture MCP server
 - [@upstash/context7-mcp](https://github.com/upstash/context7) - Up-to-date documentation MCP server
 - [aws-cdk](https://github.com/aws/aws-cdk) - AWS Cloud Development Kit
+
+### Other Tools
+- [Claude Code](https://claude.ai/code) - AI code assistant (installed via native installer)
 
 ### Homebrew Packages
 - fish (shell)
 - gpg (encryption)
 - gawk (text processing, required for Node.js)
 - peco (interactive filtering)
+- uv (Python package manager)
+- direnv (directory-specific env vars)
+- gh (GitHub CLI)
+- tmux (terminal multiplexer)
+- jj (Jujutsu version control)
+- mkcert (local TLS certificates)
+- gitleaks (secret scanning)
 
 ### Homebrew Cask Applications
 - Docker
-- Visual Studio Code
 - Dropbox
 - Google Drive
+- Zed (editor)
+- Karabiner Elements (keyboard customization)
+- Session Manager Plugin (AWS SSM)
 
 ## Directory Structure
 
@@ -78,9 +89,9 @@ chsh -s /opt/homebrew/bin/fish
 │       └── dotfiles/   # Dotfiles linking
 ├── .gitconfig          # Git configuration
 ├── .gitignore_global   # Global gitignore
-├── .mise.toml          # mise configuration
-├── .tool-versions      # Tool versions (mise compatible)
-└── setup.sh            # Main setup script
+├── .mise.toml          # mise configuration (single source of truth)
+├── Makefile            # Setup and update targets
+└── CLAUDE.md           # Claude Code project instructions
 ```
 
 ## Manual Steps After Installation
@@ -103,7 +114,7 @@ To update your environment:
 ```bash
 cd ~/git/dotfiles
 git pull
-ansible-playbook -i localhost, -c local ansible/playbook.yml
+make update
 ```
 
 ## Troubleshooting

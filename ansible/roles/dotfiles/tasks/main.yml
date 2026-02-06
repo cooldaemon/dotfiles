@@ -1,3 +1,13 @@
+- name: Remove legacy .codex directory
+  file:
+    path: "~/.codex"
+    state: absent
+
+- name: Remove legacy .tool-versions symlink
+  file:
+    path: "~/.tool-versions"
+    state: absent
+
 - name: Link config files
   file:
     src: "{{ src_path }}/{{ item }}"

@@ -26,10 +26,12 @@ make update
 
 # Run specific roles with make targets
 make homebrew-update
+make homebrew-cask-update
 make mise-update
 make claude-update
 make mcp-update
-make vscode-update
+make dotfiles-update
+make gpg-setup
 
 # Show all available commands
 make help
@@ -45,21 +47,18 @@ ansible-playbook -i localhost, -c local ansible/playbook.yml --tags "homebrew,mi
 ### Ansible-Based Configuration
 The repository uses Ansible for automation with the following roles:
 - **homebrew**: Installs command-line tools (fish, gpg, gawk, peco)
-- **homebrew_cask**: Installs GUI applications (Docker, VS Code, Cursor, Dropbox, Google Drive)
+- **homebrew_cask**: Installs GUI applications (Docker, Dropbox, Google Drive, Zed, Karabiner Elements, Session Manager Plugin)
 - **mise**: Manages development languages (Node.js 20.18.2, Python 3.13.5, Ruby 3.3.4, Go 1.23.4) and global npm packages
-- **vscode**: Configures VS Code and Cursor editors (disables Apple Press and Hold, creates settings.json symlinks)
 - **fish**: Installs Oh My Fish framework and peco plugin
 - **dotfiles**: Creates symlinks for configuration files and Claude settings
 - **claude_code**: Installs Claude Code via Native installer (auto-updates enabled, removes legacy npm version from both mise and all mise Node.js global installations)
-- **claude_mcp**: Configures Claude MCP (Model Context Protocol) servers (playwright, context7, peekaboo, serena)
+- **claude_mcp**: Configures Claude MCP (Model Context Protocol) servers (playwright, context7, peekaboo)
 
 Each role is tagged in the playbook for individual execution (e.g., `--tags homebrew`, `--tags claude`, `--tags mcp`)
 
 ### Key Configuration Files
 - `.mise.toml`: Defines tool versions and global npm packages
 - `.config/fish/`: Fish shell configurations
-- `vscode/settings.json`: VS Code editor settings
-- `cursor/settings.json`: Cursor editor settings with Copilot and Vim configurations
 - `.claude/`: Claude Code settings and custom commands
 
 ### Claude Code Integration
