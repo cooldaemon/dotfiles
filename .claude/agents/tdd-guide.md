@@ -38,8 +38,15 @@ If unclear, check existing test files or ask the user.
 
 ### Test Execution
 
-- Unit/Integration tests: `/verify` covers them
-- E2E tests: `/e2e path/to/test.feature` (specific test via e2e-runner)
+**ALWAYS check Makefile first** (see `coding-style` skill):
+
+1. If Makefile exists → Use `make test`, `make check`, etc.
+2. If Makefile doesn't exist → **Ask user before creating one**
+3. If user declines → Use language-specific commands from skills
+
+**Commands:**
+- Unit/Integration tests: `/verify` or `make test`
+- E2E tests: `/e2e path/to/test.feature` (via e2e-runner)
 
 ### When /verify Fails
 

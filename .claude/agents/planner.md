@@ -1,7 +1,7 @@
 ---
 name: planner
 description: Expert planning specialist for complex features and refactoring. Use PROACTIVELY when users request feature implementation, architectural changes, or complex refactoring. Creates implementation plans with EARS-format acceptance criteria.
-tools: Read, Grep, Glob
+tools: Read, Write, Grep, Glob, Bash
 model: opus
 skills:
   - ears-format
@@ -74,92 +74,118 @@ Create detailed steps with:
 ## Plan Format
 
 ```markdown
+---
+id: PLAN-NNNN
+title: [Feature Name]
+status: draft
+created: YYYY-MM-DD
+---
+
 # Implementation Plan: [Feature Name]
 
 ## Overview
-[2-3 sentence summary]
+[2-3 sentence summary of the feature/change]
 
 ## Acceptance Criteria (EARS Format)
 
-### User Story 1: [Title]
+### US-1: [User Story Title]
 As a [user type], I want to [action], so that [benefit]
 
 **Criteria:**
-- WHEN [trigger] THE SYSTEM SHALL [behavior]
-- IF [condition] THEN THE SYSTEM SHALL [response]
+- AC-1.1: WHEN [trigger] THE SYSTEM SHALL [behavior]
+- AC-1.2: IF [condition] THEN THE SYSTEM SHALL [response]
 
-### User Story 2: [Title]
+### US-2: [User Story Title]
 As a [user type], I want to [action], so that [benefit]
 
 **Criteria:**
-- WHEN [trigger] THE SYSTEM SHALL [behavior]
-- WHILE [condition] THE SYSTEM SHALL [behavior]
+- AC-2.1: WHEN [trigger] THE SYSTEM SHALL [behavior]
+- AC-2.2: WHILE [condition] THE SYSTEM SHALL [behavior]
 
 ## Edge Cases and Error Handling
-- WHEN [error condition] THE SYSTEM SHALL [error handling]
-- WHEN [edge case] THE SYSTEM SHALL [behavior]
+- EC-1: WHEN [error condition] THE SYSTEM SHALL [error handling]
+- EC-2: WHEN [edge case] THE SYSTEM SHALL [behavior]
 
 ## Architecture Changes
-- [Change 1: file path and description]
-- [Change 2: file path and description]
+| ID | File Path | Description |
+|----|-----------|-------------|
+| ARCH-1 | `path/to/file.ts` | Description of change |
+| ARCH-2 | `path/to/other.ts` | Description of change |
 
 ## Implementation Steps
 
 ### Phase 0: Test Setup (RED)
-1. **Write E2E Tests** (File: e2e/features/*.feature)
-   - Action: Convert EARS acceptance criteria to Gherkin scenarios
-   - Why: ATDD requires tests before implementation
-   - Dependencies: Acceptance Criteria defined
-   - Risk: Low
-
-2. **Write Integration Tests** (File: tests/integration/*.test.ts)
-   - Action: Write tests for edge cases and error scenarios
-   - Why: Cover scenarios not suitable for E2E
-   - Dependencies: None
-   - Risk: Low
-
-3. **Verify Tests Fail**
-   - Action: Run test suite, confirm all new tests fail
-   - Why: TDD Red phase - tests must fail before implementation
-   - Dependencies: Steps 1-2
-   - Risk: Low
+| Step | File | Action | Dependencies | Risk |
+|------|------|--------|--------------|------|
+| 0.1 | `e2e/features/*.feature` | Convert AC to Gherkin scenarios | None | Low |
+| 0.2 | `tests/integration/*.test.ts` | Write edge case tests (EC-x) | None | Low |
+| 0.3 | - | Run tests, verify all FAIL | 0.1, 0.2 | Low |
 
 ### Phase 1: [Phase Name] (GREEN)
-1. **[Step Name]** (File: path/to/file.ts)
-   - Action: Specific action to take
-   - Why: Reason for this step
-   - Dependencies: Phase 0 complete (tests exist)
-   - Risk: Low/Medium/High
-   - Verification: Run tests, check they pass
+| Step | File | Action | Dependencies | Risk |
+|------|------|--------|--------------|------|
+| 1.1 | `path/to/file.ts` | Specific action | Phase 0 | Medium |
+| 1.2 | `path/to/other.ts` | Another action | 1.1 | Low |
 
-2. **[Step Name]** (File: path/to/file.ts)
-   ...
+### Phase N: Refactor
+| Step | Action | Dependencies |
+|------|--------|--------------|
+| N.1 | Review and refactor implementation | All phases |
+| N.2 | Verify all tests still pass | N.1 |
 
-### Phase 2: [Phase Name]
-...
-
-### Final Phase: Refactor
-1. **Code Review and Refactor**
-   - Action: Review implementation, apply refactoring patterns
-   - Why: TDD Refactor phase - improve code quality
-   - Dependencies: All tests passing
-   - Verification: All tests still pass after refactoring
-
-## Test Coverage Summary
-| Layer | What to Test | Files |
-|-------|--------------|-------|
-| E2E | Critical user flows from EARS criteria | e2e/features/*.feature |
-| Integration | Edge cases, error scenarios, API contracts | tests/integration/*.test.ts |
-| Unit | Pure logic, utilities, calculations | tests/unit/*.test.ts |
+## Test Coverage Matrix
+| AC ID | E2E Test | Integration Test | Unit Test |
+|-------|----------|------------------|-----------|
+| AC-1.1 | `feature.feature:scenario1` | - | - |
+| AC-1.2 | - | `feature.test.ts:case1` | - |
+| EC-1 | - | `feature.test.ts:errorCase` | - |
 
 ## Risks & Mitigations
-- **Risk**: [Description]
-  - Mitigation: [How to address]
+| ID | Risk | Likelihood | Impact | Mitigation |
+|----|------|------------|--------|------------|
+| R-1 | [Description] | Low/Med/High | Low/Med/High | [How to address] |
 
-## Success Criteria
-- [ ] All acceptance criteria met
-- [ ] Tests passing (E2E, Integration, Unit)
-- [ ] Code review approved
+## Progress Tracking
+- [ ] Phase 0: Test Setup
+  - [ ] Step 0.1
+  - [ ] Step 0.2
+  - [ ] Step 0.3
+- [ ] Phase 1: [Name]
+  - [ ] Step 1.1
+  - [ ] Step 1.2
+- [ ] Phase N: Refactor
+```
+
+## Output
+
+**ALWAYS write the plan to a file.** Do NOT output only to conversation.
+
+### Output Path
+
+```
+docs/plans/NNNN-feature-name.md
+```
+
+- `NNNN`: Sequential 4-digit number (0001, 0002, ...)
+- `feature-name`: kebab-case feature name derived from title
+
+### Process
+
+1. Check `docs/plans/` directory, create if not exists
+2. Determine next plan number from existing files
+3. Generate filename: `NNNN-feature-name.md`
+4. Write the complete plan with frontmatter
+5. Create/update `docs/plans/index.md` registry
+6. Inform user: "Plan saved to `docs/plans/NNNN-feature-name.md`"
+
+### Registry Format (`docs/plans/index.md`)
+
+```markdown
+# Implementation Plans
+
+| ID | Title | Status | Created |
+|----|-------|--------|---------|
+| [PLAN-0001](./0001-feature-name.md) | Feature Name | draft | YYYY-MM-DD |
 ```
 
 ## Best Practices

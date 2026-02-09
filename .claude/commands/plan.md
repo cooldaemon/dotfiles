@@ -9,6 +9,7 @@ The planner subagent will:
 - Define acceptance criteria in EARS format
 - Identify architecture changes (automatically invokes architect if needed)
 - Create testable criteria for TDD
+- **Write plan to file**: `docs/plans/NNNN-feature-name.md`
 
 ## Prerequisites
 - Clear understanding of the feature request
