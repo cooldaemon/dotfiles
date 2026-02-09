@@ -23,7 +23,24 @@
       "Bash(git diff *)",
       "Bash(git log *)",
       "Bash(git show *)",
-      "Bash(git blame *)"
+      "Bash(git blame *)",
+      "Bash(git branch)",
+      "Bash(git branch -a*)",
+      "Bash(git branch -v*)",
+      "Bash(git branch -r*)",
+      "Bash(git branch --list *)",
+      "Bash(git fetch *)",
+      "Bash(git -C * status *)",
+      "Bash(git -C * diff *)",
+      "Bash(git -C * log *)",
+      "Bash(git -C * show *)",
+      "Bash(git -C * blame *)",
+      "Bash(git -C * branch)",
+      "Bash(git -C * branch -a*)",
+      "Bash(git -C * branch -v*)",
+      "Bash(git -C * branch -r*)",
+      "Bash(git -C * branch --list *)",
+      "Bash(git -C * fetch *)"
     ]
   },
   "hooks": {
