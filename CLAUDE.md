@@ -115,4 +115,3 @@ The repository includes custom Claude commands in `.claude/commands/`:
 
 - MCP servers are installed at user scope and managed by the `claude_mcp` Ansible role
 - Use tags to run specific Ansible roles for faster updates during development
-- **All generated files must be written in English** (code, comments, documentation, commit messages)
