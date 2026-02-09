@@ -296,41 +296,19 @@ def calculate_compound_interest(principal, annual_rate, years):
 
 # Verification Steps
 
-After refactoring, run appropriate project commands:
+**ALWAYS check Makefile first:**
 
-1. **Look for project automation**:
-   - Check for Makefile: `make test`, `make lint`, `make format`
-   - Check package.json scripts: `npm run test`, `npm run lint`
-   - Check for CI configuration: `.github/workflows`, `.gitlab-ci.yml`
+1. If Makefile exists → Use `make test`, `make lint`, `make check`, etc.
+2. If Makefile doesn't exist → Use language-specific commands below
 
-2. **Language-specific verification**:
-   
-   **JavaScript/TypeScript**:
-   ```bash
-   npm run lint
-   npm run typecheck
-   npm test
-   ```
-   
-   **Python**:
-   ```bash
-   ruff check .
-   mypy .
-   pytest
-   ```
-   
-   **Ruby**:
-   ```bash
-   rubocop
-   rspec
-   ```
-   
-   **Go**:
-   ```bash
-   go fmt ./...
-   go vet ./...
-   go test ./...
-   ```
+**Language-specific commands (only if no Makefile):**
+
+| Language | Commands |
+|----------|----------|
+| JS/TS | `npm run lint`, `npm run typecheck`, `npm test` |
+| Python | `ruff check .`, `mypy .`, `pytest` |
+| Go | `go fmt ./...`, `go vet ./...`, `go test ./...` |
+| Ruby | `rubocop`, `rspec` |
 
 # Refactoring Safety Rules
 

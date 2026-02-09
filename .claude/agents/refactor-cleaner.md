@@ -57,6 +57,12 @@ Before removing ANYTHING:
 4. Duplicate code consolidation
 
 ### 4. After Each Removal
+
+**ALWAYS check Makefile first** for verification commands:
+- If Makefile exists → Use `make test`, `make build`, `make check`
+- If not → Use language-specific commands
+
+Verify:
 - Build succeeds
 - Tests pass
 - Commit changes

@@ -1,13 +1,11 @@
 ---
 name: typescript-testing
-description: Jest and Vitest testing patterns for TypeScript and JavaScript projects.
+description: Jest and Vitest testing policies for TypeScript/JavaScript. Use when writing or reviewing TS/JS tests.
 ---
 
-# TypeScript/JavaScript Testing Patterns
+# TypeScript/JavaScript Testing Policies
 
-Testing patterns using Jest or Vitest.
-
-## Test Structure
+## Test Structure (AAA Pattern)
 
 ```typescript
 describe('UserService', () => {
@@ -15,165 +13,85 @@ describe('UserService', () => {
     it('creates user with valid input', async () => {
       // Arrange
       const input = { name: 'Alice', email: 'alice@example.com' }
-
       // Act
       const user = await userService.createUser(input)
-
       // Assert
       expect(user.id).toBeDefined()
-      expect(user.name).toBe('Alice')
-    })
-
-    it('throws error for invalid email', async () => {
-      const input = { name: 'Alice', email: 'invalid' }
-
-      await expect(userService.createUser(input))
-        .rejects.toThrow('Invalid email')
     })
   })
 })
 ```
 
-## Common Matchers
+## Mocking Policies
+
+### Clear Mocks After Each Test
 
 ```typescript
-// Equality
-expect(value).toBe(exact)           // ===
-expect(value).toEqual(deepEqual)    // Deep equality
-expect(value).toStrictEqual(obj)    // Deep + type
-
-// Truthiness
-expect(value).toBeTruthy()
-expect(value).toBeFalsy()
-expect(value).toBeNull()
-expect(value).toBeDefined()
-
-// Numbers
-expect(value).toBeGreaterThan(3)
-expect(value).toBeLessThanOrEqual(5)
-expect(value).toBeCloseTo(0.3, 5)   // Floating point
-
-// Strings
-expect(str).toMatch(/pattern/)
-expect(str).toContain('substring')
-
-// Arrays
-expect(arr).toContain(item)
-expect(arr).toHaveLength(3)
-expect(arr).toEqual(expect.arrayContaining([1, 2]))
-
-// Objects
-expect(obj).toHaveProperty('key')
-expect(obj).toMatchObject({ partial: 'match' })
-
-// Exceptions
-expect(() => fn()).toThrow()
-expect(() => fn()).toThrow('message')
-await expect(asyncFn()).rejects.toThrow()
+afterEach(() => {
+  jest.clearAllMocks()  // Vitest: vi.clearAllMocks()
+})
 ```
 
-## Mocking
+### Prefer spyOn Over Full Mocks
 
-### Function Mocks
 ```typescript
-const mockFn = jest.fn()              // Vitest: vi.fn()
-mockFn.mockReturnValue(42)
-mockFn.mockResolvedValue({ data: [] })
-mockFn.mockRejectedValue(new Error())
+// GOOD: Spy on specific method
+const spy = jest.spyOn(service, 'save')
 
-// Assertions
-expect(mockFn).toHaveBeenCalled()
-expect(mockFn).toHaveBeenCalledWith('arg1', 'arg2')
-expect(mockFn).toHaveBeenCalledTimes(2)
+// AVOID: Full module mock when not needed
+jest.mock('./service')
 ```
 
-### Module Mocks
-```typescript
-// Jest
-jest.mock('./userRepository', () => ({
-  findUser: jest.fn().mockResolvedValue({ id: '1', name: 'Alice' })
-}))
-
-// Vitest
-vi.mock('./userRepository', () => ({
-  findUser: vi.fn().mockResolvedValue({ id: '1', name: 'Alice' })
-}))
-```
-
-### Spy
-```typescript
-const spy = jest.spyOn(object, 'method')  // Vitest: vi.spyOn
-spy.mockImplementation(() => 'mocked')
-
-// Restore original
-spy.mockRestore()
-```
-
-## Setup and Teardown
+### Restore Spies
 
 ```typescript
-describe('Database tests', () => {
-  beforeAll(async () => {
-    await db.connect()
-  })
-
-  afterAll(async () => {
-    await db.disconnect()
-  })
-
-  beforeEach(async () => {
-    await db.clear()
-  })
-
-  afterEach(() => {
-    jest.clearAllMocks()  // Vitest: vi.clearAllMocks()
-  })
+afterEach(() => {
+  spy.mockRestore()
 })
 ```
 
 ## Async Testing
 
 ```typescript
-// Async/await
+// Use async/await
 it('fetches data', async () => {
   const data = await fetchData()
   expect(data).toBeDefined()
 })
 
-// Resolves/Rejects
-it('resolves with data', async () => {
-  await expect(fetchData()).resolves.toEqual({ id: 1 })
-})
-
-it('rejects with error', async () => {
-  await expect(fetchData()).rejects.toThrow('Network error')
-})
+// Use rejects for error cases
+await expect(fetchData()).rejects.toThrow('Network error')
 ```
 
-## Test Coverage
+## Coverage Targets
 
-**ALWAYS check for Makefile first:**
-- If `Makefile` exists → Use `make test` or `make check`
-- If not → Ask user before creating one (see `coding-style` skill)
-- If user declines → Use commands below
+| Metric | Target |
+|--------|--------|
+| Lines | 80%+ |
+| Branches | 80%+ |
+| Functions | 80%+ |
+
+## Commands
+
+**Check Makefile first** → Use `make test` if available.
 
 ```bash
-# Jest
 jest --coverage
-
-# Vitest
 vitest --coverage
 ```
 
-```json
-// jest.config.js or vitest.config.ts
-{
-  "coverageThreshold": {
-    "global": {
-      "branches": 80,
-      "functions": 80,
-      "lines": 80
-    }
-  }
-}
-```
+## Anti-Patterns
+
+| Anti-Pattern | Correct Approach |
+|--------------|------------------|
+| Testing implementation | Test behavior/output |
+| Missing mock cleanup | Use `clearAllMocks()` in afterEach |
+| Flaky async tests | Use proper async/await |
+| Mock everything | Prefer integration tests |
+
+## Best Practices
+
+- Write tests FIRST (TDD)
+- One assertion focus per test
+- Clear test names describing behavior
+- Use beforeEach/afterEach for setup/cleanup
