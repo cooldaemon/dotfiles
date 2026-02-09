@@ -1,25 +1,68 @@
 ---
 name: python-patterns
-description: Python development patterns including flat layout project structure and uv package management.
+description: Python development patterns including package manager detection (uv, poetry, pip), project structure, and idiomatic Python practices.
 ---
 
 # Python Development Patterns
 
-## When to Activate
+## Package Manager Detection (CRITICAL)
 
-- Creating new Python projects
-- Setting up Python packaging
+**Before running ANY Python commands, detect the package manager:**
 
-## New Projects
+| File | Package Manager | Prefix |
+|------|-----------------|--------|
+| `uv.lock` | uv | `uv run` |
+| `poetry.lock` | poetry | `poetry run` |
+| `Pipfile.lock` | pipenv | `pipenv run` |
+| None | pip | `python -m` |
 
-- **Project structure**: Flat layout (package at repository root, no `src/` directory)
-- **Package manager**: uv
-- **Project initialization**: `uv init`
+**NEVER use `pip install` directly when lock file exists.**
 
-## Existing Projects
+## Project Structure
 
-Respect the existing structure and tools:
+```
+project/
+├── mypackage/          # NOT src/mypackage/
+│   ├── __init__.py
+│   ├── __main__.py     # Entry point for python -m mypackage
+│   ├── cli.py          # CLI argument parsing
+│   ├── core.py         # Business logic
+│   └── utils.py        # Helpers
+├── tests/
+├── pyproject.toml
+├── uv.lock
+└── Makefile
+```
 
-- If using `src/` layout, keep it
-- If using poetry/pipenv/pip, continue using them
-- Match existing code style and patterns
+Flat layout (`mypackage/`) is preferred over src layout (`src/mypackage/`).
+
+## CLI Structure (CRITICAL)
+
+**Three-layer separation:**
+
+```python
+# mypackage/__main__.py - Minimal bootstrap
+if __name__ == "__main__":
+    from mypackage.cli import main
+    main()
+
+# mypackage/cli.py - CLI argument parsing only
+import argparse
+from mypackage.core import process_data
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("input")
+    args = parser.parse_args()
+    result = process_data(args.input)
+    print(result)
+
+# mypackage/core.py - Business logic (testable without CLI)
+def process_data(input_path: str) -> str:
+    ...
+```
+
+**Why:**
+- `python -m mypackage` works via `__main__.py`
+- Core logic is testable without invoking CLI
+- Easier to reuse as library
