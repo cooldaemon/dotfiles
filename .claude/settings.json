@@ -5,6 +5,27 @@
   "feedbackSurveyState": {
     "lastShownTime": 1754011159357
   },
+  "permissions": {
+    "allow": [
+      "Read",
+      "Glob",
+      "Grep",
+      "Bash(ls *)",
+      "Bash(head *)",
+      "Bash(tail *)",
+      "Bash(cat *)",
+      "Bash(find *)",
+      "Bash(pwd)",
+      "Bash(file *)",
+      "Bash(wc *)",
+      "Bash(grep *)",
+      "Bash(git status *)",
+      "Bash(git diff *)",
+      "Bash(git log *)",
+      "Bash(git show *)",
+      "Bash(git blame *)"
+    ]
+  },
   "hooks": {
     "PreToolUse": [
       {
