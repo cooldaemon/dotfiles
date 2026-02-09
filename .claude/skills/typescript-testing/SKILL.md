@@ -152,6 +152,11 @@ it('rejects with error', async () => {
 
 ## Test Coverage
 
+**ALWAYS check for Makefile first:**
+- If `Makefile` exists → Use `make test` or `make check`
+- If not → Ask user before creating one (see `coding-style` skill)
+- If user declines → Use commands below
+
 ```bash
 # Jest
 jest --coverage

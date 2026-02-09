@@ -13,6 +13,11 @@ description: Pre-PR verification checklist. Use after completing features, befor
 
 ## Verification Phases
 
+**ALWAYS check for Makefile first:**
+- If `Makefile` exists → Use `make check` or `make verify`
+- If not → Ask user before creating one (see `coding-style` skill)
+- If user declines → Use commands below
+
 ### Phase 1: Build
 ```bash
 # Check if project builds

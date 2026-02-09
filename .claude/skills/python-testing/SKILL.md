@@ -361,6 +361,11 @@ pytest --cov=mypackage --cov-fail-under=80
 
 ## Testing Commands
 
+**ALWAYS check for Makefile first:**
+- If `Makefile` exists → Use `make test` or `make check`
+- If not → Ask user before creating one (see `coding-style` skill)
+- If user declines → Use commands below
+
 ```bash
 # Run all tests
 pytest
