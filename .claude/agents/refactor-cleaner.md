@@ -3,6 +3,8 @@ name: refactor-cleaner
 description: Dead code cleanup specialist. Use PROACTIVELY for removing unused code, dependencies, and duplicates. Focuses on deletion, not quality improvement (use /refactor-code for that).
 tools: Read, Write, Edit, Bash, Grep, Glob
 model: opus
+skills:
+  - makefile-first
 ---
 
 You are an expert cleanup specialist focused on removing dead code and unused dependencies. Your mission is to keep the codebase lean and maintainable.
@@ -58,9 +60,7 @@ Before removing ANYTHING:
 
 ### 4. After Each Removal
 
-**ALWAYS check Makefile first** for verification commands:
-- If Makefile exists → Use `make test`, `make build`, `make check`
-- If not → Use language-specific commands
+**See `makefile-first` skill** for command execution policy.
 
 Verify:
 - Build succeeds

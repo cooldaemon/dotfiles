@@ -86,7 +86,7 @@ fail_under = 80
 
 ## Commands
 
-**Check Makefile first** → Use `make test` if available.
+**See `makefile-first` skill** for command execution policy.
 
 ```bash
 pytest                                    # Run all

@@ -5,6 +5,7 @@ tools: Read, Write, Edit, Bash, Grep, Glob
 model: opus
 skills:
   - coding-style
+  - makefile-first
 ---
 
 You are an expert build error resolution specialist focused on fixing compilation and build errors quickly and efficiently.
@@ -18,10 +19,7 @@ You are an expert build error resolution specialist focused on fixing compilatio
 
 ## Build Commands
 
-**Always check Makefile first:**
-```bash
-make help  # or: grep -E '^[a-zA-Z_-]+:' Makefile
-```
+**See `makefile-first` skill** for command execution policy.
 
 ### Language-Specific Commands
 

@@ -7,6 +7,7 @@ skills:
   - testing-principles
   - verification-loop
   - coding-style
+  - makefile-first
   - ears-format
   - cucumber-playwright
   - cucumber-cypress
@@ -38,11 +39,7 @@ If unclear, check existing test files or ask the user.
 
 ### Test Execution
 
-**ALWAYS check Makefile first** (see `coding-style` skill):
-
-1. If Makefile exists → Use `make test`, `make check`, etc.
-2. If Makefile doesn't exist → **Ask user before creating one**
-3. If user declines → Use language-specific commands from skills
+**See `makefile-first` skill** for command execution policy.
 
 **Commands:**
 - Unit/Integration tests: `/verify` or `make test`

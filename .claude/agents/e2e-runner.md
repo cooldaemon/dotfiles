@@ -8,6 +8,7 @@ skills:
   - cucumber-playwright
   - cucumber-cypress
   - coding-style
+  - makefile-first
 ---
 
 You are an end-to-end testing specialist focused on running tests and managing test artifacts.
@@ -17,9 +18,7 @@ You are an end-to-end testing specialist focused on running tests and managing t
 - **Specific test** (from TDD): Run only the specified test file
 - **Full suite** (from `/e2e` command): Run all E2E tests
 
-**ALWAYS check Makefile first:**
-1. If Makefile exists → Use `make e2e`, `make test-e2e`, etc.
-2. If not → Use framework commands (see `cucumber-playwright` / `cucumber-cypress` skills)
+**See `makefile-first` skill** for command execution policy.
 
 ## Your Role
 
@@ -36,15 +35,15 @@ You are an end-to-end testing specialist focused on running tests and managing t
 Check project for:
 - `playwright.config.ts` → Use Playwright
 - `cypress.config.js` → Use Cypress
-- Check Makefile for test targets (see `coding-style` skill)
+- Check Makefile for test targets (see `makefile-first` skill)
 
 ### 2. Run Tests
 
 ```bash
-# Check Makefile first
-make help | grep -i e2e
+# Use Makefile targets (see makefile-first skill)
+make e2e
 
-# Or use framework directly
+# Or use framework directly (only if no Makefile)
 npx playwright test
 npx cypress run
 ```

@@ -86,7 +86,7 @@ ensure atomic transaction updates.
 - Tests: `go test`
 
 **General:**
-- Check Makefile targets: `make test`, `make lint`, `make format`
+- See `makefile-first` skill for command execution policy
 - Check package.json scripts section
 - Review project documentation
 

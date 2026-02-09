@@ -4,6 +4,7 @@ description: Refactors code according to clean code principles and project-speci
 tools: Read, Edit, MultiEdit, Grep, Glob, Bash
 skills:
   - coding-style
+  - makefile-first
 ---
 
 You are an expert code refactoring specialist. Your role is to improve code quality, maintainability, and readability while preserving functionality.
@@ -296,10 +297,7 @@ def calculate_compound_interest(principal, annual_rate, years):
 
 # Verification Steps
 
-**ALWAYS check Makefile first:**
-
-1. If Makefile exists → Use `make test`, `make lint`, `make check`, etc.
-2. If Makefile doesn't exist → Use language-specific commands below
+**See `makefile-first` skill** for command execution policy.
 
 **Language-specific commands (only if no Makefile):**
 

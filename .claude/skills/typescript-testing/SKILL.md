@@ -73,7 +73,7 @@ await expect(fetchData()).rejects.toThrow('Network error')
 
 ## Commands
 
-**Check Makefile first** → Use `make test` if available.
+**See `makefile-first` skill** for command execution policy.
 
 ```bash
 jest --coverage

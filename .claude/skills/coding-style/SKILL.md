@@ -144,26 +144,6 @@ def calculate_compound_interest(principal, annual_rate, years):
     return principal * (1 + annual_rate) ** years
 ```
 
-## Build Automation (Makefile)
-
-**ALWAYS use Makefile** - Never run commands directly.
-
-### When Makefile Doesn't Exist
-
-| Situation | Action |
-|-----------|--------|
-| New project (creating from scratch) | Create Makefile |
-| Existing codebase | Ask user before creating Makefile |
-
-### Why Makefile
-
-- Single entry point for all operations
-- Self-documenting (serves as handover documentation)
-- Language-agnostic interface
-- Enables `make check` before every PR
-
-**Anti-pattern:** Running raw commands (`npm run build`, `go test ./...`) directly.
-
 ## File Organization
 
 MANY SMALL FILES > FEW LARGE FILES:

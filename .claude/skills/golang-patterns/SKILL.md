@@ -142,7 +142,7 @@ server := NewServer(":8080", WithTimeout(60*time.Second))
 
 ## Commands
 
-**Check Makefile first** → Use `make build`, `make lint` if available.
+**See `makefile-first` skill** for command execution policy.
 
 ```bash
 go build ./...

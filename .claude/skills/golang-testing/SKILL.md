@@ -143,7 +143,7 @@ func (m *MockUserStore) GetUser(id string) (*User, error) {
 
 ## Commands
 
-**Check Makefile first** → Use `make test` if available.
+**See `makefile-first` skill** for command execution policy.
 
 ```bash
 go test ./...                           # Run all
