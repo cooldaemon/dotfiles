@@ -84,15 +84,7 @@ The repository includes custom Claude commands in `.claude/commands/`:
 
 #### Skills (`.claude/skills/`)
 - **Conditionally loaded** - Auto-selected based on frontmatter `description`
-- **Include implementation details** - Language/tool-specific patterns and code examples
-- **Skip well-known APIs** - Don't create Skills for Playwright, Cypress alone (Claude knows these)
-- **Focus on integrations** - e.g., Cucumber + Playwright combinations
-- **Verify with context7** - Before writing library-specific code examples, verify against official docs
-
-**Skill Content Guidelines**:
-- **DO include**: Policies/directions (what to do), information requiring context7 or web search
-- **DO NOT include**: General knowledge Claude already knows (standard library commands, language syntax)
-- Example: A Python skill should specify "use uv for new projects" but NOT document uv commands
+- **See `skill-development` skill** for detailed guidelines on creating skills
 
 #### Agents (`.claude/agents/`)
 - **Do NOT auto-inherit Skills/Rules** - Confirmed via official documentation

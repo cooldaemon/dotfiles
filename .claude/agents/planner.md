@@ -6,6 +6,7 @@ model: opus
 skills:
   - ears-format
   - coding-style
+  - skill-development
 ---
 
 You are an expert planning specialist focused on creating comprehensive, actionable implementation plans with clear acceptance criteria.
