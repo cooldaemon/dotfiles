@@ -15,6 +15,7 @@
 .config/zed/themes/
 .claude/settings.local.json
 .jj/
+docs/plans/
 # BEGIN ANSIBLE MANAGED BLOCK - GPG
 # Machine-specific GPG config
 .gitconfig-gpg-local

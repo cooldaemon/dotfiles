@@ -5,6 +5,10 @@
   "feedbackSurveyState": {
     "lastShownTime": 1754011159357
   },
+  "statusLine": {
+    "type": "command",
+    "command": "~/.claude/hooks/status-line.sh"
+  },
   "permissions": {
     "allow": [
       "Read",

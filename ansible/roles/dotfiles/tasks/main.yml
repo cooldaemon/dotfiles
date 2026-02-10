@@ -87,6 +87,26 @@
     state: link
     force: yes
 
+- name: Remove existing hooks directory if not a link
+  file:
+    path: "~/.claude/hooks"
+    state: absent
+  when: ansible_check_mode is not defined
+
+- name: Link .claude/hooks directory
+  file:
+    src: "{{ src_path }}/.claude/hooks"
+    dest: "~/.claude/hooks"
+    state: link
+    force: yes
+
+- name: Ensure hook scripts are executable
+  file:
+    path: "{{ src_path }}/.claude/hooks/{{ item }}"
+    mode: '0755'
+  with_items:
+    - status-line.sh
+
 - name: Link setup-serena-mcp.sh script
   file:
     src: "{{ src_path }}/.claude/setup-serena-mcp.sh"
