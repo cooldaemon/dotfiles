@@ -9,9 +9,9 @@ function fish_user_key_bindings
 
     bind -M insert \cr 'peco_select_history (commandline -b)'
     ### expand ###
-    bind --sets-mode expand \t expand:execute
-    bind --mode expand --sets-mode default --key backspace expand:revert
-    bind --mode expand \t expand:choose-next
+    bind --sets-mode expand \t expand_execute
+    bind --mode expand --sets-mode default --key backspace expand_revert
+    bind --mode expand \t expand_choose-next
     bind --mode expand --sets-mode default '' ''
     ### expand ###
 end

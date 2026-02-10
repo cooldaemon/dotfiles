@@ -27,7 +27,7 @@ Options
         set condition "$value"
 
       case -p --pattern
-        set condition "expand:match '$value'"
+        set condition "expand_match '$value'"
 
       case -e --expander
         set expander "$value"

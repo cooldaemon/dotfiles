@@ -1,4 +1,4 @@
-function expand:revert
+function expand_revert
   # Since we can't conditionally switch key bind modes, we need to pass through command completion requests again even
   # though we are already in expand mode.
   if not set -q __expand_replacements[1]

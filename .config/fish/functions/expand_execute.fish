@@ -1,4 +1,4 @@
-function expand:execute -d 'Executes word expansion on the current token'
+function expand_execute -d 'Executes word expansion on the current token'
   # Record the current unexpanded command string.
   commandline | read -g __expand_last_string
 
@@ -37,5 +37,5 @@ function expand:execute -d 'Executes word expansion on the current token'
   end
 
   # Choose a replacement from the ones now defined.
-  expand:choose-next
+  expand_choose-next
 end
