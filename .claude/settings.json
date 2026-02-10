@@ -1,14 +1,5 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-settings.json",
-  "model": "opus",
-  "alwaysThinkingEnabled": true,
-  "feedbackSurveyState": {
-    "lastShownTime": 1754011159357
-  },
-  "statusLine": {
-    "type": "command",
-    "command": "~/.claude/hooks/status-line.sh"
-  },
   "permissions": {
     "allow": [
       "Read",
@@ -47,6 +38,7 @@
       "Bash(git -C * fetch *)"
     ]
   },
+  "model": "opus",
   "hooks": {
     "PreToolUse": [
       {
@@ -56,8 +48,7 @@
             "type": "command",
             "command": "echo '[Hook] Review changes before push'"
           }
-        ],
-        "description": "Reminder before git push"
+        ]
       },
       {
         "matcher": "tool == \"Write\" && tool_input.file_path matches \"\\\\.(md|txt)$\" && !(tool_input.file_path matches \"README\\\\.md|CLAUDE\\\\.md|CONTRIBUTING\\\\.md\")",
@@ -66,9 +57,16 @@
             "type": "command",
             "command": "echo '[Hook] BLOCKED: Unnecessary documentation file' && exit 1"
           }
-        ],
-        "description": "Block creation of random .md files"
+        ]
       }
     ]
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "~/.claude/hooks/status-line.sh"
+  },
+  "alwaysThinkingEnabled": true,
+  "feedbackSurveyState": {
+    "lastShownTime": 1754011159357
   }
 }

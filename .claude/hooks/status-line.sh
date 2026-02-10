@@ -40,9 +40,9 @@ if [ "$remaining_int" -ge 70 ]; then
     # Normal: green, no prompt
     echo -e "${GREEN}Context: ${remaining_int}%${ext_label}${NC}"
 elif [ "$remaining_int" -ge 30 ]; then
-    # Warning: yellow, prompt for checkpoint
-    echo -e "${YELLOW}Context: ${remaining_int}%${ext_label} - Consider /checkpoint${NC}"
+    # Warning: yellow, prompt for compact
+    echo -e "${YELLOW}Context: ${remaining_int}%${ext_label} - Consider /compact${NC}"
 else
-    # Critical: red, urgent checkpoint prompt
-    echo -e "${RED}Context: ${remaining_int}%${ext_label} - Run /checkpoint now!${NC}"
+    # Critical: red, urgent compact prompt
+    echo -e "${RED}Context: ${remaining_int}%${ext_label} - Run /compact now!${NC}"
 fi
