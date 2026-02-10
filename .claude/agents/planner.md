@@ -77,7 +77,6 @@ Create detailed steps with:
 ---
 id: PLAN-NNNN
 title: [Feature Name]
-status: draft
 created: YYYY-MM-DD
 ---
 
@@ -183,9 +182,9 @@ docs/plans/NNNN-feature-name.md
 ```markdown
 # Implementation Plans
 
-| ID | Title | Status | Created |
-|----|-------|--------|---------|
-| [PLAN-0001](./0001-feature-name.md) | Feature Name | draft | YYYY-MM-DD |
+| ID | Title | Created |
+|----|-------|---------|
+| [PLAN-0001](./0001-feature-name.md) | Feature Name | YYYY-MM-DD |
 ```
 
 ## Best Practices

@@ -13,5 +13,6 @@ I'll use two subagents to improve code quality:
 
 ## Next Commands
 After refactoring:
+- `/plan-done` - Delete the completed plan (if using /plan workflow)
 - `/git-commit` - Commit the improvements
 - `/update-claude-md` - Update project docs if needed

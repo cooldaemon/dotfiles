@@ -55,5 +55,6 @@ All three reviewers run **always** - ORM code changes affect generated SQL.
 
 After review:
 - `/tdd` - Fix issues with test-first approach
+- `/refactor-code` - Refactor and clean up code
 - `/e2e` - Run full E2E suite (if changes affect E2E-relevant code)
 - `/git-commit` - Commit if approved
