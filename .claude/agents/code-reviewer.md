@@ -59,17 +59,19 @@ You are a senior code reviewer ensuring high standards of code quality and secur
 
 ## Output Format
 
-For each issue found:
+For each issue found, use checkbox format with unique issue IDs:
 
 ```
-[CRITICAL] Hardcoded API key
-File: src/api/client.ts:42
-Issue: API key exposed in source code
-Fix: Move to environment variable
+- [ ] [CR-001] [CRITICAL] Hardcoded API key - `src/api/client.ts:42`
+  Issue: API key exposed in source code
+  Fix: Move to environment variable
 
-const apiKey = "sk-abc123";  // ❌ Bad
-const apiKey = process.env.API_KEY;  // ✓ Good
+  const apiKey = "sk-abc123";  // ❌ Bad
+  const apiKey = process.env.API_KEY;  // ✓ Good
 ```
+
+### Issue ID Format
+Use `CR-NNN` prefix (Code Review) with sequential numbering starting from 001.
 
 ## Review Summary Format
 
@@ -87,13 +89,13 @@ const apiKey = process.env.API_KEY;  // ✓ Good
 ### Issues
 
 #### CRITICAL
-1. [Issue description] - `file:line`
+- [ ] [CR-001] Issue description - `file:line`
 
 #### HIGH
-1. [Issue description] - `file:line`
+- [ ] [CR-002] Issue description - `file:line`
 
 #### MEDIUM
-1. [Issue description] - `file:line`
+- [ ] [CR-003] Issue description - `file:line`
 
 ### Verdict
 - ✅ **APPROVE**: No CRITICAL or HIGH issues

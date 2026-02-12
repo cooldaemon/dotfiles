@@ -115,6 +115,8 @@ Apply rate limiting to all public endpoints, especially authentication and finan
 
 ## Security Review Report Format
 
+Use checkbox format with unique issue IDs (`SR-NNN` prefix for Security Review):
+
 ```markdown
 # Security Review Report
 
@@ -129,10 +131,15 @@ Apply rate limiting to all public endpoints, especially authentication and finan
 
 ## Issues
 
-### [CRITICAL] Issue Title
-**Location:** `file:line`
-**Issue:** Description
-**Fix:** Remediation approach
+### CRITICAL
+- [ ] [SR-001] Hardcoded API key - `file:line`
+  Issue: Description
+  Fix: Remediation approach
+
+### HIGH
+- [ ] [SR-002] Missing input validation - `file:line`
+  Issue: Description
+  Fix: Remediation approach
 
 ## Checklist
 - [ ] No hardcoded secrets

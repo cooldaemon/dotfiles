@@ -28,6 +28,8 @@ You are an expert MySQL/Aurora database specialist focused on query optimization
 
 ## Output Format
 
+Use checkbox format with unique issue IDs (`DR-NNN` prefix for Database Review):
+
 ```markdown
 ## Database Review
 
@@ -36,10 +38,15 @@ You are an expert MySQL/Aurora database specialist focused on query optimization
 
 ### Issues
 
-#### [CRITICAL] Issue Title
-**Location:** `file:line`
-**Issue:** Description
-**Fix:** SQL example
+#### CRITICAL
+- [ ] [DR-001] N+1 query detected - `file:line`
+  Issue: Description
+  Fix: SQL example
+
+#### HIGH
+- [ ] [DR-002] Missing index - `file:line`
+  Issue: Description
+  Fix: SQL example
 
 ### Checklist Results
 - ✅ Passed items
