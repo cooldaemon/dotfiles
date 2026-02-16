@@ -1,12 +1,13 @@
 ---
-description: "Create a Claude Code skill using a subagent"
+description: "Create or update a Claude Code skill using a subagent"
 ---
 
-I'll use the skill-creator subagent to create a new skill.
+I'll use the skill-creator subagent to create or update a skill.
 
 The skill-creator subagent will:
 - Follow skill-development guidelines
-- Create proper folder structure and SKILL.md
+- Create proper folder structure and SKILL.md (for new skills)
+- Apply minimal changes while ensuring compliance (for updates)
 - Verify library-specific content with context7
 - Apply the checklist before completion
 
@@ -15,5 +16,5 @@ The skill-creator subagent will:
 - Optional: Implementation plan from `/plan`
 
 ## Next Commands
-After creating:
-- `/git-commit` - Commit the new skill
+After creating/updating:
+- `/git-commit` - Commit the skill changes
