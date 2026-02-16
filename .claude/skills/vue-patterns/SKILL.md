@@ -1,6 +1,6 @@
 ---
 name: vue-patterns
-description: Vue 3 Composition API policies. Use when writing Vue components or composables.
+description: Vue 3 Composition API and scoped style policies. Use when writing Vue components, composables, or using :deep() selector.
 ---
 
 # Vue 3 Patterns
@@ -107,6 +107,30 @@ largeList.value = [...largeList.value, newItem]
 | `v-once` | Static content that never changes |
 | `shallowRef` | Large arrays/objects |
 
+## Scoped Style Policies
+
+### :deep() Selector - Use with Caution
+
+| Use When | Avoid When |
+|----------|------------|
+| Styling third-party component internals | Styling your own child components |
+| No other customization option available | Component exposes props/slots for customization |
+| Scoped override needed without global CSS | You control both parent and child |
+
+**Risks:**
+- Breaks component encapsulation
+- Fragile: child component refactoring breaks styles
+- Hard to trace style origins in large codebases
+
+```vue
+<style scoped>
+/* Target third-party component internals only */
+:deep(.third-party-class) {
+  color: var(--custom-color);
+}
+</style>
+```
+
 ## Anti-Patterns
 
 | Anti-Pattern | Correct Approach |
@@ -116,3 +140,5 @@ largeList.value = [...largeList.value, newItem]
 | v-if + v-for on same element | Use computed filter |
 | Missing :key in v-for | Always provide unique key |
 | inject without null check | Check `if (!ctx) throw` |
+| `:deep()` for own child components | Use props, slots, or CSS variables |
+| Nested `:deep()` selectors | Flatten or reconsider component structure |
