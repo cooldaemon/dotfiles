@@ -1,13 +1,216 @@
 ---
 name: claude-md-authoring
-description: Guidelines for creating and maintaining CLAUDE.md files. Use when creating, updating, or reviewing CLAUDE.md documentation. Contains templates, auto-load behavior, monorepo patterns, and best practices.
+description: Guidelines for creating and maintaining CLAUDE.md files. Use when creating, updating, or reviewing CLAUDE.md documentation. Includes target file determination, templates, auto-load behavior, monorepo patterns, and best practices.
 ---
 
 You are an expert at creating and maintaining CLAUDE.md files that effectively guide Claude Code in project-specific contexts.
 
 # Purpose
 
-This skill provides templates, patterns, and best practices for authoring CLAUDE.md files that serve as project memory and guidance for Claude Code sessions.
+This skill provides a complete framework for authoring CLAUDE.md files, including:
+1. Determining which CLAUDE.md file to update (root vs subdirectory)
+2. Templates and structural patterns
+3. Best practices for content and formatting
+4. Monorepo and multi-component project strategies
+
+# Determining Target CLAUDE.md File
+
+Before creating or updating content, determine which CLAUDE.md file should be the target.
+
+## Working Directory Detection
+
+Analyze the session to identify the primary working area:
+
+1. **File Modification Analysis**
+   - Count files modified per directory
+   - Identify the directory with the most changes
+   - Track nested component work (e.g., `packages/api/src/controllers/`)
+
+2. **Command Execution Context**
+   - Where were build/test commands run?
+   - Were commands specific to a subdirectory?
+
+3. **User Focus Indicators**
+   - Explicit user statements ("update the API package")
+   - File paths in discussions
+   - Problem domains mentioned
+
+4. **Scope Analysis**
+   - Changes span multiple packages → likely root CLAUDE.md
+   - Changes isolated to one component → likely subdirectory CLAUDE.md
+   - Architectural decision affects all → root CLAUDE.md
+
+## Content Classification Criteria
+
+Use this decision matrix to classify session insights:
+
+| Content Type | Examples | Target CLAUDE.md |
+|--------------|----------|------------------|
+| **Component-specific commands** | `npm run migrate`, `make build-api`, `pytest tests/api/` | Subdirectory |
+| **Component-specific conventions** | "API routes must use async/await", "Frontend components use composition API" | Subdirectory |
+| **Component-specific gotchas** | "PostgreSQL connections timeout after 30s", "React strict mode breaks this package" | Subdirectory |
+| **Component architecture** | "API uses layered architecture", "Frontend state management with Pinia" | Subdirectory |
+| **Component-specific testing** | "API tests require Docker", "Frontend uses Playwright" | Subdirectory |
+| **Platform-specific (if per-package)** | "Windows: use WSL for API builds" | Subdirectory |
+| **Shared conventions** | Commit message format, code review process, PR guidelines | Root |
+| **Monorepo-wide commands** | `npm run build:all`, `make test-all`, workspace management | Root |
+| **Project architecture** | Overall system design, service communication, shared infrastructure | Root |
+| **Cross-cutting concerns** | Authentication strategy, logging approach, error handling patterns | Root |
+| **Development environment** | IDE setup, linter configuration, formatter settings | Root |
+
+## Decision Flow
+
+Follow this systematic approach:
+
+```
+1. Identify primary working directory
+   └─> Use file modification counts and command context
+
+2. Classify content type
+   └─> Use Content Classification Criteria table
+
+3. Apply decision rules:
+
+   IF content applies ONLY to identified directory:
+       └─> Target: subdirectory CLAUDE.md
+
+   ELSE IF content applies to multiple directories:
+       └─> Target: root CLAUDE.md
+
+   ELSE IF content is architectural/cross-cutting:
+       └─> Target: root CLAUDE.md
+
+   ELSE IF uncertain:
+       └─> Ask user for clarification
+```
+
+## Edge Cases
+
+**Multi-Directory Work Sessions:**
+- Related components (e.g., `api/controllers/` and `api/models/`) → use parent directory CLAUDE.md
+- Unrelated components → update root CLAUDE.md with cross-cutting insights
+- Refactoring across areas → document in root CLAUDE.md
+
+**Uncertain Classification:**
+1. Ask the user: "Should this guidance apply only to [directory] or project-wide?"
+2. Default to narrower scope (easier to move content up than down)
+3. Consider where information would be most useful in future sessions
+
+**Existing Subdirectory CLAUDE.md:**
+1. Read it first to understand existing structure
+2. Add new content to appropriate section
+3. Avoid duplicating information from root CLAUDE.md
+4. Maintain consistency with existing style
+
+## Subdirectory CLAUDE.md Management
+
+### When to Create
+
+Create a new subdirectory CLAUDE.md when:
+
+1. **Isolation Test**: Content is meaningful ONLY in that directory context
+2. **Scope Test**: Information would clutter root CLAUDE.md
+3. **Frequency Test**: Future sessions will work in this directory
+4. **Ownership Test**: Directory has distinct conventions/workflows
+
+### Subdirectory CLAUDE.md Template
+
+Use this minimal template for new subdirectory CLAUDE.md files:
+
+```markdown
+# [Component Name]
+
+[One-line description of this component's purpose]
+
+## Commands
+
+### Development
+```bash
+# Component-specific development commands
+```
+
+### Testing
+```bash
+# Component-specific test commands
+```
+
+## Architecture
+
+### Component Structure
+[Brief overview of how this component is organized]
+
+### Key Technologies
+- [Technology]: [Version and purpose]
+
+## Important Notes
+
+### Conventions
+- [Component-specific conventions]
+
+### Gotchas
+- [Component-specific gotchas]
+```
+
+### Content Scope Rules
+
+**Subdirectory CLAUDE.md should contain:**
+- Commands run from this directory
+- Conventions specific to this component
+- Architecture of this component only
+- Dependencies unique to this component
+- Gotchas specific to this component
+
+**Subdirectory CLAUDE.md should NOT contain:**
+- General project conventions (belongs in root)
+- Commands run from project root
+- Cross-component architecture
+- Shared dependencies
+- Monorepo-wide workflows
+
+## Targeting Examples
+
+### Example 1: API Package Work
+
+**Session Context:**
+- 12 files modified in `packages/api/src/`
+- Commands run: `npm run test:api`, `npm run migrate`
+- Discussion: "API routes must handle timeouts gracefully"
+
+**Decision:** Update `packages/api/CLAUDE.md`
+- Primary directory: `packages/api/`
+- Content type: Component-specific convention
+
+### Example 2: Project-Wide Refactoring
+
+**Session Context:**
+- 5 files in `packages/api/`, 4 in `packages/frontend/`, 3 in `packages/shared/`
+- Commands run: `npm run build:all`, `npm test`
+- Discussion: "Moving to ESM modules across entire project"
+
+**Decision:** Update root `CLAUDE.md`
+- Primary directory: Multiple (distributed)
+- Content type: Cross-cutting architectural change
+
+### Example 3: Frontend Testing Setup
+
+**Session Context:**
+- 8 files in `packages/frontend/tests/`
+- Commands run: `npm run test:frontend`, `npx playwright test`
+- Discussion: "Playwright requires specific viewport settings"
+
+**Decision:** Update `packages/frontend/CLAUDE.md`
+- Primary directory: `packages/frontend/`
+- Content type: Component-specific testing
+
+### Example 4: Git Workflow Convention
+
+**Session Context:**
+- 1 file modified: `.github/pull_request_template.md`
+- Discussion: "All PRs must include test evidence"
+
+**Decision:** Update root `CLAUDE.md`
+- Primary directory: Root (affects all packages)
+- Content type: Shared convention
 
 # Auto-Loaded Files
 
@@ -408,6 +611,11 @@ For extensive documentation:
 **Do NOT:**
 - Create files like `CLAUDE-API.md` or `CLAUDE-FRONTEND.md` (not auto-loaded)
 - Place `.claude/` directories in subdirectories (ignored by Claude Code)
+- Default to root CLAUDE.md without analyzing session context
+- Add subdirectory-specific content to root CLAUDE.md
+- Duplicate root CLAUDE.md content in subdirectories
+- Create subdirectory CLAUDE.md for trivial or single-use information
+- Mix component-specific and project-wide content in same file
 - Include general programming knowledge (Claude already knows this)
 - Write tutorials on basic syntax
 - Copy documentation that exists elsewhere (use @import instead)
@@ -416,10 +624,15 @@ For extensive documentation:
 - Include sensitive information (API keys, passwords)
 
 **DO:**
+- Systematically analyze session context before choosing target file
+- Use content classification criteria to determine target
+- Ask user when uncertain about target file
 - Use subdirectory CLAUDE.md files for component-specific guidance
+- Keep subdirectory CLAUDE.md focused and minimal
 - Use @import for modularizing single-project documentation
 - Focus on project-specific conventions and decisions
 - Keep commands and examples up-to-date
 - Include "why" behind non-obvious decisions
 - Cross-reference related sections
 - Use code blocks with syntax highlighting
+- Verify no duplicate information exists across CLAUDE.md files
