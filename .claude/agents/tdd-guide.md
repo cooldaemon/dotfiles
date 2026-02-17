@@ -92,21 +92,44 @@ If unclear, check existing test files or ask the user.
 ## TDD Cycle
 
 1. **RED**: Write test → run test (must FAIL)
-2. **GREEN**: Write code → `/verify` + run test (must PASS)
-3. **REFACTOR**: Write code → `/verify` + run test (must stay PASS)
+2. **GREEN**: Write minimal code → run test (must PASS)
+3. **REFACTOR**: Apply `coding-style` patterns → run test (must stay PASS)
+
+### RED Phase
+- Write a failing test that describes the desired behavior
+- Run the test to confirm it fails
+- If test passes, the test is wrong or feature already exists
+
+### GREEN Phase
+- Write the minimum code to make the test pass
+- Do NOT optimize or clean up yet
+- Avoid comments with arbitrary IDs (SR-001, etc.)
+
+### REFACTOR Phase
+
+Apply refactoring patterns from `coding-style` skill:
+
+1. **Extract Helper Functions** - Break complex logic into well-named helpers
+2. **Explaining Variables** - Replace complex expressions with named variables
+3. **Chunk Statements** - Group related code with blank lines
+4. **Normalize Symmetries** - Make similar code look similar
+5. **Guard Clauses** - Convert nested conditionals to early returns
+6. **Remove Dead Code** - Delete unused functions, variables, imports
+
+After each refactoring:
+- Run tests to ensure they still pass
+- If tests fail, revert the change
+
+**IMPORTANT**: REFACTOR happens within this agent using `coding-style` skill, not via external command.
 
 ### Test Execution
 
-**See `makefile-first` skill** for command execution policy.
+**See `makefile-first` and `verification-loop` skills** for command execution policy and verification phases.
 
-**Commands:**
-- Unit/Integration tests: `/verify` or `make test`
-- E2E tests: `/e2e path/to/test.feature` (via e2e-runner)
-
-### When /verify Fails
+### When Tests Fail
 
 - Simple error (typo, missing import): Fix directly
-- Complex/unclear error: Use `/fix-build` command
+- Complex/unclear error: Analyze error message and fix incrementally
 
 ## Your Role
 

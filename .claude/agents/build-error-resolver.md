@@ -82,7 +82,7 @@ For each error:
 - Configuration errors
 
 **DON'T USE when:**
-- Code needs refactoring → `/refactor-code`
+- Code needs refactoring → `/tdd` (REFACTOR phase)
 - Architectural changes → `architect`
 - Tests failing → `tdd-guide`
 - Security issues → `security-reviewer`

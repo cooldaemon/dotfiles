@@ -31,7 +31,7 @@ MANDATORY workflow:
 2. Run test - it should FAIL
 3. Write minimal implementation (GREEN)
 4. Run test - it should PASS
-5. Refactor using `/refactor-code` command (IMPROVE)
+5. Refactor using `coding-style` patterns (IMPROVE)
 6. Verify tests still pass
 
 ## Test Structure (AAA Pattern)

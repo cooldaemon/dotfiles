@@ -13,8 +13,9 @@ Run multiple specialized reviewers in parallel for comprehensive code analysis.
 | **code-reviewer** | Quality, readability, performance |
 | **security-reviewer** | Security vulnerabilities, OWASP Top 10 |
 | **database-reviewer** | SQL queries, ORM usage, schema design |
+| **dead-code-reviewer** | Unused code, imports, dependencies |
 
-All three reviewers run **always** - ORM code changes affect generated SQL.
+All four reviewers run **always** - ORM code changes affect generated SQL.
 
 ## Execution
 
@@ -85,6 +86,7 @@ total_issues: N
 - `CR-NNN`: Code review issues
 - `SR-NNN`: Security review issues
 - `DR-NNN`: Database review issues
+- `DC-NNN`: Dead code issues
 
 ### Zero Issues Case
 If no issues are found, do NOT create a report file. Simply display "No issues found" in the conversation.
@@ -98,7 +100,6 @@ If no issues are found, do NOT create a report file. Simply display "No issues f
 ## Next Commands
 
 After review:
-- `/tdd` - Fix issues with test-first approach
-- `/refactor-code` - Refactor and clean up code
+- `/tdd` - Fix issues with test-first approach (includes REFACTOR phase)
 - `/e2e` - Run full E2E suite (if changes affect E2E-relevant code)
 - `/git-commit` - Commit if approved

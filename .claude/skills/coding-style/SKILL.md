@@ -144,6 +144,199 @@ def calculate_compound_interest(principal, annual_rate, years):
     return principal * (1 + annual_rate) ** years
 ```
 
+### Comment Anti-Patterns
+
+**Forbidden: Arbitrary ID prefixes**
+```python
+# WRONG
+# SR-001: Check if path exists
+# CR-042: Handle edge case
+
+# CORRECT: No IDs in code comments
+# IDs belong in issue trackers, not code
+```
+
+**Forbidden: Comments explaining WHAT**
+```python
+# WRONG: Comment should be a function name
+# Validate cwd is a valid directory
+project_root = Path(cwd).resolve()
+
+# CORRECT: Function name explains WHAT
+project_root = resolve_project_root(cwd)
+```
+
+**Allowed: Comments explaining WHY**
+```python
+# Skip validation for admin users per SEC-2024 audit requirement
+# Using setTimeout due to React 18 batching bug (fixed in 18.3)
+# See RFC 7231 section 6.5.4 for 404 semantics
+```
+
+## Refactoring Patterns
+
+Apply these patterns during TDD REFACTOR phase to improve code quality.
+
+### Extract Helper Functions
+
+Break complex logic into well-named helpers:
+
+```python
+# BEFORE
+def calculate_price(items):
+    total = sum(item.price * item.quantity for item in items)
+    tax = total * 0.08 if total > 100 else total * 0.05
+    shipping = 10 if total < 50 else 0
+    return total + tax + shipping
+
+# AFTER
+def calculate_price(items):
+    subtotal = calculate_subtotal(items)
+    tax = calculate_tax(subtotal)
+    shipping = calculate_shipping(subtotal)
+    return subtotal + tax + shipping
+
+def calculate_subtotal(items):
+    return sum(item.price * item.quantity for item in items)
+
+def calculate_tax(subtotal):
+    return subtotal * 0.08 if subtotal > 100 else subtotal * 0.05
+
+def calculate_shipping(subtotal):
+    return 10 if subtotal < 50 else 0
+```
+
+### Explaining Variables & Constants
+
+Replace magic values and complex expressions with named variables/constants:
+
+```javascript
+// BEFORE
+if (user.age >= 18 && user.age <= 65 && user.credits > 1000) {
+  applyDiscount(order.total * 0.15);
+}
+
+// AFTER
+const MINIMUM_AGE = 18;
+const MAXIMUM_AGE = 65;
+const MINIMUM_CREDITS = 1000;
+const DISCOUNT_RATE = 0.15;
+
+const isEligibleAge = user.age >= MINIMUM_AGE && user.age <= MAXIMUM_AGE;
+const hasEnoughCredits = user.credits > MINIMUM_CREDITS;
+const isEligibleForDiscount = isEligibleAge && hasEnoughCredits;
+
+if (isEligibleForDiscount) {
+  const discountAmount = order.total * DISCOUNT_RATE;
+  applyDiscount(discountAmount);
+}
+```
+
+### Chunk Statements
+
+Group related code with blank lines:
+
+```python
+# BEFORE
+user = get_user(user_id)
+validate_user(user)
+order = create_order()
+order.user = user
+items = get_cart_items(user)
+for item in items:
+    order.add_item(item)
+calculate_totals(order)
+save_order(order)
+
+# AFTER
+user = get_user(user_id)
+validate_user(user)
+
+order = create_order()
+order.user = user
+
+items = get_cart_items(user)
+for item in items:
+    order.add_item(item)
+
+calculate_totals(order)
+save_order(order)
+```
+
+### Normalize Symmetries
+
+Make similar code look similar:
+
+```javascript
+// BEFORE
+if (type === 'admin') {
+  user.role = 'administrator';
+  user.permissions = getAllPermissions();
+} else if (type === 'mod') {
+  user.permissions = getModeratorPermissions();
+  user.role = 'moderator';  // Different order!
+}
+
+// AFTER
+if (type === 'admin') {
+  user.role = 'administrator';
+  user.permissions = getAllPermissions();
+} else if (type === 'mod') {
+  user.role = 'moderator';
+  user.permissions = getModeratorPermissions();
+}
+```
+
+### Dead Code Removal
+
+Remove unused code aggressively:
+- Unused functions, variables, and imports
+- Commented-out code (git has history)
+- Unreachable code paths
+- Obsolete TODOs and FIXMEs
+
+### One Pile
+
+Consolidate related code:
+- Move helper functions near their usage
+- Group related constants together
+- Combine scattered validation logic
+
+### Separation of Concerns
+
+- Separate business logic from presentation
+- Keep I/O operations distinct from processing
+- Isolate external dependencies
+- Extract configuration from implementation
+
+### Explicit Parameters
+
+Make dependencies clear:
+
+```javascript
+// BEFORE (hidden dependencies)
+function calculateTotal() {
+  const items = globalCart.items;  // Hidden global
+  const taxRate = config.taxRate;  // Hidden config
+  return items.reduce((sum, item) => sum + item.price, 0) * (1 + taxRate);
+}
+
+// AFTER (explicit parameters)
+function calculateTotal(items, taxRate) {
+  return items.reduce((sum, item) => sum + item.price, 0) * (1 + taxRate);
+}
+```
+
+## Refactoring Safety Rules
+
+1. **Maintain Functionality** - Never break existing behavior
+2. **Small Steps** - Apply changes incrementally
+3. **Test After Each Change** - Ensure tests pass after each refactoring
+4. **Stage Large Changes** - Work in reviewable chunks
+5. **Version Control** - Commit after each successful refactoring
+6. **Preserve Tests** - Never delete tests without understanding their purpose
+7. **Document Breaking Changes** - If API changes are necessary, document them
+
 ## File Organization
 
 MANY SMALL FILES > FEW LARGE FILES:
@@ -218,7 +411,6 @@ Before marking work complete:
 - [ ] No console.log statements
 - [ ] No hardcoded values
 - [ ] No mutation (immutable patterns used)
+- [ ] No comments with arbitrary IDs (SR-001, CR-042, etc.)
+- [ ] Comments explain WHY, not WHAT
 
-## Refactoring
-
-For detailed refactoring patterns (Extract Helper, Chunk Statements, Normalize Symmetries, etc.), use `/refactor-code` command.
