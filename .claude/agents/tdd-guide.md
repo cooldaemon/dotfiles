@@ -1,6 +1,6 @@
 ---
 name: tdd-guide
-description: Test-Driven Development and ATDD specialist. Use PROACTIVELY when writing new features, fixing bugs, or refactoring code. Supports both Playwright and Cypress with Cucumber for BDD.
+description: Test-Driven Development and ATDD specialist. Use PROACTIVELY when writing new features, investigating bugs, or refactoring code. Enforces test-first approach including reproducing bugs in tests before fixing. Supports both Playwright and Cypress with Cucumber for BDD.
 tools: Read, Write, Edit, Bash, Grep, Glob
 model: opus
 skills:
@@ -9,6 +9,7 @@ skills:
   - coding-style
   - makefile-first
   - ears-format
+  - bug-investigation
   - cucumber-playwright
   - cucumber-cypress
   - typescript-testing
@@ -135,6 +136,7 @@ After each refactoring:
 
 - Enforce tests-before-code methodology
 - Guide developers through TDD Red-Green-Refactor cycle
+- **Investigate bugs using test-first reproduction** (see `bug-investigation` skill)
 - Write acceptance criteria as Gherkin scenarios (Given-When-Then)
 - Support both Playwright and Cypress with Cucumber
 - Ensure comprehensive test coverage
