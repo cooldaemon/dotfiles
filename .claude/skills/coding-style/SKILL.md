@@ -166,6 +166,45 @@ project_root = Path(cwd).resolve()
 project_root = resolve_project_root(cwd)
 ```
 
+**WHAT Comment Detection Heuristics**
+
+A comment is likely a WHAT comment if it:
+- Starts with a verb: Check, Validate, Get, Set, Handle, Process, Create, Update, Delete, Parse, Convert, Calculate, Filter, Sort, Find, Initialize, Setup, Configure, Apply, Extract, Build
+- Describes the immediate next line of code
+- Could be replaced by a descriptive function name
+- Provides no information beyond what the code shows
+
+Examples of WHAT comments to DELETE:
+```python
+# Check if user is authenticated      <- DELETE (extract to is_authenticated())
+# Parse the JSON response             <- DELETE (code shows json.loads())
+# Loop through all items              <- DELETE (for item in items: is clear)
+# Handle the error case               <- DELETE (except block is obvious)
+# Initialize the counter              <- DELETE (counter = 0 is clear)
+```
+
+**Mandatory Action: DELETE WHAT Comments**
+
+WHEN you encounter or write a WHAT comment:
+1. DELETE the comment immediately
+2. Apply ONE of these alternatives:
+   - Extract logic into a well-named function (preferred)
+   - Use explaining variables for complex expressions
+   - Use blank lines to separate logical blocks
+   - If none apply, the code is already self-documenting
+
+NEVER leave a WHAT comment "for now" or "for clarity" - this is the #1 source of comment debt.
+
+**Alternatives to WHAT Comments**
+
+| Instead of... | Use... |
+|---------------|--------|
+| `# Validate user input` + inline code | `validate_user_input(data)` function |
+| `# Check if file exists` + if statement | `if file_exists(path):` or `if path.exists():` |
+| `# Calculate the total price` + math | `total_price = calculate_total(items)` |
+| `# Process each item` + for loop | Blank line before loop; loop is clear |
+| `# Handle error case` + except block | Except block is self-documenting |
+
 **Allowed: Comments explaining WHY**
 ```python
 # Skip validation for admin users per SEC-2024 audit requirement
@@ -397,6 +436,17 @@ ALWAYS use structured logging on server-side code:
 - Include: timestamp, level, message, requestId
 - Never log sensitive data (passwords, tokens, PII)
 
+## Comment Review (Before Completion)
+
+Before completing ANY code change, scan for WHAT comments:
+
+1. **Search for verb-starting comments**: Comments starting with Check, Validate, Get, Set, Handle, Process, etc.
+2. **For each found**: Ask "Does this describe WHAT or WHY?"
+3. **If WHAT**: DELETE and apply alternative (extract function, explaining variable, or nothing)
+4. **If WHY**: Keep, but verify it explains non-obvious reasoning
+
+**Quick Test**: Cover the comment. Is the code still understandable? If yes, DELETE the comment.
+
 ## Code Quality Checklist
 
 Before marking work complete:
@@ -412,5 +462,6 @@ Before marking work complete:
 - [ ] No hardcoded values
 - [ ] No mutation (immutable patterns used)
 - [ ] No comments with arbitrary IDs (SR-001, CR-042, etc.)
-- [ ] Comments explain WHY, not WHAT
+- [ ] No WHAT comments remain (actively deleted, not just avoided)
+- [ ] Remaining comments explain WHY (non-obvious reasoning only)
 

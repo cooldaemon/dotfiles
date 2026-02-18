@@ -44,7 +44,10 @@ You are a senior code reviewer ensuring high standards of code quality and secur
 ### Comment Quality (HIGH)
 
 - Arbitrary ID prefixes in comments (SR-001, CR-042, REQ-123, etc.)
-- Comments explaining WHAT code does (should be function/variable names)
+- **WHAT comments** (see coding-style skill for detection heuristics):
+  - Comments starting with verbs: Check, Validate, Get, Set, Handle, Process, Create, Update, Delete, Parse, Convert, Calculate, Filter, Sort, Find, Initialize, Setup, Configure, Apply, Extract, Build
+  - Comments describing the immediate next line of code
+  - Comments that could be replaced by a descriptive function name
 - Redundant comments that duplicate what code already expresses
 
 ### Performance (MEDIUM)
