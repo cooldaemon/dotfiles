@@ -80,7 +80,7 @@ shellcheck *.sh
 
 1. **Injection** - Queries parameterized? Input sanitized?
 2. **Broken Authentication** - Passwords hashed? Sessions secure?
-3. **Sensitive Data Exposure** - HTTPS enforced? Secrets in env vars?
+3. **Sensitive Data Exposure** - HTTPS enforced? Secrets in env vars? (See HTTP Exceptions below)
 4. **XXE** - XML parsers configured securely?
 5. **Broken Access Control** - Authorization checked on every route?
 6. **Security Misconfiguration** - Defaults changed? Debug disabled?
@@ -88,6 +88,16 @@ shellcheck *.sh
 8. **Insecure Deserialization** - User input deserialized safely?
 9. **Vulnerable Components** - Dependencies up to date?
 10. **Insufficient Logging** - Security events logged?
+
+## HTTP Exceptions (Do NOT Flag as Insecure)
+
+These protocols use HTTP by design. Their responses are cryptographically signed at the application layer, making HTTPS redundant. Many servers do not support HTTPS.
+
+- **RFC 3161 Timestamp Servers (TSA)** — e.g., `http://timestamp.globalsign.com/tsa/advanced`
+- **OCSP Responders** — Certificate revocation checks over HTTP
+- **CRL Distribution Points** — Certificate Revocation List URLs embedded in certificates
+
+Do NOT suggest changing these to HTTPS. The integrity is guaranteed by digital signatures, not transport security.
 
 ## When to Review
 
