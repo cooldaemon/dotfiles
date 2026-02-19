@@ -13,7 +13,7 @@ You are a senior code reviewer ensuring high standards of code quality and secur
 
 ## When Invoked
 
-1. Run `git diff HEAD~1` to see the latest committed changes
+1. Run `git diff origin/master...HEAD` to see all local changes not yet on remote
 2. Focus on modified files
 3. Begin review immediately
 
