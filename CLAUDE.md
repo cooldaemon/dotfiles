@@ -74,7 +74,8 @@ Parallel reviewers (launched by `/code-review`) have non-overlapping responsibil
 ### Standard Workflow
 
 ```
-/tdd → /git-commit (checkpoint) → /code-review → /tdd (fixes) → /git-commit
+Code plans:   /plan → /tdd → /code-review → /tdd (fixes) → /git-commit
+Config plans:  /plan → /update-claude-config → /commit
 ```
 
 Commit before review creates a safe checkpoint for reverting bad fixes.

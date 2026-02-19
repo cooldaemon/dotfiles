@@ -185,7 +185,7 @@ See `references/troubleshooting.md` for common issues.
 - [ ] No XML tags anywhere
 - [ ] Under 500 lines
 - [ ] Anti-patterns included
-- [ ] Library-specific examples verified
+- [ ] Library-specific: verify with context7 if APIs may have changed. Differences from Claude's knowledge → write in SKILL.md
 
 ### Before Release
 - [ ] Tested triggering on obvious tasks

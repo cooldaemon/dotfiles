@@ -17,8 +17,8 @@ The planner subagent will:
 
 ## Next Commands
 After planning:
-- `/tdd` - Implement with test-driven development (uses EARS criteria from plan)
-- `/create-skill` - Create a Claude Code skill (for skill creation plans)
+- `/update-claude-config` - Execute the plan (for config-only changes: commands, agents, skills, docs)
+- `/tdd` - Implement with test-driven development (for plans with executable code)
 
 After implementation complete:
 - `/plan-done` - Delete the completed plan
