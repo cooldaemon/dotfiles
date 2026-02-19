@@ -237,6 +237,12 @@ docs/plans/NNNN-feature-name.md
 | [PLAN-0001](./0001-feature-name.md) | Feature Name | YYYY-MM-DD |
 ```
 
+## Out of Scope
+
+Do NOT include these in plans — they are infrastructure decisions made by the implementer:
+- **Model selection** (`model:` field in agent frontmatter)
+- Runtime configuration (environment variables, deployment settings)
+
 ## Best Practices
 
 1. **Test First (ATDD)**: Phase 0 must be test creation - NEVER plan implementation before tests
