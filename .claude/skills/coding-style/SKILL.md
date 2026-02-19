@@ -459,7 +459,8 @@ Before marking work complete:
 - [ ] Data + functions preferred over classes
 - [ ] Proper error handling
 - [ ] No console.log statements
-- [ ] No hardcoded values
+- [ ] No magic numbers (use named constants)
+- [ ] No dummy/test data in production code (hardcoded values to pass tests, stub returns, placeholder strings)
 - [ ] No mutation (immutable patterns used)
 - [ ] No comments with arbitrary IDs (SR-001, CR-042, etc.)
 - [ ] No WHAT comments remain (actively deleted, not just avoided)

@@ -26,13 +26,9 @@ Avoid duplication - write appropriate tests at each layer:
 
 ## Test-Driven Development
 
-MANDATORY workflow:
-1. Write test first (RED)
-2. Run test - it should FAIL
-3. Write minimal implementation (GREEN)
-4. Run test - it should PASS
-5. Refactor using `coding-style` patterns (IMPROVE)
-6. Verify tests still pass
+**Principle**: Always write tests before implementation code.
+
+For the TDD workflow (RED-GREEN-REFACTOR cycle), use `/tdd` command.
 
 ## Test Structure (AAA Pattern)
 

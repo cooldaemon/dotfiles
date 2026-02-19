@@ -48,10 +48,19 @@ ls docs/code-reviews/*.md 2>/dev/null
 3. Display: "Found implementation plan: [plan title]"
 4. List the acceptance criteria
 
-### During TDD Cycle
-1. Convert EARS criteria to Gherkin scenarios
-2. Implement test-first for each criterion
-3. Track progress against the plan
+### AC-by-AC Iteration
+
+Execute the TDD cycle **per acceptance criterion**, not per phase:
+
+```
+For each AC (in order):
+  1. RED:      Write failing test(s) for this AC
+  2. GREEN:    Write minimal code to pass (dummies OK)
+  3. REFACTOR: Eliminate dummies, apply coding-style
+  → Report: "AC-X.X complete"
+```
+
+**Do NOT** batch all tests first then all implementations. Each AC gets its own complete RED-GREEN-REFACTOR cycle before moving to the next.
 
 ### On Completion
 When all acceptance criteria are implemented:
@@ -64,7 +73,11 @@ When all acceptance criteria are implemented:
 1. Read the latest report (most recent by filename timestamp)
 2. Parse pending issues (lines matching `- [ ] [XX-NNN]`)
 3. Display: "Found code review report with N pending issues"
-4. List the pending issues for the user
+4. List the pending issues
+
+### Fix Policy
+
+Fix **ALL** remaining `- [ ]` items unconditionally, regardless of severity. The user has already curated the report by removing items they do not want fixed. Do not skip or deprioritize any unchecked item.
 
 ### During TDD Cycle
 When an issue from the report is addressed:
@@ -77,6 +90,15 @@ When all issues are resolved (no `- [ ]` remaining):
 1. Update frontmatter `status: RESOLVED`
 2. Delete the report file using Bash: `rm docs/code-reviews/[filename].md`
 3. Confirm: "Code review report resolved and deleted: [filename]"
+
+## Autonomous Execution Policy
+
+When a plan or code review report exists, complete ALL items autonomously. Do NOT ask "Should I continue?" between steps.
+
+**Only stop and ask the user when:**
+- An unexpected error blocks progress and cannot be resolved
+- Requirements are ambiguous with multiple valid interpretations
+- A test reveals a design flaw that requires changing the plan
 
 ## Language Detection (CRITICAL)
 
@@ -93,8 +115,8 @@ If unclear, check existing test files or ask the user.
 ## TDD Cycle
 
 1. **RED**: Write test → run test (must FAIL)
-2. **GREEN**: Write minimal code → run test (must PASS)
-3. **REFACTOR**: Apply `coding-style` patterns → run test (must stay PASS)
+2. **GREEN**: Dummies OK, get to PASS fast → run test (must PASS)
+3. **REFACTOR**: Eliminate ALL dummies, apply `coding-style` → run test (must stay PASS, no dummies)
 
 ### RED Phase
 - Write a failing test that describes the desired behavior
@@ -102,11 +124,27 @@ If unclear, check existing test files or ask the user.
 - If test passes, the test is wrong or feature already exists
 
 ### GREEN Phase
-- Write the minimum code to make the test pass
+- Get to GREEN as quickly as possible
+- Dummies and hardcoded values are encouraged — real implementation happens in REFACTOR
+- Focus on making the test pass, not on production-ready code
 - Do NOT optimize or clean up yet
-- Avoid comments with arbitrary IDs (SR-001, etc.)
 
 ### REFACTOR Phase
+
+Two responsibilities in order:
+
+#### 1. Eliminate Dummies from GREEN Phase
+
+The GREEN phase may introduce dummy/hardcoded data to pass tests quickly. The REFACTOR phase MUST replace them with real implementations:
+
+- Hardcoded return values → real logic
+- Stub/placeholder data → actual data sources
+- TODO-marked implementations → complete implementations
+- Values existing only to pass tests → production-ready code
+
+After each replacement, run tests to confirm they still pass.
+
+#### 2. Apply Coding-Style Patterns
 
 Apply refactoring patterns from `coding-style` skill:
 
@@ -148,23 +186,6 @@ After each refactoring:
 1. `playwright.config.ts` exists → Use **Playwright + Cucumber** (see `cucumber-playwright` skill)
 2. `cypress.config.js` exists → Use **Cypress + Cucumber** (see `cucumber-cypress` skill)
 3. Neither exists → Ask user or check package.json
-
-## EARS to Gherkin Conversion
-
-Reference acceptance criteria from planner's EARS format:
-
-```
-EARS (from planner):
-  WHEN user submits form with invalid email
-  THE SYSTEM SHALL display error message
-
-Gherkin (for tdd-guide):
-  Scenario: Form validation for invalid email
-    Given I am on the registration page
-    When I enter "invalid-email" as email
-    And I submit the form
-    Then I should see "Please enter a valid email" error
-```
 
 ## E2E Quality Checklist
 
