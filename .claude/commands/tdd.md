@@ -20,5 +20,7 @@ The tdd-guide agent automatically checks for context:
 
 ## Next Commands
 After TDD cycle:
-- `/code-review` - Review the implementation
-- `/git-commit` - Commit the changes
+- `/git-commit` - Commit the changes (creates a checkpoint)
+- `/code-review` - Review the committed changes
+- `/tdd` - Fix review issues (if any)
+- `/git-commit` - Commit review fixes

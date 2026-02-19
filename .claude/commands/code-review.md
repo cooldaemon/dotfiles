@@ -102,4 +102,4 @@ If no issues are found, do NOT create a report file. Simply display "No issues f
 After review:
 - `/tdd` - Fix issues with test-first approach (includes REFACTOR phase)
 - `/e2e` - Run full E2E suite (if changes affect E2E-relevant code)
-- `/git-commit` - Commit if approved
+- `/git-commit` - Commit review fixes
