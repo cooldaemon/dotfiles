@@ -38,7 +38,7 @@
       "Bash(git -C * fetch *)"
     ]
   },
-  "model": "opus",
+  "model": "opus[1m]",
   "hooks": {
     "PreToolUse": [
       {
