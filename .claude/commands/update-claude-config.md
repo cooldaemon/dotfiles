@@ -22,6 +22,6 @@ The claude-config-updater subagent will:
 
 ## Next Commands
 After implementation:
+- `/review-claude-config` - Review the configuration changes
+- `/git-commit` - Commit the changes
 - `/plan-done` - Delete the completed plan
-- `/commit` - Commit the changes
-- `/code-review` - Review the changes

@@ -44,38 +44,11 @@ Each role is tagged for individual execution (e.g., `--tags homebrew`, `--tags c
 - `.config/fish/` — Fish shell config
 - `.claude/` — All Claude Code configuration (symlinked to `~/.claude/`)
 
-## Design Principles
-
-### Rules / Skills / Agents
-
-| Layer | Location | Loading | Purpose |
-|-------|----------|---------|---------|
-| Rules | `.claude/rules/` | Always loaded (main session only) | Lightweight principles, language-agnostic |
-| Skills | `.claude/skills/` | Conditionally loaded by description match | Principles and patterns (WHAT) |
-| Agents | `.claude/agents/` | Invoked explicitly | Workflow and process (HOW) |
-
-**Content placement rules:**
-- Skills define principles. Agents define workflow. Never duplicate between them.
-- Agents do NOT auto-inherit Rules or Skills — specify skills explicitly in frontmatter
-- Content needed in both main session and agents → put in Skill (not Rule)
-- When modifying an agent, check ALL skills it loads for consistency
-
-### Agent Responsibility Boundaries
-
-Parallel reviewers (launched by `/code-review`) have non-overlapping responsibilities:
-
-| Agent | Scope |
-|-------|-------|
-| `code-reviewer` | Code quality: integrity, readability, performance, comments |
-| `security-reviewer` | All security and OWASP concerns |
-| `database-reviewer` | SQL queries, ORM usage, schema design |
-| `dead-code-reviewer` | Unused code, imports, dependencies |
-
-### Standard Workflow
+## Standard Workflow
 
 ```
 Code plans:   /plan → /tdd → /code-review → /tdd (fixes) → /git-commit
-Config plans:  /plan → /update-claude-config → /commit
+Config plans:  /plan → /update-claude-config → /review-claude-config → /git-commit
 ```
 
 Commit before review creates a safe checkpoint for reverting bad fixes.

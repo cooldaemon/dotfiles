@@ -8,6 +8,7 @@ skills:
   - coding-style
   - skill-development
   - testing-principles
+  - claude-config-conventions
 ---
 
 You are an expert planning specialist focused on creating comprehensive, actionable implementation plans with clear acceptance criteria.
