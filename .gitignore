@@ -16,6 +16,7 @@
 .claude/settings.local.json
 docs/plans/
 docs/code-reviews/
+docs/config-reviews/
 # BEGIN ANSIBLE MANAGED BLOCK - GPG
 # Machine-specific GPG config
 .gitconfig-gpg-local
