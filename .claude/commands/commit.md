@@ -2,9 +2,9 @@
 description: "Generate a message and perform git commit with pre-commit validation using a subagent."
 ---
 
-I'll use the git-commit subagent to handle the commit process. Let me provide context from our current session.
+I'll use the commit subagent to handle the commit process. Let me provide context from our current session.
 
-The git-commit subagent will:
+The commit subagent will:
 - Analyze the repository changes
 - Stage appropriate files based on our session context
 - Generate a semantic commit message
@@ -17,4 +17,4 @@ The git-commit subagent will:
 
 ## Next Commands
 After committing:
-- `/git-rebase-push` - Push to remote repository
+- `/push-to-remote` - Push to remote repository

@@ -162,9 +162,54 @@ git stash pop
 4. Include test plan with TODOs
 5. Push with `-u` flag if new branch
 
+## Git Fixup Pattern
+
+During TDD, each User Story produces a clean commit history through fixup commits:
+
+1. **After GREEN phase**: Create a semantic commit
+   ```bash
+   git add -A && git commit -m "feat(scope): description"
+   ```
+
+2. **After REFACTOR phase**: Create a fixup commit targeting the GREEN commit
+   ```bash
+   git add -A && git commit --fixup HEAD
+   ```
+
+3. **After review fixes**: Create a fixup commit targeting the relevant US commit
+   ```bash
+   git add -A && git commit --fixup <target-sha>
+   ```
+
+4. **Before push**: Autosquash all fixup commits
+   ```bash
+   GIT_SEQUENCE_EDITOR=true git rebase --autosquash origin/<base-branch>
+   ```
+
+The result is one clean commit per US in the final history.
+
+### Interleaved Commits
+
+Git `fixup!` commits match their target by **commit message**, not by position in the log. This means interleaved normal and fixup commits from multiple USs are correctly handled by autosquash.
+
+**Before autosquash:**
+```
+feat(auth): add login flow              <- US-1 GREEN
+fixup! feat(auth): add login flow       <- US-1 REFACTOR
+fixup! feat(auth): add login flow       <- US-1 review fix
+feat(auth): add password reset          <- US-2 GREEN
+fixup! feat(auth): add password reset   <- US-2 REFACTOR
+```
+
+**After `git rebase --autosquash`:**
+```
+feat(auth): add login flow              <- US-1 (REFACTOR + fix absorbed)
+feat(auth): add password reset          <- US-2 (REFACTOR absorbed)
+```
+
+Each fixup is absorbed into the commit whose message it matches, regardless of intervening commits.
+
 ## Related Commands
 
-- `/git-commit` - Commit with semantic message
-- `/git-rebase-push` - Rebase and push workflow
-- `/jj-describe` - Update jj change description (if using jj)
-- `/jj-git-push` - Push jj changes to git remote (if using jj)
+- `/commit` - Commit with semantic message (manual use)
+- `/push-to-remote` - Autosquash fixups, rebase, and push workflow

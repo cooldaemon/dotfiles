@@ -45,9 +45,10 @@ For each changed file, verify against the conventions in the loaded skills:
 - Verify workflow descriptions are current
 
 ### Cross-References (All Files)
-- Grep for `/command-name` patterns — verify each exists in `.claude/commands/`
-- Grep for agent names — verify each exists in `.claude/agents/`
-- Grep for skill names — verify each exists in `.claude/skills/`
+- Grep for `/command-name` patterns — verify each referenced command exists in `.claude/commands/`
+- Grep for agent names — verify each referenced agent exists in `.claude/agents/`
+- Grep for skill names — verify each referenced skill exists in `.claude/skills/`
+- **Related Commands sections list only commands relevant to that skill/agent.** Do not flag removal of unrelated commands. A command existing does not mean every file must reference it.
 
 ### Architecture Principles (All Files)
 - Verify content placement per `claude-config-conventions` skill (Content Placement Rules)

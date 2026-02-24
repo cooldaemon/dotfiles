@@ -122,6 +122,12 @@ Create detailed steps with:
 - Group related changes
 - Minimize context switching
 
+## User Story Rules
+
+1. **User-valuable slice**: Each US must represent a complete UX flow (start state -> user actions -> system responses -> end state) that results in observable user benefit. A US is not a technical task or internal refactoring -- it is a slice of functionality that a user can see, use, or verify.
+
+2. **E2E happy path**: Each US must include at least one E2E happy path scenario in its acceptance criteria. This ensures the US is testable end-to-end, not just at the unit level.
+
 ## Plan Format
 
 ```markdown

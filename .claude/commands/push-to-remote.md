@@ -2,9 +2,9 @@
 description: "Safely pull remote changes with rebase and push to remote repository using a subagent."
 ---
 
-I'll use the git-rebase-push subagent to safely synchronize with the remote repository.
+I'll use the push-to-remote subagent to safely synchronize with the remote repository.
 
-The git-rebase-push subagent will:
+The push-to-remote subagent will:
 - Check current branch and remote tracking status
 - Fetch and rebase any remote changes
 - Handle conflicts interactively if they occur
@@ -14,6 +14,7 @@ The git-rebase-push subagent will:
 ## Prerequisites
 - Local commits ready
 - Remote repository accessible
+- Fixup commits from TDD cycle will be autosquashed before pushing
 
 ## Next Commands
 After pushing:

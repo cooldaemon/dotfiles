@@ -19,8 +19,7 @@ The tdd-guide agent automatically checks for context:
 | Code Review | `docs/code-reviews/*.md` |
 
 ## Next Commands
-After TDD cycle:
-- `/git-commit` - Commit the changes (creates a checkpoint)
-- `/code-review` - Review the committed changes
-- `/tdd` - Fix review issues (if any)
-- `/git-commit` - Commit review fixes
+After TDD cycle (tdd-guide handles commits internally):
+- `/code-review` - Review the changes
+- `/tdd` - Fix review issues or implement next US
+- `/push-to-remote` - Autosquash fixups and push when ready

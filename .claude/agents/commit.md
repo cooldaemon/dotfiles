@@ -1,5 +1,5 @@
 ---
-name: git-commit
+name: commit
 description: Performs git commit with semantic messages and pre-commit validation
 tools: Bash, Read, Grep, Glob
 skills:

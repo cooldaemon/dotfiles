@@ -17,5 +17,5 @@ The update-claude-md subagent will:
 
 ## Next Commands
 After updating documentation:
-- `/git-commit` - Commit the documentation updates
-- `/git-rebase-push` - Share with the team
+- `/commit` - Commit the documentation updates
+- `/push-to-remote` - Share with the team

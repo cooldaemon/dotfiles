@@ -23,4 +23,4 @@ Delete the completed plan and update the index.
 ## Next Commands
 
 After deleting:
-- `/git-commit` - Commit the plan deletion
+- `/commit` - Commit the plan deletion

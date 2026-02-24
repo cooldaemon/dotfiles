@@ -32,6 +32,8 @@ If both exist, fix review issues first (they are fixes to previous plan executio
 2. Display: "Fixing review issues: [report title]"
 3. For each unchecked issue (`- [ ]`), read the Fix description and apply it
 4. Update the checkbox to `- [x]` after fixing each issue
+5. After all issues resolved, delete the report file: `rm docs/config-reviews/[filename].md`
+6. Confirm: "Config review report resolved and deleted: [filename]"
 
 ### Resume Logic (Plan Mode)
 
@@ -80,9 +82,24 @@ Execute ALL plan steps autonomously. Do NOT ask "Should I continue?" between ste
 - Plan instructions are ambiguous with multiple valid interpretations
 - A step would overwrite user changes not reflected in the plan
 
+## Git Checkpointing
+
+After completing all phases, create a git checkpoint using the git fixup pattern from git-workflow skill:
+
+### Plan Mode (semantic commit)
+```bash
+git add -A && git commit -m "<type>(<scope>): <subject>"
+```
+
+### Review Fix Mode (fixup commit)
+```bash
+git add -A && git commit --fixup HEAD
+```
+
 ## On Completion
 
 1. Display: "Plan implementation complete: [plan title]"
 2. Display summary of all changes (files created, modified, deleted)
-3. Suggest: "Run `/plan-done` to delete the completed plan"
-4. Suggest: "Run `/git-commit` to commit the changes"
+3. Create git checkpoint (semantic or fixup depending on mode)
+4. Suggest: "Run `/review-claude-config` to review the changes"
+5. Suggest: "Run `/plan-done` to delete the completed plan"

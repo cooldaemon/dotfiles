@@ -23,5 +23,5 @@ The claude-config-updater subagent will:
 ## Next Commands
 After implementation:
 - `/review-claude-config` - Review the configuration changes
-- `/git-commit` - Commit the changes
+- `/push-to-remote` - Push to remote (after review cycle complete)
 - `/plan-done` - Delete the completed plan

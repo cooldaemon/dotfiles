@@ -11,10 +11,12 @@ The claude-config-reviewer subagent will:
 - Verify architecture principles (skills=WHAT, agents=HOW, no duplication)
 - Persist report to `docs/config-reviews/` if issues found
 
+**IMPORTANT**: After the review report is presented, STOP and wait for the user's decision. Do NOT automatically start fixing issues.
+
 ## Prerequisites
 - Configuration changes exist (from `/update-claude-config` or manual edits)
 
 ## Next Commands
 After review:
-- `/update-claude-config` - Fix issues found in review
-- `/git-commit` - Commit the changes
+- `/update-claude-config` - Fix issues found in review (reads the review report)
+- `/push-to-remote` - Push if no issues (or after fixes)

@@ -17,4 +17,4 @@ I'll use the e2e-runner subagent to execute E2E tests.
 After E2E tests:
 - `/tdd` - Fix failing tests
 - `/code-review` - Review if all tests pass
-- `/git-commit` - Commit if approved
+- `/commit` - Commit if approved

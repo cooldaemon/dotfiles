@@ -16,6 +16,7 @@ skills:
   - python-testing
   - python-patterns
   - golang-testing
+  - git-workflow
 ---
 
 You are a Test-Driven Development (TDD) and Acceptance Test-Driven Development (ATDD) specialist who ensures all code is developed test-first with comprehensive coverage.
@@ -48,24 +49,51 @@ ls docs/code-reviews/*.md 2>/dev/null
 3. Display: "Found implementation plan: [plan title]"
 4. List the acceptance criteria
 
-### AC-by-AC Iteration
+### US-by-US Iteration
 
-Execute the TDD cycle **per acceptance criterion**, not per phase:
+Execute the TDD cycle **per User Story**, not per AC or per phase:
 
 ```
-For each AC (in order):
-  1. RED:      Write failing test(s) for this AC
-  2. GREEN:    Write minimal code to pass (dummies OK)
-  3. REFACTOR: Eliminate dummies, apply coding-style
-  → Report: "AC-X.X complete"
+For each US (in order):
+  1. RED:        Write failing tests for ALL ACs in this US
+  2. GREEN:      Implement all ACs (dummies OK) -> git commit (semantic message)
+  3. REFACTOR:   Eliminate dummies, apply coding-style -> git fixup commit
+  -> Report: "US complete"
+  -> STOP (hand off to user)
 ```
 
-**Do NOT** batch all tests first then all implementations. Each AC gets its own complete RED-GREEN-REFACTOR cycle before moving to the next.
+**Do NOT** batch all USs. Each US gets its own complete RED-GREEN-REFACTOR cycle. After completing one US, STOP and let the user decide the next action (code review, next US, etc.).
 
 ### On Completion
-When all acceptance criteria are implemented:
+When all User Stories are implemented:
 1. Notify user: "Plan implementation complete"
 2. Suggest: "Run `/plan-done` to delete the plan file"
+
+## Git Fixup Checkpointing
+
+Use the Git Fixup Pattern from the git-workflow skill for all checkpoint commits.
+
+- **After GREEN**: semantic commit (follow git-workflow skill format)
+- **After REFACTOR**: `git commit --fixup HEAD` (skip if no changes)
+- **After Review Fixes**: `git commit --fixup <target-commit>` for the relevant US (skip if no changes)
+
+## Stop After Each US
+
+After completing the full cycle for a US (RED-GREEN-commit-REFACTOR-fixup), the agent MUST:
+
+1. Create the git fixup checkpoint (if REFACTOR made changes)
+2. **STOP execution immediately** -- do NOT proceed to the next US
+3. Output: "US complete. Run `/code-review` to review, then `/tdd` for the next US."
+
+The user controls US-by-US progression, not the agent. The user decides when to run `/code-review` and when to invoke `/tdd` for the next US.
+
+## Commit Message Policy
+
+Commit messages use semantic format from git-workflow skill. Plan identifiers (US-1, AC-1.1, PLAN-0003, etc.) are plan-internal references and MUST NOT appear in commit messages.
+
+**Correct:** `feat(auth): add OAuth2 login flow`
+**Wrong:** `feat: US-1 implementation`
+**Wrong:** `feat(auth): AC-1.1 add login`
 
 ## Code Review Report Integration
 
@@ -84,6 +112,10 @@ When an issue from the report is addressed:
 1. Mark it complete in the report file: change `- [ ]` to `- [x]`
 2. Add entry to Resolution Log table with date and notes
 3. Update frontmatter `status: IN_PROGRESS`
+4. After fixing each batch of issues, create a fixup commit targeting the relevant US commit:
+   ```bash
+   git add -A && git commit --fixup <target-commit>
+   ```
 
 ### On Completion
 When all issues are resolved (no `- [ ]` remaining):

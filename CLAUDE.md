@@ -47,16 +47,16 @@ Each role is tagged for individual execution (e.g., `--tags homebrew`, `--tags c
 ## Standard Workflow
 
 ```
-Code plans:   /plan → /tdd → /code-review → /tdd (fixes) → /git-commit
-Config plans:  /plan → /update-claude-config → /review-claude-config → /git-commit
+Code plans:   /plan → /tdd (US-level, git fixup) → /code-review → /tdd (fixes) → /push-to-remote
+Config plans:  /plan → /update-claude-config (git commit) → /review-claude-config → /update-claude-config (git fixup) → /push-to-remote
 ```
 
-Commit before review creates a safe checkpoint for reverting bad fixes.
+Multiple USs can be developed and reviewed before a single `/push-to-remote`.
 
-### TDD: AC-by-AC with Three-Layer Defense
+### TDD: US-by-US with Three-Layer Defense
 
 ```
-For each AC: RED → GREEN (dummies OK) → REFACTOR (eliminate ALL dummies)
+For each US: RED → GREEN (dummies OK) → git commit → REFACTOR (eliminate ALL dummies) → git fixup
 ```
 
 Quality defense layers:
