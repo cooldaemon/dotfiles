@@ -1,6 +1,6 @@
 ---
 name: ears-format
-description: EARS (Easy Approach to Requirements Syntax) format for writing testable acceptance criteria. Used by planning and testing agents.
+description: EARS format for defining system behavior in implementation plans (Phase 2). Used by planner agent to write how.md. Do NOT use for UX planning or Gherkin scenarios.
 ---
 
 # EARS Format for Acceptance Criteria
@@ -91,19 +91,11 @@ THEN THE SYSTEM SHALL save data and show success message
 | **WHILE** | Continuous behaviors, ongoing conditions |
 | **WHERE** | Context-dependent, environmental conditions |
 
-## Converting EARS to Gherkin
+## Phase 2 Role
 
-EARS acceptance criteria map directly to Gherkin scenarios:
+EARS is used in `how.md` to specify system behavior per User Story, complementing Gherkin scenarios defined in `ux.md`.
 
-```
-EARS:
-  WHEN user submits form with invalid email
-  THE SYSTEM SHALL display error message
+- **ux.md** (Phase 1): Gherkin scenarios define user-facing behavior (Given/When/Then)
+- **how.md** (Phase 2): EARS statements define system-level behavior (WHEN/THE SYSTEM SHALL)
 
-Gherkin:
-  Scenario: Form validation for invalid email
-    Given I am on the registration page
-    When I enter "invalid-email" as email
-    And I submit the form
-    Then I should see "Please enter a valid email" error
-```
+EARS statements in how.md should be testable and map to implementation requirements that the Gherkin scenarios alone do not capture (e.g., performance constraints, error handling at system level, data validation rules).

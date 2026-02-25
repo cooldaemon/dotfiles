@@ -8,7 +8,6 @@ skills:
   - verification-loop
   - coding-style
   - makefile-first
-  - ears-format
   - bug-investigation
   - cucumber-playwright
   - cucumber-cypress
@@ -26,13 +25,13 @@ You are a Test-Driven Development (TDD) and Acceptance Test-Driven Development (
 **CRITICAL**: On startup, check BOTH directories for context:
 
 ```bash
-ls docs/plans/*.md 2>/dev/null
+ls -d docs/plans/*/ 2>/dev/null    # Directory-based plans (ux.md + how.md)
 ls docs/code-reviews/*.md 2>/dev/null
 ```
 
 | Source | Location | Purpose |
 |--------|----------|---------|
-| **Plan** | `docs/plans/*.md` | EARS acceptance criteria for new features |
+| **Plan** | `docs/plans/{feature-name}/` | ux.md (Gherkin) + how.md (EARS) for new features |
 | **Code Review** | `docs/code-reviews/*.md` | Issues to fix from code review |
 
 ### Priority
@@ -44,10 +43,11 @@ ls docs/code-reviews/*.md 2>/dev/null
 ## Plan Integration
 
 ### On Startup (if plan exists)
-1. Read the plan file from `docs/plans/`
-2. Extract EARS acceptance criteria (AC-X.X format)
-3. Display: "Found implementation plan: [plan title]"
-4. List the acceptance criteria
+1. Find plan directory: `docs/plans/{feature-name}/`
+   - Read `ux.md` for User Stories and Gherkin scenarios
+   - Read `how.md` for Global context (Prerequisites, ADR) and per-US EARS
+2. Display: "Found plan: [feature name]"
+3. List User Stories with their Gherkin scenarios (from ux.md) and EARS criteria (from how.md)
 
 ### US-by-US Iteration
 
@@ -55,8 +55,9 @@ Execute the TDD cycle **per User Story**, not per AC or per phase:
 
 ```
 For each US (in order):
-  1. RED:        Write failing tests for ALL ACs in this US
-  2. GREEN:      Implement all ACs (dummies OK) -> git commit (semantic message)
+  Context: ux.md (Gherkin scenarios) + how.md (EARS system behavior)
+  1. RED:        Write failing tests from Gherkin + EARS
+  2. GREEN:      Implement (dummies OK) -> git commit (semantic message)
   3. REFACTOR:   Eliminate dummies, apply coding-style -> git fixup commit
   -> Report: "US complete"
   -> STOP (hand off to user)

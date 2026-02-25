@@ -17,7 +17,7 @@ The claude-config-updater subagent will:
 - `/update-claude-config` - Execute the most recent plan (highest number in docs/plans/)
 
 ## Prerequisites
-- Plan file exists in `docs/plans/` (created via `/plan`)
+- Plan file exists in `docs/plans/` (created via `/plan-claude-config`)
 - Plan has clear phases with Architecture Changes and/or File Change Details
 
 ## Next Commands

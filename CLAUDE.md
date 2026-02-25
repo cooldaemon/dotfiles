@@ -46,10 +46,27 @@ Each role is tagged for individual execution (e.g., `--tags homebrew`, `--tags c
 
 ## Standard Workflow
 
+### Code Changes
 ```
-Code plans:   /plan → /tdd (US-level, git fixup) → /code-review → /tdd (fixes) → /push-to-remote
-Config plans:  /plan → /update-claude-config (git commit) → /review-claude-config → /update-claude-config (git fixup) → /push-to-remote
+/plan-ux → /plan-how → /tdd (US-level, git fixup) → /code-review → /tdd (fixes) → /push-to-remote
 ```
+
+### Config Changes
+```
+/plan-claude-config → /update-claude-config (git commit) → /review-claude-config → /update-claude-config (git fixup) → /push-to-remote
+```
+
+### Bug Investigation
+```
+/investigate → (branch to /plan-ux, /plan-how, or /tdd based on findings)
+```
+
+### Two-Phase Planning (Code)
+
+| Phase | Command | Agent | Output |
+|-------|---------|-------|--------|
+| Phase 1: WHAT | `/plan-ux` | designer | `docs/plans/{name}/ux.md` |
+| Phase 2: HOW | `/plan-how` | planner | `docs/plans/{name}/how.md` + ADR |
 
 Multiple USs can be developed and reviewed before a single `/push-to-remote`.
 
