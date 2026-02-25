@@ -46,7 +46,9 @@ description: "Conventions for Claude Code configuration files (agents, commands,
 
 **Content rules:**
 - Body is expanded in the main session context (not inside a subagent).
-- Should delegate to a subagent for actual work.
+- Delegate to a subagent for actual work, UNLESS:
+  - Interactive: requires back-and-forth dialogue with the user during execution
+  - Trivial: a few simple operations where subagent overhead exceeds the work itself
 - Include a "Next Commands" section listing follow-up commands.
 - Include a "Prerequisites" section if the command requires prior state.
 
@@ -76,4 +78,4 @@ Reviewers have non-overlapping responsibilities:
 - Duplicating content between a skill and the agents that load it
 - Downgrading model (sonnet, haiku) in plans or agent definitions without user instruction
 - Omitting `skills:` from agent frontmatter when the agent needs shared principles
-- Commands doing work directly instead of delegating to a subagent
+- Commands doing substantial work directly instead of delegating to a subagent

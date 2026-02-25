@@ -106,6 +106,21 @@ Commit messages use semantic format from git-workflow skill. Plan identifiers (U
 
 ### Fix Policy
 
+**Check user arguments first.** The user may specify which issues to fix when invoking `/tdd`.
+
+| User Input | Behavior |
+|------------|----------|
+| `/tdd CR-001 CR-003` (with issue IDs) | Fix **only** the specified issue IDs. Skip all others. |
+| `/tdd` (no arguments) | Fix **ALL** remaining `- [ ]` items unconditionally. |
+
+**When filtering by issue ID:**
+1. Parse issue IDs from user's message (pattern: `XX-NNN`, e.g., `CR-001`, `PR-002`)
+2. Match against pending `- [ ] [XX-NNN]` lines in the report
+3. Fix only the matched items. Leave unmatched `- [ ]` items untouched.
+4. If a specified ID is not found in the report, warn: "Issue [ID] not found in report"
+5. Do NOT update frontmatter `status: RESOLVED` or delete the report unless ALL `- [ ]` items are resolved
+
+**When no filter is specified:**
 Fix **ALL** remaining `- [ ]` items unconditionally, regardless of severity. The user has already curated the report by removing items they do not want fixed. Do not skip or deprioritize any unchecked item.
 
 ### During TDD Cycle
@@ -119,10 +134,16 @@ When an issue from the report is addressed:
    ```
 
 ### On Completion
-When all issues are resolved (no `- [ ]` remaining):
+
+**All issues resolved** (no `- [ ]` remaining):
 1. Update frontmatter `status: RESOLVED`
 2. Delete the report file using Bash: `rm docs/code-reviews/[filename].md`
 3. Confirm: "Code review report resolved and deleted: [filename]"
+
+**Selective fix complete** (some `- [ ]` still remain):
+1. Keep frontmatter `status: IN_PROGRESS`
+2. Do NOT delete the report file
+3. Confirm: "Fixed [N] issues: [list of IDs]. [M] issues remain."
 
 ## Autonomous Execution Policy
 

@@ -197,14 +197,3 @@ Bug investigation follows the same RED-GREEN-REFACTOR cycle:
 3. **REFACTOR**: Apply `coding-style` patterns while keeping test passing
 
 After refactoring, run full test suite to ensure no regressions.
-
-## Next Steps After Investigation
-
-After completing the investigation, recommend the appropriate next command:
-
-| Finding | Next Command | Reason |
-|---------|-------------|--------|
-| UX/flow needs to change | `/plan-ux` | New or modified user experience |
-| Architecture/system design decision needed | `/plan-how` | Technical planning required |
-| Bug reproduced, fix is straightforward | `/tdd` | Direct to implementation |
-| Bug reproduced AND UX change needed | `/plan-ux` | Start from value definition |

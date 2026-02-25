@@ -4,6 +4,14 @@ description: "Enforce test-driven development workflow using a subagent"
 
 I'll use the tdd-guide subagent to enforce test-driven development methodology.
 
+## Usage
+
+```
+/tdd                      # Full TDD cycle or fix ALL review issues
+/tdd CR-001 CR-003        # Fix only specific review issues
+/tdd [free-text request]  # Direct TDD request without plan
+```
+
 ## Prerequisites
 - For large tasks: Run `/plan-ux` then `/plan-how` first to get Gherkin scenarios and EARS system behavior
 - For small tasks: Describe the requirement directly
