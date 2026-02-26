@@ -8,7 +8,6 @@ formulas:
   - 'direnv'
   - 'gh'
   - 'tmux'
-  - 'jj'
   - 'jq'  # for JSON parsing in Claude Code status-line hook
   - 'mkcert'
   - 'coreutils'  # for gmkdir and other GNU utilities required by Ruby gem native extensions
