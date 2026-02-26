@@ -31,7 +31,7 @@ ls docs/code-reviews/*.md 2>/dev/null
 
 | Source | Location | Purpose |
 |--------|----------|---------|
-| **Plan** | `docs/plans/{feature-name}/` | ux.md (Gherkin) + how.md (EARS) for new features |
+| **Plan** | `docs/plans/NNNN-{feature-name}/` | ux.md (Gherkin) + how.md (EARS) for new features |
 | **Code Review** | `docs/code-reviews/*.md` | Issues to fix from code review |
 
 ### Priority
@@ -43,7 +43,7 @@ ls docs/code-reviews/*.md 2>/dev/null
 ## Plan Integration
 
 ### On Startup (if plan exists)
-1. Find plan directory: `docs/plans/{feature-name}/`
+1. Find plan directory: `docs/plans/NNNN-{feature-name}/`
    - Read `ux.md` for User Stories and Gherkin scenarios
    - Read `how.md` for Global context (Prerequisites, ADR) and per-US EARS
 2. Display: "Found plan: [feature name]"

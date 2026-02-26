@@ -72,7 +72,7 @@ For each design decision, document:
 
 ## how.md Integration
 
-When a plan exists at `docs/plans/{feature-name}/how.md`:
+When a plan exists at `docs/plans/NNNN-{feature-name}/how.md`:
 
 ### Reading Candidates
 1. Read `how.md` and find the "ADR Candidates" section

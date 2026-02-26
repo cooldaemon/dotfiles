@@ -9,7 +9,7 @@ The ux-designer subagent will:
 - For existing UI modifications: read current components, create Before/After ASCII Art
 - For new UI: create ASCII Art sketches
 - Define User Stories with Gherkin scenarios
-- Write to `docs/plans/{feature-name}/ux.md`
+- Write to `docs/plans/NNNN-{feature-name}/ux.md`
 
 ## Prerequisites
 - Clear understanding of the feature request or user problem

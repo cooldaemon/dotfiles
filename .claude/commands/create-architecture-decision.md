@@ -13,13 +13,14 @@ The adr-architect agent will:
 
 ## Plan Integration
 
-If a plan exists at `docs/plans/{feature-name}/how.md`, the adr-architect agent will:
+If a plan exists at `docs/plans/NNNN-{feature-name}/how.md`, the adr-architect agent will:
 - Read the "ADR Candidates" section for topics and context
 - Create ADRs for the listed candidates
 - Update how.md with links to the created ADR files
 
-Invoke with a feature name to process candidates from a specific plan:
+Invoke with a plan number or feature name to process candidates from a specific plan:
 ```
+/create-architecture-decision 0002
 /create-architecture-decision {feature-name}
 ```
 

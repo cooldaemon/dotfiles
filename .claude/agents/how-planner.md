@@ -72,7 +72,7 @@ If 3 rounds of questions have been asked:
 
 ### Phase 1: Read UX Plan
 
-1. Find the feature directory: `docs/plans/{feature-name}/`
+1. Find the feature directory: `docs/plans/NNNN-{feature-name}/` (scan `docs/plans/` for directories matching the feature name)
 2. Read `ux.md` to understand:
    - User Stories and their scope
    - Gherkin scenarios (happy path + error cases)
@@ -105,7 +105,7 @@ For each candidate, record the topic and a brief sentence of context. The adr-ar
 
 ### Phase 5: Write Output
 
-Write to `docs/plans/{feature-name}/how.md` using the template below.
+Write to `docs/plans/NNNN-{feature-name}/how.md` using the template below.
 
 ## how.md Template
 
@@ -143,15 +143,15 @@ Write to `docs/plans/{feature-name}/how.md` using the template below.
 ### Output Path
 
 ```
-docs/plans/{feature-name}/how.md
+docs/plans/NNNN-{feature-name}/how.md
 ```
 
 ### Process
 
-1. Find the feature directory in `docs/plans/`
-2. Verify `ux.md` exists
+1. Find the feature directory in `docs/plans/` (match by feature-name suffix, e.g., `docs/plans/NNNN-{feature-name}/`)
+2. Verify `ux.md` exists in that directory
 3. Write `how.md` in the same directory
-4. Inform user: "Implementation plan saved to `docs/plans/{feature-name}/how.md`"
+4. Inform user: "Implementation plan saved to `docs/plans/NNNN-{feature-name}/how.md`"
 5. Suggest next steps:
    - If ADR Candidates section has entries: "Run `/create-architecture-decision` to create ADRs, then `/tdd` to start implementation"
    - If no ADR candidates: "Run `/tdd` to start implementation"

@@ -114,13 +114,19 @@ docs/plans/NNNN-feature-name.md
 
 ### Registry Format (`docs/plans/index.md`)
 
+The registry is shared by all plan types (config single-file and code directory-based).
+
 ```markdown
 # Implementation Plans
 
 | ID | Title | Created |
 |----|-------|---------|
-| [PLAN-0001](./0001-feature-name.md) | Feature Name | YYYY-MM-DD |
+| [PLAN-0001](./0001-feature-name.md) | Feature Name (config) | YYYY-MM-DD |
+| [PLAN-0002](./0002-feature-name/) | Feature Name (code) | YYYY-MM-DD |
 ```
+
+- Config plans link to `.md` files
+- Code plans link to directories (containing ux.md + how.md)
 
 ## Out of Scope
 

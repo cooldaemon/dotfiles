@@ -23,7 +23,7 @@ The tdd-guide agent automatically checks for context:
 
 | Source | Location |
 |--------|----------|
-| Plan | `docs/plans/{feature-name}/` (ux.md + how.md) |
+| Plan | `docs/plans/NNNN-{feature-name}/` (ux.md + how.md) |
 | Code Review | `docs/code-reviews/*.md` |
 
 ## Git Policy

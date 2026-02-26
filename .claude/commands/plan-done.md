@@ -15,14 +15,13 @@ Delete the completed plan and update the index.
 
 ## Actions
 
-### Directory-based plans (ux.md + how.md)
-1. Identify the target plan directory: `docs/plans/{feature-name}/`
-2. Delete the entire directory: `rm -r docs/plans/{feature-name}/`
-3. Confirm deletion to user
-
-### Single-file plans (config plans)
-1. Identify the target plan file: `docs/plans/NNNN-*.md`
-2. Delete the file
+1. Identify the target plan by argument:
+   - Number (e.g., `0003`): match `docs/plans/0003-*`
+   - Name (e.g., `feature-name`): match `docs/plans/*-feature-name*`
+   - No argument: use the highest-numbered plan in `docs/plans/`
+2. Determine plan type:
+   - **Directory** (`docs/plans/NNNN-{feature-name}/`): Delete the entire directory with `rm -r`
+   - **File** (`docs/plans/NNNN-{feature-name}.md`): Delete the file
 3. Remove the corresponding row from `docs/plans/index.md`
 4. Confirm deletion to user
 
