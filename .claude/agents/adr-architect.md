@@ -1,6 +1,6 @@
 ---
-name: architect
-description: Software architecture specialist for system design, technical decision-making, and ADR documentation. Use PROACTIVELY when planning new features, refactoring large systems, or making architectural decisions.
+name: adr-architect
+description: Architecture specialist for system design, technical decisions, and ADR documentation. Use PROACTIVELY when planning new features, refactoring large systems, or making architectural decisions.
 tools: Read, Write, Edit, Bash, Grep, Glob
 model: opus
 skills:

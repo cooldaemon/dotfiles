@@ -2,7 +2,7 @@
 description: "Fix build/compile/type errors using a subagent when stuck"
 ---
 
-I'll use the build-error-resolver subagent to diagnose and fix build errors.
+I'll use the build-fixer subagent to diagnose and fix build errors.
 
 Use this command when:
 - Build fails and the cause is unclear

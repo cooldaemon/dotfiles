@@ -1,6 +1,6 @@
 ---
 name: ears-format
-description: EARS format for defining system behavior in implementation plans (Phase 2). Used by planner agent to write how.md. Do NOT use for UX planning or Gherkin scenarios.
+description: EARS format for defining system behavior in implementation plans (Phase 2). Used by how-planner agent to write how.md. Do NOT use for UX planning or Gherkin scenarios.
 ---
 
 # EARS Format for Acceptance Criteria

@@ -1,6 +1,6 @@
 ---
-name: build-error-resolver
-description: Build and compilation error resolution specialist. Use PROACTIVELY when build fails or type/compile errors occur. Fixes build errors only with minimal diffs, no architectural changes.
+name: build-fixer
+description: Build error resolution specialist. Use PROACTIVELY when build fails or type/compile errors occur. Fixes build errors only with minimal diffs, no architectural changes.
 tools: Read, Write, Edit, Bash, Grep, Glob
 model: opus
 skills:
@@ -83,7 +83,7 @@ For each error:
 
 **DON'T USE when:**
 - Code needs refactoring → `/tdd` (REFACTOR phase)
-- Architectural changes → `architect`
+- Architectural changes → `adr-architect`
 - Tests failing → `tdd-guide`
 - Security issues → `security-reviewer`
 

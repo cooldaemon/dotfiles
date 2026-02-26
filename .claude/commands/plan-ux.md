@@ -1,10 +1,10 @@
 ---
-description: "Create UX plan with user stories, ASCII art sketches, and Gherkin scenarios using designer sub-agent"
+description: "Create UX plan with user stories, ASCII art sketches, and Gherkin scenarios using ux-designer sub-agent"
 ---
 
-I'll use the designer subagent to create a UX plan defining user value.
+I'll use the ux-designer subagent to create a UX plan defining user value.
 
-The designer subagent will:
+The ux-designer subagent will:
 - Gather requirements from user (asks clarifying questions if ambiguous)
 - For existing UI modifications: read current components, create Before/After ASCII Art
 - For new UI: create ASCII Art sketches

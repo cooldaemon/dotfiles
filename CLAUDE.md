@@ -65,8 +65,8 @@ Each role is tagged for individual execution (e.g., `--tags homebrew`, `--tags c
 
 | Phase | Command | Agent | Output |
 |-------|---------|-------|--------|
-| Phase 1: WHAT | `/plan-ux` | designer | `docs/plans/{name}/ux.md` |
-| Phase 2: HOW | `/plan-how` | planner | `docs/plans/{name}/how.md` + ADR |
+| Phase 1: WHAT | `/plan-ux` | ux-designer | `docs/plans/{name}/ux.md` |
+| Phase 2: HOW | `/plan-how` | how-planner | `docs/plans/{name}/how.md` + ADR |
 
 Multiple USs can be developed and reviewed before a single `/push-to-remote`.
 

@@ -1,10 +1,10 @@
 ---
-description: "Create Architecture Decision Records (ADRs) using the architect agent"
+description: "Create Architecture Decision Records (ADRs) using the adr-architect agent"
 ---
 
-I'll use the architect agent to create an Architecture Decision Record for your project.
+I'll use the adr-architect agent to create an Architecture Decision Record for your project.
 
-The architect agent will:
+The adr-architect agent will:
 - Check and create the docs/adr directory structure if needed
 - Analyze the technical decision context
 - Generate a new ADR file with proper numbering

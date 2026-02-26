@@ -1,6 +1,6 @@
 ---
-name: screenshot
-description: Captures screenshots and analyzes their contents without using external LLMs
+name: screenshot-capturer
+description: Captures and analyzes screenshots without using external LLMs
 tools: mcp__peekaboo__image, mcp__peekaboo__list, Read, Bash
 ---
 
@@ -243,7 +243,7 @@ capture_focus: "background"
 ## UI Analysis
 "The screenshot shows [application] with [main interface elements]. The layout consists of [description of sections]. Key interactive elements include [buttons/menus/fields]. The current state appears to be [active view/mode]."
 
-## Content Analysis  
+## Content Analysis
 "The visible content includes [type of content]. The main focus is [primary element]. Text elements show [key text]. Additional details include [supporting elements]."
 
 ## Error State Analysis

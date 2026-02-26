@@ -20,13 +20,37 @@ description: "Conventions for Claude Code configuration files (agents, commands,
 - Content needed in both main session and agents --> put in Skill (not Rule).
 - When modifying an agent, check ALL skills it loads for consistency.
 
+## Naming Conventions
+
+**Agent naming: `{scope}-{role}`**
+- `{scope}` matches the command's `{object}` keyword for discoverability
+- `{role}` conveys the agent's persona (designer, planner, reviewer, etc.)
+- Examples: `ux-designer`, `how-planner`, `adr-architect`, `build-fixer`, `code-reviewer`
+
+**Command naming: `{verb}-{object}`**
+- Verb-first for action clarity
+- Examples: `/plan-ux`, `/plan-how`, `/fix-build`, `/capture-screenshot`
+
+**Mapping rule: Agent `{scope}` = Command `{object}`**
+
+| Command | Object | Agent | Scope |
+|---------|--------|-------|-------|
+| `/plan-ux` | `ux` | `ux-designer` | `ux` |
+| `/plan-how` | `how` | `how-planner` | `how` |
+| `/create-architecture-decision` | `architecture-decision` (long) | `adr-architect` | `adr` |
+| `/fix-build` | `build` | `build-fixer` | `build` |
+| `/capture-screenshot` | `screenshot` | `screenshot-capturer` | `screenshot` |
+| `/code-review` | `code-review` | `code-reviewer` | `code` |
+
+**Exact match exception**: When the command name is short and unambiguous, the agent can match exactly (e.g., `/commit` -> `commit` agent, `/push-to-remote` -> `push-to-remote` agent).
+
 ## Agent Conventions
 
 **Frontmatter (required fields):**
 - `name` -- kebab-case identifier
 - `description` -- clear purpose and when to use
 - `tools` -- list of required tools
-- `skills` -- explicitly list all skills the agent needs (no auto-inheritance)
+- `skills` -- list all skills the agent needs (no auto-inheritance). Optional if the agent needs no skills.
 
 **`model:` field:**
 - Optional. If omitted, inherits from caller.
@@ -49,7 +73,7 @@ description: "Conventions for Claude Code configuration files (agents, commands,
 - Delegate to a subagent for actual work, UNLESS:
   - Interactive: requires back-and-forth dialogue with the user during execution
   - Trivial: a few simple operations where subagent overhead exceeds the work itself
-- Include a "Next Commands" section listing follow-up commands.
+- Include a "Next Commands" section when the command has natural follow-up steps in a workflow.
 - Include a "Prerequisites" section if the command requires prior state.
 
 ## Rule Conventions
@@ -77,5 +101,5 @@ Reviewers have non-overlapping responsibilities:
 - Putting agent-needed content in a rule (rules are main-session only)
 - Duplicating content between a skill and the agents that load it
 - Downgrading model (sonnet, haiku) in plans or agent definitions without user instruction
-- Omitting `skills:` from agent frontmatter when the agent needs shared principles
+- Omitting skills from agent frontmatter when the agent's responsibilities require shared principles
 - Commands doing substantial work directly instead of delegating to a subagent
