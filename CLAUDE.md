@@ -48,7 +48,7 @@ Each role is tagged for individual execution (e.g., `--tags homebrew`, `--tags c
 
 ### Code Changes
 ```
-/plan-ux → /plan-how → /tdd (US-level, git fixup) → /code-review → /tdd (fixes) → /push-to-remote
+/plan-ux → /plan-how → /create-architecture-decision (if ADR candidates) → /tdd (US-level, git fixup) → /code-review → /tdd (fixes) → /push-to-remote
 ```
 
 ### Config Changes
@@ -66,7 +66,8 @@ Each role is tagged for individual execution (e.g., `--tags homebrew`, `--tags c
 | Phase | Command | Agent | Output |
 |-------|---------|-------|--------|
 | Phase 1: WHAT | `/plan-ux` | ux-designer | `docs/plans/{name}/ux.md` |
-| Phase 2: HOW | `/plan-how` | how-planner | `docs/plans/{name}/how.md` + ADR |
+| Phase 2: HOW | `/plan-how` | how-planner | `docs/plans/{name}/how.md` |
+| Phase 2.5: ADR | `/create-architecture-decision` | adr-architect | `docs/adr/NNNN-title.md` (if candidates) |
 
 Multiple USs can be developed and reviewed before a single `/push-to-remote`.
 

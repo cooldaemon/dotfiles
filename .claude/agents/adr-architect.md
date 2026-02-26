@@ -70,4 +70,18 @@ For each design decision, document:
 4. **Document** - Create ADR if significant decision (see adr-patterns skill)
 5. **Implement** - Proceed with approved design
 
+## how.md Integration
+
+When a plan exists at `docs/plans/{feature-name}/how.md`:
+
+### Reading Candidates
+1. Read `how.md` and find the "ADR Candidates" section
+2. Use each candidate's topic and context as input for ADR creation
+3. Gather additional context from the codebase as needed
+
+### After Creating ADR
+1. Update the `how.md` "ADR Candidates" section:
+   - Change `- [ ] {Topic}` to `- [x] {Topic} -- see [docs/adr/NNNN-title.md](../../adr/NNNN-title.md)`
+2. This allows tdd-guide to find the ADR file paths when reading how.md
+
 **Remember**: Good architecture enables rapid development, easy maintenance, and confident scaling.

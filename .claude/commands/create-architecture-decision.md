@@ -11,6 +11,22 @@ The adr-architect agent will:
 - Update the index.md file automatically
 - Follow the standard ADR template from adr-patterns skill
 
+## Plan Integration
+
+If a plan exists at `docs/plans/{feature-name}/how.md`, the adr-architect agent will:
+- Read the "ADR Candidates" section for topics and context
+- Create ADRs for the listed candidates
+- Update how.md with links to the created ADR files
+
+Invoke with a feature name to process candidates from a specific plan:
+```
+/create-architecture-decision {feature-name}
+```
+
+## Next Commands
+After creating ADRs from a plan:
+- `/tdd` - Implement with test-driven development
+
 ## Prerequisites
 - Clear understanding of the problem
 - Options considered
