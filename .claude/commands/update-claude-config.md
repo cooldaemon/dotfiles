@@ -20,6 +20,9 @@ The claude-config-updater subagent will:
 - Plan file exists in `docs/plans/` (created via `/plan-claude-config`)
 - Plan has clear phases with Architecture Changes and/or File Change Details
 
+## Git Policy
+The claude-config-updater agent manages its own git commits (semantic for plan execution, fixup for review fixes). Do NOT override this in the Task prompt.
+
 ## Next Commands
 After implementation:
 - `/review-claude-config` - Review the configuration changes

@@ -26,8 +26,11 @@ The tdd-guide agent automatically checks for context:
 | Plan | `docs/plans/{feature-name}/` (ux.md + how.md) |
 | Code Review | `docs/code-reviews/*.md` |
 
+## Git Policy
+The tdd-guide agent manages its own git commits (semantic after GREEN, fixup after REFACTOR). Do NOT override this in the Task prompt.
+
 ## Next Commands
-After TDD cycle (tdd-guide handles commits internally):
+After TDD cycle:
 - `/code-review` - Review the changes
 - `/tdd` - Fix review issues or implement next US
 - `/push-to-remote` - Autosquash fixups and push when ready
