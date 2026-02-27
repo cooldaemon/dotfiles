@@ -88,8 +88,10 @@ Reviewers have non-overlapping responsibilities:
 
 | Agent | Scope |
 |-------|-------|
-| `code-reviewer` | Code quality: integrity, readability, performance, comments |
+| `code-reviewer` | Code quality: integrity, readability, comments, best practices |
 | `security-reviewer` | All security and OWASP concerns |
+| `performance-reviewer` | Algorithmic complexity, memory, rendering, bundle size, caching |
+| `sre-reviewer` | Observability, resilience, health checks, resource limits, blast radius |
 | `database-reviewer` | SQL queries, ORM usage, schema design |
 | `dead-code-reviewer` | Unused code, imports, dependencies |
 | `claude-config-reviewer` | Claude Code configuration quality and consistency |

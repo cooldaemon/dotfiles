@@ -1,6 +1,6 @@
 ---
 name: code-reviewer
-description: Expert code review specialist. Proactively reviews code for quality and maintainability. Use immediately after writing or modifying code. Reviews only - does not modify code.
+description: Expert code review specialist. Proactively reviews code for integrity, readability, comments, and best practices. Use immediately after writing or modifying code. Reviews only - does not modify code.
 tools: Read, Grep, Glob, Bash
 skills:
   - coding-style
@@ -41,15 +41,6 @@ You are a senior code reviewer ensuring high standards of code quality.
   - Comments describing the immediate next line of code
   - Comments that could be replaced by a descriptive function name
 - Redundant comments that duplicate what code already expresses
-
-### Performance (MEDIUM)
-
-- Inefficient algorithms (O(n²) when O(n log n) possible)
-- Unnecessary re-renders in React
-- Missing memoization
-- Large bundle sizes
-- N+1 queries
-- Missing caching
 
 ### Best Practices (MEDIUM)
 

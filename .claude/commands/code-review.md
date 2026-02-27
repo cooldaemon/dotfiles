@@ -10,12 +10,14 @@ Run multiple specialized reviewers in parallel for comprehensive code analysis.
 
 | Reviewer | Focus |
 |----------|-------|
-| **code-reviewer** | Quality, readability, performance |
+| **code-reviewer** | Integrity, readability, comments, best practices |
 | **security-reviewer** | Security vulnerabilities, OWASP Top 10 |
+| **performance-reviewer** | Algorithmic complexity, memory, rendering, bundle size |
+| **sre-reviewer** | Observability, resilience, health checks, resource limits |
 | **database-reviewer** | SQL queries, ORM usage, schema design |
 | **dead-code-reviewer** | Unused code, imports, dependencies |
 
-All four reviewers run **always** - ORM code changes affect generated SQL.
+All six reviewers run **always** - ORM code changes affect generated SQL, any code change can have performance or operational implications.
 
 ## Execution
 
@@ -74,8 +76,17 @@ total_issues: N
 ## Security Review (security-reviewer)
 [Full output from security-reviewer agent]
 
+## Performance Review (performance-reviewer)
+[Full output from performance-reviewer agent]
+
+## SRE Review (sre-reviewer)
+[Full output from sre-reviewer agent]
+
 ## Database Review (database-reviewer)
 [Full output from database-reviewer agent]
+
+## Dead Code Review (dead-code-reviewer)
+[Full output from dead-code-reviewer agent]
 
 ## Resolution Log
 | Issue ID | Resolved | Commit | Notes |
@@ -85,6 +96,8 @@ total_issues: N
 ### Issue ID Prefixes
 - `CR-NNN`: Code review issues
 - `SR-NNN`: Security review issues
+- `PR-NNN`: Performance review issues
+- `SRE-NNN`: SRE review issues
 - `DR-NNN`: Database review issues
 - `DC-NNN`: Dead code issues
 

@@ -80,6 +80,30 @@ jest --coverage
 vitest --coverage
 ```
 
+## Vitest Bench
+
+```bash
+vitest bench                    # Run all benchmarks
+vitest bench --reporter=verbose # Detailed output
+```
+
+### When to Write Benchmarks
+
+- Comparing alternative implementations (data structures, algorithms)
+- Validating that an optimization actually improved performance
+- Establishing baseline for performance-critical paths
+- Preventing regression in hot paths
+
+### Benchmark Options
+
+```typescript
+bench('operation', () => { /* code */ }, {
+  time: 1000,       // ms to run (default: 100)
+  iterations: 100,  // minimum iterations
+  warmupTime: 200,  // warmup before measuring
+})
+```
+
 ## Anti-Patterns
 
 | Anti-Pattern | Correct Approach |
