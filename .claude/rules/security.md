@@ -1,36 +1,17 @@
-# Security Guidelines
+# Security
 
-## Mandatory Security Checks
+## Response Protocol
 
-Before ANY commit:
-- [ ] No hardcoded secrets (API keys, passwords, tokens)
-- [ ] All user inputs validated
-- [ ] SQL injection prevention (parameterized queries)
-- [ ] XSS prevention (sanitized HTML)
-- [ ] CSRF protection enabled
-- [ ] Authentication/authorization verified
-- [ ] Rate limiting on all endpoints
-- [ ] Error messages don't leak sensitive data
-
-## Secret Management
-
-```typescript
-// NEVER: Hardcoded secrets
-const apiKey = "sk-proj-xxxxx"
-
-// ALWAYS: Environment variables
-const apiKey = process.env.OPENAI_API_KEY
-
-if (!apiKey) {
-  throw new Error('OPENAI_API_KEY not configured')
-}
-```
-
-## Security Response Protocol
-
-If security issue found:
+If security issue found during any work:
 1. STOP immediately
 2. Use **security-reviewer** agent
 3. Fix CRITICAL issues before continuing
 4. Rotate any exposed secrets
-5. Review entire codebase for similar issues
+
+## Quick Check (Before Commit)
+
+- No hardcoded secrets (API keys, passwords, tokens)
+- All user inputs validated
+- Error messages don't leak sensitive data
+
+For comprehensive security patterns, the `security-patterns` skill is loaded by reviewers automatically.

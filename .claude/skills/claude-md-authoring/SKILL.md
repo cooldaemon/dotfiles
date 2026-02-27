@@ -3,8 +3,6 @@ name: claude-md-authoring
 description: Guidelines for creating and maintaining CLAUDE.md files. Use when creating, updating, or reviewing CLAUDE.md documentation. Includes target file determination, templates, auto-load behavior, monorepo patterns, and best practices.
 ---
 
-You are an expert at creating and maintaining CLAUDE.md files that effectively guide Claude Code in project-specific contexts.
-
 # Purpose
 
 This skill provides a complete framework for authoring CLAUDE.md files, including:
@@ -169,48 +167,7 @@ Use this minimal template for new subdirectory CLAUDE.md files:
 
 ## Targeting Examples
 
-### Example 1: API Package Work
-
-**Session Context:**
-- 12 files modified in `packages/api/src/`
-- Commands run: `npm run test:api`, `npm run migrate`
-- Discussion: "API routes must handle timeouts gracefully"
-
-**Decision:** Update `packages/api/CLAUDE.md`
-- Primary directory: `packages/api/`
-- Content type: Component-specific convention
-
-### Example 2: Project-Wide Refactoring
-
-**Session Context:**
-- 5 files in `packages/api/`, 4 in `packages/frontend/`, 3 in `packages/shared/`
-- Commands run: `npm run build:all`, `npm test`
-- Discussion: "Moving to ESM modules across entire project"
-
-**Decision:** Update root `CLAUDE.md`
-- Primary directory: Multiple (distributed)
-- Content type: Cross-cutting architectural change
-
-### Example 3: Frontend Testing Setup
-
-**Session Context:**
-- 8 files in `packages/frontend/tests/`
-- Commands run: `npm run test:frontend`, `npx playwright test`
-- Discussion: "Playwright requires specific viewport settings"
-
-**Decision:** Update `packages/frontend/CLAUDE.md`
-- Primary directory: `packages/frontend/`
-- Content type: Component-specific testing
-
-### Example 4: Git Workflow Convention
-
-**Session Context:**
-- 1 file modified: `.github/pull_request_template.md`
-- Discussion: "All PRs must include test evidence"
-
-**Decision:** Update root `CLAUDE.md`
-- Primary directory: Root (affects all packages)
-- Content type: Shared convention
+See `references/targeting-examples.md` for detailed examples of target file selection.
 
 # Auto-Loaded Files
 
@@ -338,151 +295,7 @@ Main project content here...
 
 # CLAUDE.md Template Structure
 
-Use this template as a starting point:
-
-```markdown
-# CLAUDE.md
-
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
-
-## Repository Overview
-
-[Brief description of the project, its purpose, and main technologies]
-
-## Commands
-
-### Common Commands
-```bash
-# Development
-[development commands]
-
-# Testing
-[test commands]
-
-# Build
-[build commands]
-
-# Deployment
-[deployment commands]
-```
-
-## Architecture
-
-### Project Structure
-```
-project-root/
-├── src/           # [Description]
-├── tests/         # [Description]
-├── docs/          # [Description]
-└── ...
-```
-
-### Key Components
-- **Component A**: [Description and location]
-- **Component B**: [Description and location]
-
-### Technology Stack
-- **Language**: [Version and key configurations]
-- **Framework**: [Version and important settings]
-- **Database**: [Type and connection approach]
-- **Dependencies**: [Key libraries and their purposes]
-
-## Development Workflow
-
-### Setup
-1. [Step-by-step setup instructions]
-2. [Environment configuration]
-3. [Dependency installation]
-
-### Coding Standards
-- **Style Guide**: [Language-specific conventions]
-- **Naming Conventions**: [Patterns for files, functions, variables]
-- **Code Organization**: [Module structure, separation of concerns]
-- **Documentation**: [Comment style, docstring format]
-
-### Testing
-- **Test Framework**: [Tool and configuration]
-- **Test Structure**: [Organization and naming]
-- **Coverage Requirements**: [Minimum coverage, excluded files]
-- **Running Tests**: [Commands and options]
-
-### Git Workflow
-- **Branch Strategy**: [main/develop, feature branches, etc.]
-- **Commit Convention**: [Semantic commits, conventional commits]
-- **PR Process**: [Review requirements, CI checks]
-
-## Important Notes
-
-### Known Issues
-- [Issue description and workaround]
-
-### Performance Considerations
-- [Optimization notes]
-- [Resource constraints]
-
-### Security
-- [Security practices]
-- [Sensitive data handling]
-
-### Gotchas
-- [Common pitfalls and how to avoid them]
-- [Non-obvious behaviors]
-- [Platform-specific issues]
-
-## API Documentation
-
-### Endpoints
-- **GET /api/resource**: [Description]
-- **POST /api/resource**: [Description]
-
-### Authentication
-- [Authentication method and implementation]
-
-## Database Schema
-
-### Main Tables
-- **table_name**: [Purpose and key fields]
-
-### Relationships
-- [Important foreign keys and joins]
-
-## Configuration
-
-### Environment Variables
-- `VAR_NAME`: [Purpose and format]
-
-### Configuration Files
-- **config.json**: [Purpose and structure]
-- **settings.yml**: [Purpose and key settings]
-
-## Deployment
-
-### Environments
-- **Development**: [URL and characteristics]
-- **Staging**: [URL and characteristics]
-- **Production**: [URL and characteristics]
-
-### CI/CD Pipeline
-- [Pipeline stages]
-- [Deployment triggers]
-- [Rollback procedure]
-
-## Troubleshooting
-
-### Common Errors
-- **Error**: [Solution]
-
-### Debugging Tips
-- [Useful debugging commands]
-- [Log locations]
-- [Debug mode configuration]
-
-## References
-
-- [Link to detailed documentation]
-- [Link to API docs]
-- [Link to design documents]
-```
+See `references/template.md` for the full CLAUDE.md starter template.
 
 # Writing Best Practices
 
@@ -529,73 +342,7 @@ Order sections by frequency of use:
 
 # Example Update Scenarios
 
-## Scenario 1: New Testing Approach
-
-```markdown
-## Testing
-
-### Unit Tests
-- Framework: Jest with React Testing Library
-- Run tests: `npm test`
-- Watch mode: `npm test -- --watch`
-- Coverage: `npm test -- --coverage`
-
-**Important**: Mock API calls using MSW (Mock Service Worker) for consistent test behavior.
-```
-
-## Scenario 2: Discovered Gotcha
-
-```markdown
-## Important Notes
-
-### Gotchas
-- **Database Connections**: Always use connection pooling. Direct connections cause "too many connections" errors in production.
-- **File Uploads**: Multipart form data must include `boundary` parameter. Use FormData API, not manual construction.
-```
-
-## Scenario 3: New Build Process
-
-```markdown
-## Commands
-
-### Build
-```bash
-# Development build with hot reload
-npm run dev
-
-# Production build (optimized)
-npm run build
-
-# Build and analyze bundle size
-npm run build:analyze
-```
-```
-
-## Scenario 4: Monorepo Package-Specific Notes
-
-**Root CLAUDE.md:**
-```markdown
-# CLAUDE.md
-
-## Project Overview
-This is a monorepo with API and Frontend packages.
-
-## Common Commands
-- `npm run build:all` - Build all packages
-- `npm run test:all` - Test all packages
-```
-
-**packages/api/CLAUDE.md:**
-```markdown
-# API Package
-
-## API-Specific Commands
-- `npm run migrate` - Run database migrations
-- `npm run seed` - Seed test data
-
-## Gotchas
-- Always run migrations before tests
-```
+See `references/update-scenarios.md` for detailed update examples.
 
 # Large Projects Tips
 

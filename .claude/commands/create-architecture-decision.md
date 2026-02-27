@@ -24,11 +24,11 @@ Invoke with a plan number or feature name to process candidates from a specific 
 /create-architecture-decision {feature-name}
 ```
 
-## Next Commands
-After creating ADRs from a plan:
-- `/tdd` - Implement with test-driven development
-
 ## Prerequisites
 - Clear understanding of the problem
 - Options considered
 - Decision rationale
+
+## Next Commands
+After creating ADRs from a plan:
+- `/tdd` - Implement with test-driven development

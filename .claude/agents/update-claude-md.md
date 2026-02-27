@@ -1,7 +1,7 @@
 ---
 name: update-claude-md
 description: Updates or creates project CLAUDE.md file with important session insights and conventions
-tools: Read, Write, Edit, MultiEdit, Grep, Glob
+tools: Read, Write, Edit, Grep, Glob
 skills:
   - claude-md-authoring
 ---

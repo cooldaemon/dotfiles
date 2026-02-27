@@ -5,14 +5,6 @@ description: Go testing patterns and policies. Use when writing Go tests, follow
 
 # Go Testing Patterns
 
-## TDD Workflow (MANDATORY)
-
-```
-RED     → Write failing test first
-GREEN   → Write minimal code to pass
-REFACTOR → Improve while tests pass
-```
-
 ## Table-Driven Tests (REQUIRED)
 
 Use table-driven tests for all Go tests:
@@ -162,15 +154,12 @@ go test -fuzz=FuzzParse -fuzztime=30s   # Fuzzing
 | Testing private functions | Test through public API |
 | `time.Sleep()` in tests | Use channels or sync primitives |
 | Ignoring flaky tests | Fix or remove immediately |
-| Mock everything | Prefer integration tests |
 | Skip error path testing | Always test error cases |
 | Missing `t.Helper()` | Always add to helper functions |
 
 ## Best Practices
 
-- Write tests FIRST (TDD)
 - Use table-driven tests
-- Test behavior, not implementation
 - Use `t.Parallel()` for independent tests
 - Meaningful test names describing scenario
 - Clean up with `t.Cleanup()`

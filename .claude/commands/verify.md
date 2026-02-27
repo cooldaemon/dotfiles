@@ -2,6 +2,8 @@
 description: "Run verification checks (build, type, lint, unit/integration tests) - excludes E2E"
 ---
 
+**This runs in the main session** (no subagent) for direct verification output.
+
 Run verification on current codebase state (excludes E2E tests for speed).
 
 Refer to `verification-loop` and `coding-style` skills for execution details.

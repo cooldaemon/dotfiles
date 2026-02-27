@@ -5,6 +5,7 @@ tools: Read, Write, Edit, Bash, Grep, Glob
 skills:
   - skill-development
   - claude-config-conventions
+  - git-workflow
 ---
 
 You are a plan execution specialist who reads implementation plans and systematically applies all specified changes.

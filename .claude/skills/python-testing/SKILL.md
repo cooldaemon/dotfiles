@@ -104,14 +104,11 @@ pytest --cov=mypackage --cov-fail-under=80  # Coverage
 |--------------|------------------|
 | `time.sleep()` in tests | Use mocks or async waiting |
 | Shared mutable state | Isolated fixtures per test |
-| Testing implementation details | Test behavior/output |
 | Ignoring flaky tests | Fix or remove immediately |
 | Duplicate test functions | Use parametrize |
-| Mock everything | Prefer integration tests |
 
 ## Best Practices
 
-- Write tests FIRST (TDD)
 - One assertion per test (or related assertions)
 - Use fixtures for setup/teardown
 - Use parametrize for multiple cases

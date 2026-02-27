@@ -12,9 +12,3 @@ I'll use the e2e-runner subagent to execute E2E tests.
 ## Prerequisites
 - E2E framework configured (Playwright or Cypress)
 - Application running or dev server configured
-
-## Next Commands
-After E2E tests:
-- `/tdd` - Fix failing tests
-- `/code-review` - Review if all tests pass
-- `/commit` - Commit if approved

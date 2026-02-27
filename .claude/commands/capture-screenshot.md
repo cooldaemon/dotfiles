@@ -13,4 +13,6 @@ The screenshot-capturer subagent will:
 
 ## Next Commands
 After capturing screenshot:
+- `/plan-ux` - Design UI changes based on screenshot analysis
 - `/create-architecture-decision` - Document UI decisions
+- `/tdd` - Implement changes based on findings

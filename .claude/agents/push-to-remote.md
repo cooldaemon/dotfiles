@@ -1,7 +1,7 @@
 ---
 name: push-to-remote
 description: Safely pulls remote changes with rebase and pushes to remote repository
-tools: Bash, Read, Edit, MultiEdit
+tools: Bash, Read, Edit
 skills:
   - git-workflow
 ---

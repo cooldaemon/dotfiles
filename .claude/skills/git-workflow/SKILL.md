@@ -209,7 +209,3 @@ feat(auth): add password reset          <- US-2 (REFACTOR absorbed)
 
 Each fixup is absorbed into the commit whose message it matches, regardless of intervening commits.
 
-## Related Commands
-
-- `/commit` - Commit with semantic message (manual use)
-- `/push-to-remote` - Autosquash fixups, rebase, and push workflow

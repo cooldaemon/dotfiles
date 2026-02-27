@@ -84,14 +84,11 @@ vitest --coverage
 
 | Anti-Pattern | Correct Approach |
 |--------------|------------------|
-| Testing implementation | Test behavior/output |
 | Missing mock cleanup | Use `clearAllMocks()` in afterEach |
 | Flaky async tests | Use proper async/await |
-| Mock everything | Prefer integration tests |
 
 ## Best Practices
 
-- Write tests FIRST (TDD)
 - One assertion focus per test
 - Clear test names describing behavior
 - Use beforeEach/afterEach for setup/cleanup

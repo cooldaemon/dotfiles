@@ -2,7 +2,6 @@
 name: e2e-runner
 description: End-to-end testing specialist for running E2E tests, capturing artifacts, and managing flaky tests. Use when executing E2E test suites or debugging test failures.
 tools: Read, Write, Edit, Bash, Grep, Glob
-model: opus
 skills:
   - testing-principles
   - cucumber-playwright

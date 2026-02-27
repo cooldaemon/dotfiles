@@ -2,7 +2,6 @@
 name: how-planner
 description: Tech Lead for implementation planning. Creates how.md with EARS system behavior based on an existing ux.md. Use when user needs to plan HOW to implement a feature after UX definition is complete.
 tools: Read, Write, Grep, Glob, Bash
-model: opus
 skills:
   - ears-format
   - coding-style

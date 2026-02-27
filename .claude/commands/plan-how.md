@@ -1,5 +1,5 @@
 ---
-description: "Create implementation plan with EARS system behavior using how-planner sub-agent"
+description: "Create implementation plan with EARS system behavior"
 ---
 
 I'll use the how-planner subagent to create an implementation plan (Phase 2: HOW).

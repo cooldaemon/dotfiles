@@ -37,6 +37,9 @@ Use database transactions with proper locking for operations that check-then-act
 ### Missing Rate Limiting (HIGH)
 Apply rate limiting to all public endpoints, especially authentication and financial operations.
 
+### CSRF - Cross-Site Request Forgery (HIGH)
+Use anti-CSRF tokens for state-changing requests. Verify Origin/Referer headers. Use SameSite cookie attribute.
+
 ## Security Tools by Language
 
 ### General (All Languages)

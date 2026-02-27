@@ -1,5 +1,5 @@
 ---
-description: "Create implementation plan for Claude Code configuration changes using claude-config-planner sub-agent"
+description: "Create implementation plan for Claude Code configuration changes"
 ---
 
 I'll use the claude-config-planner subagent to create a configuration change plan.

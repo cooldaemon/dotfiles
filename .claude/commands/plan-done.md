@@ -22,10 +22,6 @@ Delete the completed plan and update the index.
 2. Determine plan type:
    - **Directory** (`docs/plans/NNNN-{feature-name}/`): Delete the entire directory with `rm -r`
    - **File** (`docs/plans/NNNN-{feature-name}.md`): Delete the file
-3. Remove the corresponding row from `docs/plans/index.md`
+3. If `docs/plans/index.md` exists, remove the corresponding row from it
 4. Confirm deletion to user
 
-## Next Commands
-
-After deleting:
-- `/commit` - Commit the plan deletion

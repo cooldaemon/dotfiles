@@ -1,5 +1,5 @@
 ---
-description: "Fix build/compile/type errors using a subagent when stuck"
+description: "Fix build/compile/type errors when stuck"
 ---
 
 I'll use the build-fixer subagent to diagnose and fix build errors.

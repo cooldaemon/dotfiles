@@ -1,5 +1,5 @@
 ---
-description: "Update project's CLAUDE.md with session insights using a subagent"
+description: "Update project's CLAUDE.md with session insights"
 ---
 
 I'll use the update-claude-md subagent to update the project's CLAUDE.md file with important insights from our session.
@@ -17,5 +17,4 @@ The update-claude-md subagent will:
 
 ## Next Commands
 After updating documentation:
-- `/commit` - Commit the documentation updates
-- `/push-to-remote` - Share with the team
+- `/push-to-remote` - Push the documentation updates

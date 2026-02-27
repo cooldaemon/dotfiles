@@ -2,7 +2,6 @@
 name: claude-config-planner
 description: Config Specialist for planning Claude Code configuration changes. Use when creating plans for commands, agents, skills, rules, or hooks in .claude/. Creates single-file plans in docs/plans/NNNN-feature-name.md.
 tools: Read, Write, Grep, Glob, Bash
-model: opus
 skills:
   - claude-config-conventions
   - skill-development

@@ -1,5 +1,5 @@
 ---
-description: "Safely pull remote changes with rebase and push to remote repository using a subagent."
+description: "Safely pull remote changes with rebase and push to remote repository"
 ---
 
 I'll use the push-to-remote subagent to safely synchronize with the remote repository.

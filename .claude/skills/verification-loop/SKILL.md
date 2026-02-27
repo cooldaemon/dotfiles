@@ -11,69 +11,27 @@ description: Pre-PR verification checklist. Use after completing features, befor
 - Before creating a PR
 - After refactoring
 
-## Verification Phases
+## Verification Principles
 
-**See `makefile-first` skill for command execution policy.**
+**Follow `makefile-first` skill for all command execution.**
 
-### Phase 1: Build
-```bash
-# Check if project builds
-npm run build    # Node.js
-go build ./...   # Go
-cargo build      # Rust
-```
-If build fails, STOP and fix before continuing.
+### Build First
+Check if the project builds. If build fails, STOP and fix before continuing.
 
-### Phase 2: Type Check
-```bash
-# TypeScript
-npx tsc --noEmit
+### Type Safety
+Run type checking. Zero type errors before proceeding.
 
-# Python
-pyright .
-mypy .
+### Lint Clean
+Run linters. Zero errors required; review warnings.
 
-# Go (built into compiler)
-go vet ./...
-```
+### Tests Pass
+Run test suite with coverage. All tests must pass. Coverage must meet project threshold.
 
-### Phase 3: Lint
-```bash
-# TypeScript/JavaScript
-npm run lint
+### Security Scan
+Run secrets detection and dependency vulnerability checks.
 
-# Python
-ruff check .
-
-# Go
-golangci-lint run
-```
-
-### Phase 4: Test Suite
-```bash
-# Run tests with coverage
-npm run test -- --coverage
-go test -cover ./...
-pytest --cov
-```
-
-### Phase 5: Security Scan
-```bash
-# Secrets detection
-gitleaks detect --source .
-
-# Dependency vulnerabilities
-npm audit
-pip-audit
-```
-
-### Phase 6: Diff Review
-```bash
-git diff --stat
-git diff HEAD~1 --name-only
-```
-
-Review each changed file for:
+### Diff Review
+Review `git diff` for:
 - Unintended changes
 - Missing error handling
 - Potential edge cases

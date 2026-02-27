@@ -94,6 +94,19 @@ await page.click('button:has-text("Submit")')
 await page.click('[data-testid="submit-button"]')
 ```
 
+### Prefer Integration Tests Over Excessive Mocking
+
+```typescript
+// BAD: Mock everything -- tests pass but real system fails
+jest.mock('./database')
+jest.mock('./cache')
+jest.mock('./queue')
+// Test only proves mocks work, not actual behavior
+
+// GOOD: Use real dependencies where feasible
+// Reserve mocks for external services and non-deterministic behavior
+```
+
 ### Keep Tests Independent
 
 ```typescript

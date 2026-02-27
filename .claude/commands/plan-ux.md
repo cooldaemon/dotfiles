@@ -1,5 +1,5 @@
 ---
-description: "Create UX plan with user stories, ASCII art sketches, and Gherkin scenarios using ux-designer sub-agent"
+description: "Create UX plan with user stories, ASCII art sketches, and Gherkin scenarios"
 ---
 
 I'll use the ux-designer subagent to create a UX plan defining user value.

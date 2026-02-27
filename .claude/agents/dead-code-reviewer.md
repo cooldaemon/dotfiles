@@ -2,7 +2,6 @@
 name: dead-code-reviewer
 description: Dead code detection specialist. Identifies unused functions, variables, imports, and dependencies. Detection only - does not modify code.
 tools: Read, Grep, Glob, Bash
-model: haiku
 skills:
   - makefile-first
 ---

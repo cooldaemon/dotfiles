@@ -4,7 +4,7 @@ description: "Investigate a bug using test-first methodology with interactive an
 
 I'll investigate this bug using the bug-investigation skill workflow.
 
-**This runs in the main session** (no sub-agent) for interactive investigation with the user.
+**This runs in the main session** (no subagent) for interactive investigation with the user.
 
 ## Investigation Workflow
 

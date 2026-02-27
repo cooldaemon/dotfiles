@@ -1,5 +1,5 @@
 ---
-description: "Generate a message and perform git commit with pre-commit validation using a subagent."
+description: "Generate a message and perform git commit with pre-commit validation"
 ---
 
 I'll use the commit subagent to handle the commit process. Let me provide context from our current session.

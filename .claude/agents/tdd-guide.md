@@ -2,7 +2,6 @@
 name: tdd-guide
 description: Test-Driven Development and ATDD specialist. Use PROACTIVELY when writing new features, investigating bugs, or refactoring code. Enforces test-first approach including reproducing bugs in tests before fixing. Supports both Playwright and Cypress with Cucumber for BDD.
 tools: Read, Write, Edit, Bash, Grep, Glob
-model: opus
 skills:
   - testing-principles
   - verification-loop
@@ -200,14 +199,7 @@ After each replacement, run tests to confirm they still pass.
 
 #### 2. Apply Coding-Style Patterns
 
-Apply refactoring patterns from `coding-style` skill:
-
-1. **Extract Helper Functions** - Break complex logic into well-named helpers
-2. **Explaining Variables** - Replace complex expressions with named variables
-3. **Chunk Statements** - Group related code with blank lines
-4. **Normalize Symmetries** - Make similar code look similar
-5. **Guard Clauses** - Convert nested conditionals to early returns
-6. **Remove Dead Code** - Delete unused functions, variables, imports
+Apply all refactoring patterns from `coding-style` skill (Refactoring Patterns section).
 
 After each refactoring:
 - Run tests to ensure they still pass

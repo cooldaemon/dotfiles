@@ -34,16 +34,9 @@ Before writing any code, gather information:
 
 ### Phase 2: Reproduce in Test (MANDATORY)
 
-**CRITICAL: Write test BEFORE touching implementation code**
+**CRITICAL: Write test BEFORE touching implementation code.**
 
-```
-1. Write a test that captures the bug scenario
-2. Run the test - it MUST fail
-3. If test passes unexpectedly:
-   - Analyze: Does the test match the bug scenario?
-   - Adjust the test (max 2 attempts)
-   - If still passes after 2 attempts → Escalate to Phase 4
-```
+Write a test that captures the bug scenario and run it. It MUST fail. If it passes unexpectedly, adjust the test (max 2 attempts). If still passes after 2 attempts, escalate to Phase 4 (Logging).
 
 #### Test Selection by Bug Type
 
@@ -54,36 +47,9 @@ Before writing any code, gather information:
 | Calculation incorrect | Unit test |
 | UI displays wrong value | Integration or E2E test |
 
-#### Mocking External Systems
-
-For bugs involving external dependencies:
-- Mock APIs with expected/actual responses
-- Mock database state that triggers bug
-- Mock third-party services
-
-```typescript
-// Example: Bug - API returns 500 on invalid input
-test('handles invalid user input gracefully', async () => {
-  // Mock API to return 500 error
-  server.use(
-    rest.post('/api/users', (req, res, ctx) => {
-      return res(ctx.status(500))
-    })
-  )
-
-  // This should fail initially (bug: no error handling)
-  await submitForm({ email: 'invalid' })
-  expect(screen.getByText(/error occurred/i)).toBeInTheDocument()
-})
-```
-
 ### Phase 3: Fix Implementation
 
-Once test fails (bug confirmed):
-
-1. **Minimal change**: Fix only what's needed
-2. **Run reproducing test**: Must pass
-3. **Run full test suite**: No regressions
+Once test fails (bug confirmed), apply a minimal fix. Run the reproducing test (must pass) and then the full test suite (no regressions).
 
 ### Phase 4: Escalation to Logging (if reproduction fails)
 
@@ -112,31 +78,6 @@ Once test fails (bug confirmed):
    - Identify the root cause
    - Write a reproducing test based on insights
    - Remove logging after fix
-
-## Decision Flowchart
-
-```
-Bug Reported
-    │
-    ▼
-Clarify: Steps, Expected, Actual, Environment?
-    │
-    ├─► Environment-specific? ───► YES ───► Phase 4: Logging
-    │
-    ▼ NO
-Phase 2: Write Reproducing Test
-    │
-    ▼
-Run Test ───► Fails? ───► YES ───► Phase 3: Fix Implementation ───► Done
-    │
-    ▼ NO (test passes)
-Adjust Test (attempt 1-2)
-    │
-    ├─► Still passes after 2 attempts? ───► YES ───► Phase 4: Logging
-    │
-    ▼ NO (test now fails)
-Phase 3: Fix Implementation ───► Done
-```
 
 ## Anti-Patterns (AVOID)
 

@@ -2,7 +2,6 @@
 name: adr-architect
 description: Architecture specialist for system design, technical decisions, and ADR documentation. Use PROACTIVELY when planning new features, refactoring large systems, or making architectural decisions.
 tools: Read, Write, Edit, Bash, Grep, Glob
-model: opus
 skills:
   - adr-patterns
 ---
