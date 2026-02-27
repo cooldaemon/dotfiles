@@ -11,6 +11,10 @@ description: Coding style principles including immutability, guard clauses, and 
 - **DRY** (Don't Repeat Yourself) - Extract common logic into functions
 - **YAGNI** (You Aren't Gonna Need It) - Don't build features before needed
 
+### DRY Across Iteration Boundaries
+
+DRY applies across ALL code in the project, including code committed in earlier User Stories or iterations. Previously-committed code with passing tests is not frozen -- it is a refactoring target when duplication is detected.
+
 ## Immutability (CRITICAL)
 
 ALWAYS create new objects, NEVER mutate:

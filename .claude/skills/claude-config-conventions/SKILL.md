@@ -71,8 +71,8 @@ description: "Conventions for Claude Code configuration files (agents, commands,
 **Content rules:**
 - Body is expanded in the main session context (not inside a subagent).
 - Delegate to a subagent for actual work, UNLESS:
-  - Interactive: requires back-and-forth dialogue with the user during execution
-  - Trivial: a few simple operations where subagent overhead exceeds the work itself
+  - Interactive: requires back-and-forth dialogue with the user during execution (e.g., `/investigate`)
+  - Trivial: a few simple operations where subagent overhead exceeds the work itself (e.g., `/verify`)
 - Include a "Next Commands" section when the command has natural follow-up steps in a workflow.
 - Include a "Prerequisites" section if the command requires prior state.
 

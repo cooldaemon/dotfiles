@@ -58,7 +58,7 @@ For each US (in order):
   Context: ux.md (Gherkin scenarios) + how.md (EARS system behavior)
   1. RED:        Write failing tests from Gherkin + EARS
   2. GREEN:      Implement (dummies OK) -> git commit (semantic message)
-  3. REFACTOR:   Eliminate dummies, apply coding-style -> git fixup commit
+  3. REFACTOR:   Eliminate dummies, apply coding-style, cross-US dedup -> git fixup commit
   -> Report: "US complete"
   -> STOP (hand off to user)
 ```
@@ -185,7 +185,7 @@ If unclear, check existing test files or ask the user.
 
 ### REFACTOR Phase
 
-Two responsibilities in order:
+Three responsibilities in order:
 
 #### 1. Eliminate Dummies from GREEN Phase
 
@@ -212,6 +212,34 @@ Apply refactoring patterns from `coding-style` skill:
 After each refactoring:
 - Run tests to ensure they still pass
 - If tests fail, revert the change
+
+#### 3. Cross-US Deduplication
+
+Actively scan for duplication between the current US's code and ALL previously-committed US code:
+
+1. **Scan**: Compare new code against existing codebase for duplicated logic, similar functions, or copy-pasted patterns
+2. **Extract**: Pull shared logic into common functions/modules
+3. **Verify**: Run ALL tests (current US + all earlier USs) -- GREEN confirms the refactoring is safe
+4. **Iterate**: If tests fail, revert and try a different extraction approach
+
+Previously-committed US code is NOT frozen (see `testing-principles` skill, Cross-US Test Safety Net). Treating earlier code as untouchable leads to copy-paste duplication and silent divergence.
+
+**Common extraction targets:**
+- Two USs with similar request/response handling -> extract shared handler
+- Parallel implementations for different modes (GUI/CLI/API) -> extract core logic, parameterize the mode-specific parts
+- Duplicated validation, transformation, or formatting logic
+
+#### Pre-Refactor Gate: Characterization Tests for Untested Code
+
+When any REFACTOR step (1, 2, or 3) needs to modify existing code that has NO test coverage:
+
+1. **STOP** refactoring that code path
+2. **Write characterization tests** that capture the code's current behavior (see `testing-principles` skill)
+3. **Run tests** -- they MUST pass GREEN (proves current behavior is correctly captured)
+4. **Then proceed** with the refactoring, using the new characterization tests as the safety net
+5. **Run all tests** after refactoring to confirm nothing broke
+
+This is mandatory. Do NOT refactor untested legacy code without first establishing a characterization test safety net.
 
 **IMPORTANT**: REFACTOR happens within this agent using `coding-style` skill, not via external command.
 
