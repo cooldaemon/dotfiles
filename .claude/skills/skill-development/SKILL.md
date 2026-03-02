@@ -91,12 +91,19 @@ Include:
 
 ## Content Guidelines
 
+### Litmus Test
+
+> "If Claude did NOT read this SKILL, would its output quality drop?"
+> - **Yes** --> keep the content
+> - **No** --> remove it (Claude already knows this)
+
 ### DO Include
 
 - **Policies/directions**: What to do, what approach to take
 - **Anti-patterns**: What to avoid
 - **Domain knowledge**: Information requiring lookup
 - **Output formats**: Expected structure when not obvious
+- **Review categories**: Platform-agnostic area names that anchor coverage (see Review Categories Pattern below)
 
 ### DO NOT Include
 
@@ -104,6 +111,8 @@ Include:
 - Basic language syntax
 - General programming concepts
 - Things you could find in any tutorial
+- **Scope mismatch**: Platform-specific content in a skill whose agent targets all platforms (e.g., React checklist in a general performance-reviewer). Platform-specific content is correct when the skill's scope matches its agent's scope
+- **Context-dependent severity thresholds**: The same pattern (e.g., O(n^2)) can be CRITICAL or harmless depending on data size and context -- do not hardcode severity in cross-platform skills
 
 ### Example
 
@@ -112,12 +121,42 @@ Include:
 ## How to use pytest
 Run `pytest` to execute tests. Use `-v` for verbose.
 
+# BAD: Platform-specific content in a cross-platform skill
+## React Performance Rules  (in a general "performance-patterns" skill)
+- No inline objects in JSX props
+- Wrap callbacks in useCallback
+
+# GOOD: Platform-specific content in a platform-scoped skill
+## React Performance Rules  (in a "react-patterns" skill)
+- No inline objects in JSX props
+- Wrap callbacks in useCallback
+
 # GOOD: Policy only
 ## Testing Policy
 - Use pytest with fixtures in conftest.py
 - Prefer parametrize over duplicate tests
 - Coverage target: 80% for business logic
+
+# GOOD: Review categories (not checklist items)
+## Review Categories
+- Algorithmic complexity
+- Memory management
+- Rendering performance
 ```
+
+### Review Categories Pattern
+
+Review-oriented skills and agents need anchors to ensure reproducible coverage across runs. Without any structure, Claude's non-deterministic output means reviews can vary -- one run checks caching, the next skips it entirely.
+
+**Solution: Use categories, not checklist items.**
+
+| Approach | Example | Problem |
+|----------|---------|---------|
+| No structure | (empty) | Non-deterministic coverage across runs |
+| Specific checklist | "No O(n^2) on unbounded collections" | Fine in platform-scoped skill; causes bias in cross-platform agent |
+| **Categories** | "Algorithmic complexity" | Platform-agnostic anchor; Claude applies specific knowledge per platform |
+
+Categories go in the **agent** (not a skill) when they define how the agent structures its review workflow. Categories go in a **skill** when they define shared principles multiple agents reference.
 
 ## Progressive Disclosure
 

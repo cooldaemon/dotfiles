@@ -12,7 +12,7 @@ Run multiple specialized reviewers in parallel for comprehensive code analysis.
 |----------|-------|
 | **code-reviewer** | Integrity, readability, comments, best practices |
 | **security-reviewer** | Security vulnerabilities, OWASP Top 10 |
-| **performance-reviewer** | Algorithmic complexity, memory, rendering, bundle size |
+| **performance-reviewer** | Algorithmic complexity, memory, rendering, bundle size, caching, network optimization |
 | **sre-reviewer** | Observability, resilience, health checks, resource limits |
 | **database-reviewer** | SQL queries, ORM usage, schema design |
 | **dead-code-reviewer** | Unused code, imports, dependencies |
