@@ -39,9 +39,34 @@
   register: peekaboo_result
   changed_when: peekaboo_result.rc == 0
 
+- name: Configure Slack MCP server
+  command: >
+    claude mcp add slack -s user
+    -e SLACK_MCP_XOXP_TOKEN={{ lookup('env', 'SLACK_MCP_XOXP_TOKEN') }}
+    -e SLACK_MCP_ADD_MESSAGE_TOOL=true
+    -- npx slack-mcp-server@latest
+  when:
+    - claude_installed.rc == 0
+    - mcp_list.rc == 0
+    - "'slack:' not in mcp_list.stdout"
+    - lookup('env', 'SLACK_MCP_XOXP_TOKEN') != ''
+  register: slack_result
+  changed_when: slack_result.rc == 0
+
+- name: Display Slack MCP skip notice
+  debug:
+    msg: >-
+      Slack MCP was skipped because SLACK_MCP_XOXP_TOKEN is not set.
+      To enable Slack MCP, run: export SLACK_MCP_XOXP_TOKEN="xoxp-..." && make mcp-update
+  when:
+    - claude_installed.rc == 0
+    - mcp_list.rc == 0
+    - "'slack:' not in mcp_list.stdout"
+    - lookup('env', 'SLACK_MCP_XOXP_TOKEN') == ''
+
 - name: Display MCP configuration results
   debug:
-    msg: "MCP servers configured: playwright={{ 'already configured' if 'playwright:' in mcp_list.stdout else 'configured' }}, context7={{ 'already configured' if 'context7:' in mcp_list.stdout else 'configured' }}, peekaboo={{ 'already configured' if 'peekaboo:' in mcp_list.stdout else 'configured' }}"
+    msg: "MCP servers configured: playwright={{ 'already configured' if 'playwright:' in mcp_list.stdout else 'configured' }}, context7={{ 'already configured' if 'context7:' in mcp_list.stdout else 'configured' }}, peekaboo={{ 'already configured' if 'peekaboo:' in mcp_list.stdout else 'configured' }}, slack={{ 'already configured' if 'slack:' in mcp_list.stdout else ('skipped (no token)' if lookup('env', 'SLACK_MCP_XOXP_TOKEN') == '' else 'configured') }}"
   when:
     - claude_installed.rc == 0
     - mcp_list.rc == 0

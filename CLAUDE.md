@@ -35,7 +35,7 @@ Direct Ansible: `ansible-playbook -i localhost, -c local ansible/playbook.yml --
 | fish | Oh My Fish + peco plugin |
 | dotfiles | Symlinks for config files and `.claude/` |
 | claude_code | Claude Code native installer (auto-updates, removes legacy npm version) |
-| claude_mcp | MCP servers (playwright, context7, peekaboo) |
+| claude_mcp | MCP servers (playwright, context7, peekaboo, slack) |
 
 Each role is tagged for individual execution (e.g., `--tags homebrew`, `--tags claude`)
 
