@@ -103,6 +103,16 @@ Reviewers have non-overlapping responsibilities:
 - If a command needs tasks created from subagent results, specify this in the command body (e.g., "After the subagent returns, create TaskCreate entries for each action item")
 - Subagents cannot spawn other subagents (no nested Task tool usage)
 
+## No Personal or Company Information in Git
+
+This repository is a public dotfiles repo. Git-tracked files must NEVER contain:
+- Real names (use `[user]` placeholder or store in `memory/` which is git-ignored)
+- Company names, workspace URLs, or internal channel names
+- Email addresses, Slack user IDs, or employee identifiers
+- API tokens, OAuth secrets, or credentials
+
+Personal/company-specific values go in `memory/` (e.g., `memory/slack-profile.md`) or `settings.local.json`.
+
 ## Anti-Patterns
 
 - Putting workflow steps in a skill (belongs in agent)
@@ -113,3 +123,4 @@ Reviewers have non-overlapping responsibilities:
 - Omitting skills from agent frontmatter when the agent's responsibilities require shared principles
 - Commands doing substantial work directly instead of delegating to a subagent
 - Giving subagents TaskCreate/TaskUpdate tools -- causes intermediate task pollution
+- Hardcoding personal names, company names, or usernames in git-tracked config files
