@@ -9,8 +9,8 @@ description: "Policies for Slack communication via MCP tools. Use when interacti
 
 All messages sent via Claude MUST include an AI disclosure footer. Append the following to every message payload:
 
-- English messages: `_This message was composed by Claude on behalf of [user]._`
-- Japanese messages: `_このメッセージはClaudeが[user]の代理で作成しました。_`
+- English messages: `_This message was composed and posted by Claude on behalf of [user]._`
+- Japanese messages: `_このメッセージはClaudeが[user]の代理で作成・投稿しました。_`
 - Bilingual messages: Include both disclosures
 
 ## Bilingual Policy

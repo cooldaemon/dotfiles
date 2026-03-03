@@ -51,6 +51,15 @@
         ]
       },
       {
+        "matcher": "mcp__slack__conversations_add_message",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/check-slack-disclosure.sh"
+          }
+        ]
+      },
+      {
         "matcher": "tool == \"Write\" && tool_input.file_path matches \"\\\\.(md|txt)$\" && !(tool_input.file_path matches \"README\\\\.md|CLAUDE\\\\.md|CONTRIBUTING\\\\.md\")",
         "hooks": [
           {
