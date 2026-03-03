@@ -45,7 +45,7 @@
     -e SLACK_MCP_XOXP_TOKEN={{ lookup('env', 'SLACK_MCP_XOXP_TOKEN') }}
     -e SLACK_MCP_ADD_MESSAGE_TOOL=true
     -e SLACK_MCP_MARK_TOOL=true
-    -e SLACK_MCP_ENABLED_TOOLS=reactions_add,reactions_remove
+    -e SLACK_MCP_ENABLED_TOOLS=reactions_add,reactions_remove,channels_list,conversations_history,conversations_replies,conversations_search_messages,users_search,usergroups_list,usergroups_me
     -- npx slack-mcp-server@latest
   when:
     - claude_installed.rc == 0
@@ -66,9 +66,38 @@
     - "'slack:' not in mcp_list.stdout"
     - lookup('env', 'SLACK_MCP_XOXP_TOKEN') == ''
 
+- name: Configure Confluence MCP server
+  command: >
+    claude mcp add confluence -s user
+    -e CONFLUENCE_URL={{ lookup('env', 'CONFLUENCE_URL') }}
+    -e CONFLUENCE_USERNAME={{ lookup('env', 'CONFLUENCE_USERNAME') }}
+    -e CONFLUENCE_API_TOKEN={{ lookup('env', 'CONFLUENCE_API_TOKEN') }}
+    -e TOOLSETS=confluence_pages,confluence_comments
+    -- uvx mcp-atlassian
+  when:
+    - claude_installed.rc == 0
+    - mcp_list.rc == 0
+    - "'confluence:' not in mcp_list.stdout"
+    - lookup('env', 'CONFLUENCE_URL') != ''
+    - lookup('env', 'CONFLUENCE_USERNAME') != ''
+    - lookup('env', 'CONFLUENCE_API_TOKEN') != ''
+  register: confluence_result
+  changed_when: confluence_result.rc == 0
+
+- name: Display Confluence MCP skip notice
+  debug:
+    msg: >-
+      Confluence MCP was skipped because CONFLUENCE_URL, CONFLUENCE_USERNAME, or CONFLUENCE_API_TOKEN is not set.
+      To enable Confluence MCP, run: export CONFLUENCE_URL="https://your-company.atlassian.net/wiki" CONFLUENCE_USERNAME="your.email@company.com" CONFLUENCE_API_TOKEN="your_token" && make mcp-update
+  when:
+    - claude_installed.rc == 0
+    - mcp_list.rc == 0
+    - "'confluence:' not in mcp_list.stdout"
+    - lookup('env', 'CONFLUENCE_URL') == '' or lookup('env', 'CONFLUENCE_USERNAME') == '' or lookup('env', 'CONFLUENCE_API_TOKEN') == ''
+
 - name: Display MCP configuration results
   debug:
-    msg: "MCP servers configured: playwright={{ 'already configured' if 'playwright:' in mcp_list.stdout else 'configured' }}, context7={{ 'already configured' if 'context7:' in mcp_list.stdout else 'configured' }}, peekaboo={{ 'already configured' if 'peekaboo:' in mcp_list.stdout else 'configured' }}, slack={{ 'already configured' if 'slack:' in mcp_list.stdout else ('skipped (no token)' if lookup('env', 'SLACK_MCP_XOXP_TOKEN') == '' else 'configured') }}"
+    msg: "MCP servers configured: playwright={{ 'already configured' if 'playwright:' in mcp_list.stdout else 'configured' }}, context7={{ 'already configured' if 'context7:' in mcp_list.stdout else 'configured' }}, peekaboo={{ 'already configured' if 'peekaboo:' in mcp_list.stdout else 'configured' }}, slack={{ 'already configured' if 'slack:' in mcp_list.stdout else ('skipped (no token)' if lookup('env', 'SLACK_MCP_XOXP_TOKEN') == '' else 'configured') }}, confluence={{ 'already configured' if 'confluence:' in mcp_list.stdout else ('skipped (no credentials)' if lookup('env', 'CONFLUENCE_URL') == '' or lookup('env', 'CONFLUENCE_USERNAME') == '' or lookup('env', 'CONFLUENCE_API_TOKEN') == '' else 'configured') }}"
   when:
     - claude_installed.rc == 0
     - mcp_list.rc == 0

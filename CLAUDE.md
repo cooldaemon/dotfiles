@@ -35,7 +35,7 @@ Direct Ansible: `ansible-playbook -i localhost, -c local ansible/playbook.yml --
 | fish | Oh My Fish + peco plugin |
 | dotfiles | Symlinks for config files and `.claude/` |
 | claude_code | Claude Code native installer (auto-updates, removes legacy npm version) |
-| claude_mcp | MCP servers (playwright, context7, peekaboo, slack) |
+| claude_mcp | MCP servers (playwright, context7, peekaboo, slack, confluence) |
 
 Each role is tagged for individual execution (e.g., `--tags homebrew`, `--tags claude`)
 
@@ -125,6 +125,34 @@ make mcp-update
 ```
 
 Token is stored in Claude Code's MCP config after registration. The environment variable is only needed during `make mcp-update`.
+
+## Confluence MCP Setup
+
+When `make mcp-update` skips Confluence (credentials not set), guide the user through these steps:
+
+### 1. Create API Token
+
+1. Go to https://id.atlassian.com/manage-profile/security/api-tokens
+2. Click "Create API token" (classic, not scoped — scoped tokens do not work with Confluence REST API)
+3. Set a label (e.g., "For Claude Code")
+4. Copy the generated token
+
+### 2. Register MCP Server
+
+```bash
+export CONFLUENCE_URL="https://your-company.atlassian.net/wiki"
+export CONFLUENCE_USERNAME="your.email@company.com"
+export CONFLUENCE_API_TOKEN="your_api_token"
+make mcp-update
+```
+
+Credentials are stored in Claude Code's MCP config after registration. The environment variables are only needed during `make mcp-update`.
+
+### Notes
+
+- **Write operations**: Page create/update/delete and comment add/reply are enabled but require user confirmation each time (not auto-allowed)
+- **Confluence Cloud only**: Server/Data Center deployments are not supported by this configuration
+- **Toolsets**: Only `confluence_pages` and `confluence_comments` toolsets are enabled (no Jira tools)
 
 ## Editing This Repository
 
