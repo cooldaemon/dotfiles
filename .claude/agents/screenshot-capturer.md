@@ -93,6 +93,8 @@ path: "~/Documents/Screenshots/screenshot_YYYYMMDD_HHMMSS.png"
 - **foreground**: Always bring target to front before capture
 - **background**: Capture without altering window focus
 
+**Always use `capture_focus: "background"` for browser captures.** The `auto` and `foreground` modes bring the browser window to the foreground, which causes the page to scroll back to the top. This loses the user's scroll position and makes it impossible to capture a specific section of a page. For non-browser applications, `auto` is usually fine.
+
 ## 4. Analyze Image
 
 **IMPORTANT**: Always use the Read tool, never mcp__peekaboo__analyze
@@ -193,10 +195,18 @@ User: "Screenshot the DevTools window in Chrome"
 - Try app_target: "frontmost" instead
 - Check if app has multiple processes
 
-**"Permission denied"**
-- macOS privacy settings may need adjustment
-- Screen Recording permission required
-- Guide user to System Preferences > Privacy & Security
+**"No capturable windows found" (but app is running)**
+- The target window is likely on a different virtual desktop (Space)
+- Peekaboo cannot capture windows on a non-active Space -- neither `app_target: "AppName"` nor `screen:N` can reach them. `screen:N` only captures the currently active Space on each physical display
+- Ask the user to move the target window to the current Space, or switch to the Space where the target app is visible, then retry
+
+**"Permission denied" or capture returns blank/error**
+- Peekaboo requires TWO separate permissions in System Settings > Privacy & Security:
+  1. **Accessibility**: Needed for window listing and focus management. Error: typically "not trusted" or inability to list windows
+  2. **Screen Recording**: Needed for actual pixel capture. Error: typically blank/black image or "permission denied"
+- Accessibility alone is NOT sufficient -- both must be granted separately
+- After granting permissions, the terminal (or Claude Code) may need to be restarted
+- Guide user to: System Settings > Privacy & Security > (Accessibility / Screen Recording)
 
 **"File save failed"**
 - Check directory exists
