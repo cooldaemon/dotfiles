@@ -37,7 +37,6 @@ Determine the task type from the command's **Task type** marker:
    - **Case 2** (opponent's message last -- user has the ball): Mark as response needed
    - **Case 3** (conversation completed -- no further action needed): Mark for read confirmation
 6. Return the categorized results as structured text to the main session. Do NOT use TaskCreate -- task creation is the main session's responsibility
-7. After a task is completed (reply sent or action taken), mark the channel/thread as read using `conversations_mark`
 
 ## Output Format
 

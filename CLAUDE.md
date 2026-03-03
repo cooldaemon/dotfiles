@@ -82,6 +82,50 @@ Quality defense layers:
 2. **coding-style checklist** (self-check) — Code Quality Checklist in the skill
 3. **code-reviewer CRITICAL** (reactive) — catches anything that slipped through
 
+## Slack MCP Setup
+
+When `make mcp-update` skips Slack (token not set), guide the user through these steps:
+
+### 1. Create Slack App
+
+1. Go to https://api.slack.com/apps → "Create New App" → "From scratch"
+2. Go to **App Manifest** (JSON tab) and set `oauth_config.scopes.user` to:
+
+```json
+          "user": [
+              "channels:history",
+              "channels:read",
+              "channels:write",
+              "chat:write",
+              "groups:history",
+              "groups:read",
+              "groups:write",
+              "im:history",
+              "im:read",
+              "im:write",
+              "mpim:history",
+              "mpim:read",
+              "mpim:write",
+              "reactions:read",
+              "reactions:write",
+              "search:read",
+              "users:read",
+              "usergroups:read"
+          ]
+```
+
+4. Save Changes → Install to Workspace (admin approval may be required)
+5. Copy **User OAuth Token** (`xoxp-...`) from OAuth & Permissions page
+
+### 2. Register MCP Server
+
+```bash
+export SLACK_MCP_XOXP_TOKEN="xoxp-..."
+make mcp-update
+```
+
+Token is stored in Claude Code's MCP config after registration. The environment variable is only needed during `make mcp-update`.
+
 ## Editing This Repository
 
 - Make changes in source files, then run `make dotfiles-update` (or `make update`)

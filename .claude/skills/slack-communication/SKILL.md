@@ -30,6 +30,12 @@ Never send a message without explicit user approval. The workflow is:
 2. Present the complete message to the user
 3. Send only after explicit approval
 
+## Mark as Read Policy
+
+- After sending a reply via `/reply-to-slack`: the REPLY subagent marks the channel/thread as read
+- After completing a Slack task without a reply (e.g., processed externally): the main session marks the channel/thread as read using `mcp__slack__conversations_mark`
+- Case 3 items (conversation completed): ask the user to confirm, then mark as read
+
 ## Anti-Patterns
 
 - Sending messages without AI disclosure footer
