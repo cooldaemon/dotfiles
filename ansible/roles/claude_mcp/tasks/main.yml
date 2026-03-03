@@ -45,6 +45,7 @@
     -e SLACK_MCP_XOXP_TOKEN={{ lookup('env', 'SLACK_MCP_XOXP_TOKEN') }}
     -e SLACK_MCP_ADD_MESSAGE_TOOL=true
     -e SLACK_MCP_MARK_TOOL=true
+    -e SLACK_MCP_ENABLED_TOOLS=reactions_add,reactions_remove
     -- npx slack-mcp-server@latest
   when:
     - claude_installed.rc == 0
