@@ -96,6 +96,13 @@ Reviewers have non-overlapping responsibilities:
 | `dead-code-reviewer` | Unused code, imports, dependencies |
 | `claude-config-reviewer` | Claude Code configuration quality and consistency |
 
+## Subagent Constraints
+
+- Subagents return text results only -- no structured data (task IDs, etc.)
+- Subagents must NOT use TaskCreate -- task creation is the main session's responsibility. Subagents that use TaskCreate pollute the task list with intermediate work items
+- If a command needs tasks created from subagent results, specify this in the command body (e.g., "After the subagent returns, create TaskCreate entries for each action item")
+- Subagents cannot spawn other subagents (no nested Task tool usage)
+
 ## Anti-Patterns
 
 - Putting workflow steps in a skill (belongs in agent)
@@ -105,3 +112,4 @@ Reviewers have non-overlapping responsibilities:
 - Downgrading model (sonnet, haiku) in plans or agent definitions without user instruction
 - Omitting skills from agent frontmatter when the agent's responsibilities require shared principles
 - Commands doing substantial work directly instead of delegating to a subagent
+- Giving subagents TaskCreate/TaskUpdate tools -- causes intermediate task pollution
