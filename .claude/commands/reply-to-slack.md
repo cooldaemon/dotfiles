@@ -19,6 +19,10 @@ Provide the channel and message context (e.g., from `/check-slack` task list) as
 
 - Run `/check-slack` first to identify messages needing replies (populates `docs/slack/check-log.md`), or provide channel/thread context directly
 
+## MCP Failure
+
+If the subagent reports that Slack MCP tools are unavailable or returns no results due to MCP errors, do NOT attempt to work around it. Instead, tell the user to run `/mcp` to reconnect the Slack MCP server, then retry `/reply-to-slack`.
+
 ## Next Commands
 
 After replying:

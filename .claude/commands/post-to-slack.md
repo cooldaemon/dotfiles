@@ -14,6 +14,10 @@ The slack-assistant subagent will:
 
 Provide the target channel and message idea as arguments.
 
+## MCP Failure
+
+If the subagent reports that Slack MCP tools are unavailable or returns no results due to MCP errors, do NOT attempt to work around it. Instead, tell the user to run `/mcp` to reconnect the Slack MCP server, then retry `/post-to-slack`.
+
 ## Next Commands
 
 After posting:

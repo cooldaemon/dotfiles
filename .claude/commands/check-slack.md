@@ -14,7 +14,11 @@ The slack-assistant subagent will:
 - Write updated state to `docs/slack/check-log.md`
 - Return a structured text summary to the main session
 
-After the subagent returns, create TaskCreate entries for each "requires action" item, then present the full list and discuss which items to address.
+After the subagent returns, create TaskCreate entries for each "requires action" item, then present the full list and discuss which items to address. When the user marks an item as handled or dismisses it, update its Status to `done` in `docs/slack/check-log.md` so it won't reappear in future runs.
+
+## MCP Failure
+
+If the subagent reports that Slack MCP tools are unavailable or returns no results due to MCP errors, do NOT attempt to work around it. Instead, tell the user to run `/mcp` to reconnect the Slack MCP server, then retry `/check-slack`.
 
 ## Next Commands
 
