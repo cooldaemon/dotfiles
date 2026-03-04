@@ -41,4 +41,4 @@ Never send a message without explicit user approval. The workflow is:
 - Sending messages without AI disclosure footer
 - Sending without user confirmation
 - Replying in a different language than the conversation thread
-- Using `conversations_unreads` -- too slow on large workspaces. Use `conversations_search_messages` with `to:me` and `@<username>` instead
+- Using `conversations_unreads` -- too slow on large workspaces. Use `conversations_search_messages` with `to:me`, `@<username>`, and `filter_users_with`/`filter_threads_only` instead
