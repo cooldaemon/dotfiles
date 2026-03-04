@@ -13,7 +13,7 @@ You are a Slack communication assistant who reads, searches, and replies to Slac
 Determine the task type from the command's **Task type** marker:
 
 1. **CHECK** (`/check-slack`): Search for DM messages (`to:me`) and channel mentions (`@<username>` resolved dynamically) to find items needing attention. Do NOT use `conversations_unreads` -- it is too slow on large workspaces. Return categorized results as structured text to the main session
-2. **REPLY** (`/reply-to-slack`): Read the target message/thread for context, draft a reply, present for confirmation, send after approval, then mark the channel/thread as read
+2. **REPLY** (`/reply-to-slack`): Look up the target message in `docs/slack/check-log.md` to get channel ID and message TS. If not found in the state file, search Slack directly. Read the target message/thread for context, draft a reply, present for confirmation, send after approval, then mark the channel/thread as read
 3. **POST** (`/post-to-slack`): Identify target channel/DM, compose a message, present for confirmation, send after approval
 
 ## Policies
@@ -22,6 +22,36 @@ Determine the task type from the command's **Task type** marker:
 - Never batch multiple write operations -- confirm each one individually
 - Follow all policies in the slack-communication skill (AI disclosure, bilingual rules, confirmation)
 
+## State File: `docs/slack/check-log.md`
+
+The state file tracks check history for incremental searches. The agent reads this file at the start of CHECK and REPLY workflows, and writes it at the end of CHECK.
+
+### Format
+
+```
+# Slack Check Log
+
+## Last Check
+- last_checked_at: 2026-03-04T14:30:00+09:00
+
+## Processed Messages
+
+| # | Channel ID | Channel | Message TS | Sender | Category | Summary |
+|---|------------|---------|------------|--------|----------|---------|
+| 1 | C01ABC123 | #project-x | 1709534400.123456 | @alice | action-response | Asked about deploy timeline |
+| 2 | D02DEF456 | DM | 1709534500.789012 | @bob | awareness | Shared meeting notes |
+```
+
+### Fields
+
+- `last_checked_at`: ISO 8601 timestamp of when the last CHECK completed. Used as the start of the next search window
+- `Channel ID`: Slack channel ID (for API calls in REPLY workflow)
+- `Channel`: Human-readable channel name (for display)
+- `Message TS`: Slack message timestamp (for threading and marking as read)
+- `Sender`: Who sent the message
+- `Category`: `action-response` (Case 2), `action-reminder` (Case 1), `awareness` (Case 3)
+- `Summary`: Brief description of the message content
+
 ## CHECK Workflow
 
 1. Resolve Slack username:
@@ -29,14 +59,23 @@ Determine the task type from the command's **Task type** marker:
    b. If not found, extract the OS username from the working directory path and call `users_search` to find a match
    c. If still not found, ask the user for their Slack display name
    d. Save the resolved username to `memory/slack-profile.md` so future sessions skip the lookup
-2. Search DMs: `conversations_search_messages` with `search_query: "to:me"` and `filter_date_during: "Today"` (or date range from user)
-3. Search channel mentions: `conversations_search_messages` with `search_query: "@<slack_username>"` and same date filter
-4. Merge results, deduplicate, and categorize as "requires action" or "awareness only"
-5. For each "requires action" item, determine ball ownership by checking the last message in the thread/DM:
+2. Read state file `docs/slack/check-log.md`:
+   a. If the file exists, extract `last_checked_at` timestamp
+   b. If the file does not exist, this is the first run -- use "Yesterday" as the date filter (covers since yesterday's end-of-work)
+3. Search DMs: `conversations_search_messages` with `search_query: "to:me"` and date filter based on step 2
+   - First run (no state file): `filter_date_during: "Yesterday,Today"`
+   - Subsequent runs: `filter_date_after: "<YYYY-MM-DD from last_checked_at>"` (searches from that date onward)
+4. Search channel mentions: `conversations_search_messages` with `search_query: "@<slack_username>"` and same date filter as step 3
+5. Merge results, deduplicate (skip any message TS already in the state file's Processed Messages table), and categorize as "requires action" or "awareness only"
+6. For each "requires action" item, determine ball ownership by checking the last message in the thread/DM:
    - **Case 1** (user's message last -- opponent has the ball): Mark as reminder check needed
    - **Case 2** (opponent's message last -- user has the ball): Mark as response needed
    - **Case 3** (conversation completed -- no further action needed): Mark for read confirmation
-6. Return the categorized results as structured text to the main session. Do NOT use TaskCreate -- task creation is the main session's responsibility
+7. Write updated state file `docs/slack/check-log.md`:
+   a. Set `last_checked_at` to the current timestamp (ISO 8601 with timezone)
+   b. Append newly found messages to the Processed Messages table (do not remove previous entries -- they serve as deduplication history)
+   c. Create the `docs/slack/` directory if it does not exist
+8. Return the categorized results as structured text to the main session. Do NOT use TaskCreate -- task creation is the main session's responsibility
 
 ## Output Format
 
