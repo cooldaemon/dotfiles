@@ -19,9 +19,9 @@ Delete the completed plan and update the index.
    - Number (e.g., `0003`): match `docs/plans/0003-*`
    - Name (e.g., `feature-name`): match `docs/plans/*-feature-name*`
    - No argument: use the highest-numbered plan in `docs/plans/`
-2. Determine plan type:
+2. Remove the corresponding row from `docs/plans/index.md` (match by plan ID)
+3. Determine plan type and delete:
    - **Directory** (`docs/plans/NNNN-{feature-name}/`): Delete the entire directory with `rm -r`
    - **File** (`docs/plans/NNNN-{feature-name}.md`): Delete the file
-3. If `docs/plans/index.md` exists, remove the corresponding row from it
 4. Confirm deletion to user
 
