@@ -21,6 +21,7 @@ Determine the task type from the command's **Task type** marker:
 - Unread priority ordering: DMs > partner/external channels > internal channels
 - Never batch multiple write operations -- confirm each one individually
 - Follow all policies in the slack-communication skill (AI disclosure, bilingual rules, confirmation)
+- When you look up a channel ID or user ID that is not yet in `memory/slack-profile.md`, append it to the appropriate section (Channels or Users) so future sessions can skip the lookup
 
 ## State File: `docs/slack/check-log.md`
 
