@@ -55,12 +55,13 @@ description: "Conventions for Claude Code configuration files (agents, commands,
 **`model:` field:**
 - Optional. If omitted, inherits from caller.
 - Plans must NOT specify model selection for agents they create -- model choice is the user's decision.
+- **Exception -- Agent Team teammates**: Commands that define Agent Team teammates MAY specify `model:` to control cost. Teammates use standard Opus (not 1M context) since they process focused subtasks, while the main session uses Opus 1M for full project context. This is a cost optimization, not a quality downgrade.
 - Do not downgrade to cheaper models (sonnet, haiku) without explicit user instruction.
 
 **Content rules:**
 - Agent = workflow/process (HOW). Never duplicate content from skills it loads.
 - Do not include general knowledge Claude already knows (standard library usage, basic syntax, general concepts).
-- Include a "When Invoked" or startup section describing the execution flow.
+- Include a "When Invoked" section describing the execution flow. For Agent Team teammates, "Teammate Protocol" is an accepted alternative that describes the agent's role in the team debate workflow.
 - Include output format specification if the agent produces structured output.
 
 ## Command Conventions
@@ -96,6 +97,37 @@ Reviewers have non-overlapping responsibilities:
 | `dead-code-reviewer` | Unused code, imports, dependencies |
 | `claude-config-reviewer` | Claude Code configuration quality and consistency |
 
+## PCOS Agent Team Pattern
+
+The PCOS (Planner-Critic-Optimizer-Synthesizer) pattern uses Agent Teams for structured debate before implementation.
+
+**Four roles:**
+
+| Role | Hat | Responsibility |
+|------|-----|---------------|
+| Planner | Blue/White | Drafts the plan based on analysis of existing files |
+| Critic | Black | Finds problems -- missing edge cases, anti-patterns, conflicts |
+| Optimizer | Green | Proposes improvements and breaks deadlocks between Planner and Critic |
+| Synthesizer | -- | Converges debate into final plan with Critique Log |
+
+**When to use PCOS:**
+- Configuration changes that affect multiple interconnected files (agents, skills, commands)
+- Changes where trade-offs need structured evaluation (e.g., architecture layer decisions)
+- NOT for trivial single-file edits or mechanical updates
+
+**Debate flow:**
+1. Planner drafts plan and shares with Critic and Optimizer
+2. Critic sends challenges, Optimizer sends proposals (both to Planner)
+3. Planner accepts/rejects/defers each item
+4. Synthesizer produces final plan with Critique Log (all items tracked)
+5. Team lead (main session) writes the plan file and presents to user
+
+**Pre-implementation vs post-implementation review:**
+- **Critic** (pre-implementation): Reviews the *plan* during PCOS debate, before any files are created or modified. Catches architectural issues early.
+- **config-reviewer** (post-implementation): Reviews *implemented file changes* after the plan has been executed. Catches issues that only appear in actual file content.
+
+These are different stages with different inputs -- no responsibility overlap.
+
 ## Subagent Constraints
 
 - Subagents return text results only -- no structured data (task IDs, etc.)
@@ -119,7 +151,7 @@ Personal/company-specific values go in `memory/` (e.g., `memory/slack-profile.md
 - Putting shared principles in an agent (belongs in skill)
 - Putting agent-needed content in a rule (rules are main-session only)
 - Duplicating content between a skill and the agents that load it
-- Downgrading model (sonnet, haiku) in plans or agent definitions without user instruction
+- Downgrading model (sonnet, haiku) in plans or agent definitions without user instruction (Agent Team teammate model selection is allowed -- see model field rules)
 - Omitting skills from agent frontmatter when the agent's responsibilities require shared principles
 - Commands doing substantial work directly instead of delegating to a subagent
 - Giving subagents TaskCreate/TaskUpdate tools -- causes intermediate task pollution

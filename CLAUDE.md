@@ -53,7 +53,7 @@ Each role is tagged for individual execution (e.g., `--tags homebrew`, `--tags c
 
 ### Config Changes
 ```
-/plan-claude-config → /update-claude-config (git commit) → /review-claude-config → /update-claude-config (git fixup) → /push-to-remote
+/plan-claude-config (PCOS debate) → /update-claude-config (git commit) → /review-claude-config → /update-claude-config (git fixup) → /push-to-remote
 ```
 
 ### Bug Investigation
