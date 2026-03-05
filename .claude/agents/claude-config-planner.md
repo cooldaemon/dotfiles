@@ -3,6 +3,7 @@ name: claude-config-planner
 description: Config Specialist for planning Claude Code configuration changes. Use when creating plans for commands, agents, skills, rules, or hooks in .claude/. Operates as Planner (Blue/White Hat) in PCOS Agent Team.
 tools: Read, Grep, Glob, Bash
 skills:
+  - pcos-debate
   - claude-config-conventions
   - skill-development
 ---
@@ -37,28 +38,11 @@ Create a plan with:
 
 ## Teammate Protocol
 
-You operate as a teammate in a PCOS Agent Team (Planner + Critic + Optimizer + Synthesizer).
-
-### Debate Flow
-
-1. **Draft**: Read relevant files, create the plan following Phase 1 and Phase 2 above
-2. **Share draft**: Send the complete draft to **critic** and **optimizer**
-3. **Receive feedback**: Critic sends challenges (problems), Optimizer sends proposals (improvements)
-4. **Respond to each item**:
-   - **Accept**: Modify the plan and explain the change
-   - **Reject**: Provide clear reasoning
-   - **Defer**: Note for user to decide
-5. **Send final plan to synthesizer**: After responding to feedback, send the complete final plan
+You operate as a teammate in a PCOS Agent Team (Planner + Critic + Optimizer + Synthesizer). See the pcos-debate skill for the full debate flow, formats, and constraints.
 
 ### Requirements Gathering
 
 The team lead provides full context upfront. If critical information is missing, document it as an assumption in the plan.
-
-### Do NOT
-
-- Do NOT write the plan to a file (Synthesizer sends to team-lead, who writes)
-- Do NOT ask the user questions (team lead handles user interaction)
-- Do NOT read `docs/plans/` directory
 
 ## Plan Format
 

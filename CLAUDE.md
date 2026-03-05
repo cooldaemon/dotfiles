@@ -63,11 +63,13 @@ Each role is tagged for individual execution (e.g., `--tags homebrew`, `--tags c
 
 ### Two-Phase Planning (Code)
 
-| Phase | Command | Agent | Output |
-|-------|---------|-------|--------|
-| Phase 1: WHAT | `/plan-ux` | ux-designer | `docs/plans/NNNN-{feature-name}/ux.md` |
-| Phase 2: HOW | `/plan-how` | how-planner | `docs/plans/NNNN-{feature-name}/how.md` |
+| Phase | Command | Agent Team (PCOS) | Output |
+|-------|---------|-------------------|--------|
+| Phase 1: WHAT | `/plan-ux` | ux-planner, ux-critic, ux-optimizer, ux-synthesizer | `docs/plans/NNNN-{feature-name}/ux.md` |
+| Phase 2: HOW | `/plan-how` | how-planner, how-critic, how-optimizer, how-synthesizer | `docs/plans/NNNN-{feature-name}/how.md` |
 | Phase 2.5: ADR | `/create-architecture-decision` | adr-architect | `docs/adr/NNNN-title.md` (if candidates) |
+
+All PCOS-enabled commands include a complexity gate: simple requests bypass team debate.
 
 Multiple USs can be developed and reviewed before a single `/push-to-remote`.
 

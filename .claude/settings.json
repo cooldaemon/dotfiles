@@ -63,7 +63,7 @@
         ]
       },
       {
-        "matcher": "tool == \"Write\" && tool_input.file_path matches \"\\\\.(md|txt)$\" && !(tool_input.file_path matches \"README\\\\.md|CLAUDE\\\\.md|CONTRIBUTING\\\\.md\")",
+        "matcher": "tool == \"Write\" && tool_input.file_path matches \"\\\\.(md|txt)$\" && !(tool_input.file_path matches \"README\\\\.md|CLAUDE\\\\.md|CONTRIBUTING\\\\.md|docs/\")",
         "hooks": [
           {
             "type": "command",

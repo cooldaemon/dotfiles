@@ -25,7 +25,7 @@ description: "Conventions for Claude Code configuration files (agents, commands,
 **Agent naming: `{scope}-{role}`**
 - `{scope}` matches the command's `{object}` keyword for discoverability
 - `{role}` conveys the agent's persona (designer, planner, reviewer, etc.)
-- Examples: `ux-designer`, `how-planner`, `adr-architect`, `build-fixer`, `code-reviewer`
+- Examples: `ux-planner`, `how-planner`, `adr-architect`, `build-fixer`, `code-reviewer`
 
 **Command naming: `{verb}-{object}`**
 - Verb-first for action clarity
@@ -33,10 +33,11 @@ description: "Conventions for Claude Code configuration files (agents, commands,
 
 **Mapping rule: Agent `{scope}` = Command `{object}`**
 
-| Command | Object | Agent | Scope |
-|---------|--------|-------|-------|
-| `/plan-ux` | `ux` | `ux-designer` | `ux` |
-| `/plan-how` | `how` | `how-planner` | `how` |
+| Command | Object | Agent(s) | Scope |
+|---------|--------|----------|-------|
+| `/plan-ux` | `ux` | `ux-planner`, `ux-critic`, `ux-optimizer`, `ux-synthesizer` | `ux` |
+| `/plan-how` | `how` | `how-planner`, `how-critic`, `how-optimizer`, `how-synthesizer` | `how` |
+| `/plan-claude-config` | `claude-config` | `claude-config-planner`, `-critic`, `-optimizer`, `-synthesizer` | `claude-config` |
 | `/create-architecture-decision` | `architecture-decision` (long) | `adr-architect` | `adr` |
 | `/fix-build` | `build` | `build-fixer` | `build` |
 | `/capture-screenshot` | `screenshot` | `screenshot-capturer` | `screenshot` |
@@ -115,16 +116,26 @@ The PCOS (Planner-Critic-Optimizer-Synthesizer) pattern uses Agent Teams for str
 - Changes where trade-offs need structured evaluation (e.g., architecture layer decisions)
 - NOT for trivial single-file edits or mechanical updates
 
+**PCOS-enabled commands:**
+
+| Command | Team | Domain |
+|---------|------|--------|
+| `/plan-ux` | ux-planner, ux-critic, ux-optimizer, ux-synthesizer | UX plans (user stories, Gherkin) |
+| `/plan-how` | how-planner, how-critic, how-optimizer, how-synthesizer | Implementation plans (EARS, ADR) |
+| `/plan-claude-config` | claude-config-planner, -critic, -optimizer, -synthesizer | Config changes (.claude/) |
+
+All PCOS-enabled commands include a complexity gate: simple requests bypass the team debate and delegate to the Planner agent directly.
+
 **Debate flow:**
 1. Planner drafts plan and shares with Critic and Optimizer
 2. Critic sends challenges, Optimizer sends proposals (both to Planner)
 3. Planner accepts/rejects/defers each item
-4. Synthesizer produces final plan with Critique Log (all items tracked)
-5. Team lead (main session) writes the plan file and presents to user
+4. Synthesizer converges debate, writes output files, and sends Critique Log to team lead
+5. Team lead presents plan to user
 
 **Pre-implementation vs post-implementation review:**
-- **Critic** (pre-implementation): Reviews the *plan* during PCOS debate, before any files are created or modified. Catches architectural issues early.
-- **config-reviewer** (post-implementation): Reviews *implemented file changes* after the plan has been executed. Catches issues that only appear in actual file content.
+- **PCOS Critic** (pre-implementation): Reviews the *plan* during PCOS debate, before any files are created or modified. Catches architectural issues early. Exists in all PCOS teams (ux-critic, how-critic, claude-config-critic).
+- **Post-implementation reviewer** (post-implementation): Reviews *implemented file changes* after the plan has been executed. Catches issues that only appear in actual file content (e.g., config-reviewer for config changes, code-reviewer for code changes).
 
 These are different stages with different inputs -- no responsibility overlap.
 
