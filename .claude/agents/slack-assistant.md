@@ -65,10 +65,10 @@ The state file tracks check history for incremental searches. The agent reads th
    a. If the file exists, extract `last_checked_at` timestamp
    b. If the file does not exist, this is the first run -- use "Yesterday" as the date filter (covers since yesterday's end-of-work)
 3. Search DMs: `conversations_search_messages` with `search_query: "to:me"` and date filter based on step 2
-   - First run (no state file): `filter_date_during: "Yesterday,Today"`
+   - First run (no state file): `filter_date_after: "Yesterday"` (covers yesterday and today)
    - Subsequent runs: `filter_date_after: "<YYYY-MM-DD from last_checked_at>"` (searches from that date onward)
-4. Search channel mentions: `conversations_search_messages` with `search_query: "@<slack_username>"` and same date filter as step 3
-5. Search participating threads: `conversations_search_messages` with `filter_users_with: "@<slack_username>"`, `filter_threads_only: true`, and same date filter as step 3. This finds new messages in threads where the user has participated, even without @mentions
+4. Search channel mentions: `conversations_search_messages` with `search_query: "@<slack_username>"` and same `filter_date_after` as step 3
+5. Search participating threads: `conversations_search_messages` with `filter_users_with: "@<slack_username>"`, `filter_threads_only: true`, and same `filter_date_after` as step 3. This finds new messages in threads where the user has participated, even without @mentions
 6. For each search result, extract the **channel ID** (e.g., `C01ABC123`) and **message TS** (e.g., `1709534400.123456`) from the search result metadata. These are required fields -- never write `(pending)` or placeholders. If a search result does not include these fields, use `conversations_history` or `conversations_replies` on the channel to obtain them
 7. Merge results, deduplicate (skip any message TS already in the state file's Processed Messages table), and categorize as "requires action" or "awareness only". Also exclude existing `open` items from the state file -- they will be re-included in the output at step 10
 8. For each "requires action" item, determine ball ownership by checking the last message in the thread/DM:
