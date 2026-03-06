@@ -79,6 +79,13 @@ Do NOT include these in plans -- they are infrastructure decisions made by the i
 - **Model selection** (`model:` field in agent frontmatter) -- except Agent Team teammate model selection, which is a cost optimization decision
 - Runtime configuration (environment variables, deployment settings)
 
+## Unverified Hypothesis Marking
+
+Mark uncertain technical assumptions with `[UNVERIFIED]` (see pcos-debate skill for full protocol). Examples:
+
+- `[UNVERIFIED] Custom agents can use WebSearch tool in their tools: frontmatter`
+- `[UNVERIFIED] The mcp__context7__query-docs tool supports topic: parameter`
+
 ## Anti-Patterns (AVOID)
 
 | Anti-Pattern | Correct Approach |

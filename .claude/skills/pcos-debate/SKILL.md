@@ -47,6 +47,30 @@ description: "Shared protocol for PCOS Agent Team debates. Defines Critique Log 
 - Optimizer focuses on IMPROVEMENTS only (not problems) and DEADLOCK RESOLUTION
 - Synthesizer is neutral -- does not favor any participant
 
+## Unverified Hypothesis Handling
+
+### Planner Responsibilities
+- Mark any technical feasibility assumption you are not 100% certain about with `[UNVERIFIED]`
+- Do NOT delay the draft to verify -- mark and move on (speed over certainty at draft stage)
+
+### Critic/Optimizer Responsibilities (Complex Mode)
+- Use search tools (WebSearch, WebFetch, context7 MCP -- see web-research skill) to verify or refute `[UNVERIFIED]` items
+- Report verification results in Challenge/Proposal format:
+  - Verified true: `[VERIFIED]` with evidence link/quote
+  - Verified false: Challenge with correct information
+  - Cannot verify: Leave as `[UNVERIFIED]` with note
+
+### Synthesizer Responsibilities
+- For items that remain `[UNVERIFIED]` after debate:
+  1. Record in the Critique Log with Resolution = "Unverified"
+  2. Add an investigation task to the plan's Progress Tracking section:
+     `- [ ] Investigate: [description of what needs verification]`
+  3. The main session handles investigation before proceeding to the next phase (e.g., before `/update-claude-config` or `/tdd`)
+
+### Simple Mode (No Critic/Optimizer)
+- Planner marks `[UNVERIFIED]` items in the plan
+- The main session investigates all `[UNVERIFIED]` items before proceeding to implementation
+
 ## Standard Agent Constraints
 
 - Synthesizer writes output files directly (plan files, index updates, ADRs). Other roles (Planner, Critic, Optimizer) do NOT write files.

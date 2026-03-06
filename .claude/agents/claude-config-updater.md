@@ -102,5 +102,4 @@ git add -A && git commit --fixup HEAD
 1. Display: "Plan implementation complete: [plan title]"
 2. Display summary of all changes (files created, modified, deleted)
 3. Create git checkpoint (semantic or fixup depending on mode)
-4. Suggest: "Run `/review-claude-config` to review the changes"
-5. Suggest: "Run `/plan-done` to delete the completed plan"
+4. Display: "Review will run automatically via the command."

@@ -39,7 +39,7 @@ Send the following to **team-lead**:
 1. Confirmation: "Config plan saved to `docs/plans/NNNN-feature-name.md`"
 2. Plan summary and key decisions
 3. Critique Log highlights
-4. Suggest: "Run `/update-claude-config` to execute the plan"
+4. Suggest: "Run `/update-claude-config` to execute the plan (includes automatic review)"
 
 ## Rules
 

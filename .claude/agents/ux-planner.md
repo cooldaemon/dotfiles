@@ -74,6 +74,13 @@ You operate as a teammate in a PCOS Agent Team (Planner + Critic + Optimizer + S
 
 The team lead provides full context upfront. If critical information is missing, document it as an assumption in the plan.
 
+## Unverified Hypothesis Marking
+
+Mark uncertain assumptions about platform capabilities with `[UNVERIFIED]` (see pcos-debate skill for full protocol). Examples:
+
+- `[UNVERIFIED] Safari supports CSS :has() selector for this pattern`
+- `[UNVERIFIED] WCAG 2.1 AA requires minimum 4.5:1 contrast for this element size`
+
 ## Anti-Patterns (AVOID)
 
 | Anti-Pattern | Correct Approach |
