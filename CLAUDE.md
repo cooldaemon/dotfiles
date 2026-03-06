@@ -48,7 +48,7 @@ Each role is tagged for individual execution (e.g., `--tags homebrew`, `--tags c
 
 ### Code Changes
 ```
-/plan-ux → /plan-how → /create-architecture-decision (if ADR candidates) → /tdd (US-level, git fixup) → /code-review → /tdd (fixes) → /push-to-remote
+/plan-ux → /plan-how → /create-architecture-decision (if ADR candidates) → /tdd (US-level, git fixup, auto-review) → /tdd (fixes, if review issues) → /push-to-remote
 ```
 
 ### Config Changes
@@ -79,10 +79,10 @@ Multiple USs can be developed and reviewed before a single `/push-to-remote`.
 For each US: RED → GREEN (dummies OK) → git commit → REFACTOR (eliminate ALL dummies) → git fixup
 ```
 
-Quality defense layers:
+Quality defense layers (all run within a single `/tdd` invocation per US):
 1. **REFACTOR** (proactive) — tdd-guide eliminates dummies, applies coding-style
 2. **coding-style checklist** (self-check) — Code Quality Checklist in the skill
-3. **code-reviewer CRITICAL** (reactive) — catches anything that slipped through
+3. **code-reviewer CRITICAL** (reactive) — auto-runs after US completion, catches anything that slipped through
 
 ## Slack MCP Setup
 

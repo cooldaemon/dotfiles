@@ -83,9 +83,9 @@ After completing the full cycle for a US (RED-GREEN-commit-REFACTOR-fixup), the 
 
 1. Create the git fixup checkpoint (if REFACTOR made changes)
 2. **STOP execution immediately** -- do NOT proceed to the next US
-3. Output: "US complete. Run `/code-review` to review, then `/tdd` for the next US."
+3. Output: "US complete. Review will run automatically."
 
-The user controls US-by-US progression, not the agent. The user decides when to run `/code-review` and when to invoke `/tdd` for the next US.
+The user controls US-by-US progression. After the agent stops, the command auto-runs code review, then waits for the user's decision on fixes or next US.
 
 ## Commit Message Policy
 

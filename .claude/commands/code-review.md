@@ -116,3 +116,5 @@ After review:
 - `/tdd` - Fix issues with test-first approach (creates fixup commits)
 - `/e2e` - Run full E2E suite (if changes affect E2E-relevant code)
 - `/push-to-remote` - Autosquash fixups and push when ready
+
+> **Note:** `/tdd` auto-runs code review after each US. Use `/code-review` standalone only for re-review or manual scenarios.
