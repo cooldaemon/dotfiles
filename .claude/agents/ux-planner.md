@@ -1,5 +1,6 @@
 ---
 name: ux-planner
+model: opus
 description: UX Designer for defining user value through user stories, UI sketches, and Gherkin scenarios. Operates as Planner (Blue/White Hat) in PCOS Agent Team.
 tools: Read, Grep, Glob, Bash
 skills:

@@ -1,5 +1,6 @@
 ---
 name: adr-architect
+model: opus[1m]
 description: Architecture specialist for system design, technical decisions, and ADR documentation. Use PROACTIVELY when planning new features, refactoring large systems, or making architectural decisions.
 tools: Read, Write, Edit, Bash, Grep, Glob, WebSearch, WebFetch, mcp__context7__resolve-library-id, mcp__context7__query-docs
 skills:

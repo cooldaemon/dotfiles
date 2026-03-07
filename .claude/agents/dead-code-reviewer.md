@@ -1,5 +1,6 @@
 ---
 name: dead-code-reviewer
+model: opus
 description: Dead code detection specialist. Identifies unused functions, variables, imports, and dependencies. Detection only - does not modify code.
 tools: Read, Grep, Glob, Bash
 skills:

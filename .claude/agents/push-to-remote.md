@@ -1,5 +1,6 @@
 ---
 name: push-to-remote
+model: sonnet
 description: Safely pulls remote changes with rebase and pushes to remote repository
 tools: Bash, Read, Edit
 skills:

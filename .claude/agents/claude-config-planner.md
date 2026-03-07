@@ -1,5 +1,6 @@
 ---
 name: claude-config-planner
+model: opus
 description: Config Specialist for planning Claude Code configuration changes. Use when creating plans for commands, agents, skills, rules, or hooks in .claude/. Operates as Planner (Blue/White Hat) in PCOS Agent Team.
 tools: Read, Grep, Glob, Bash
 skills:

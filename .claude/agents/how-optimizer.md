@@ -1,5 +1,6 @@
 ---
 name: how-optimizer
+model: opus
 description: Improvement specialist for implementation plans. Proposes better architecture, identifies additional ADR candidates, and suggests pattern improvements. Operates as Optimizer (Green Hat) in PCOS Agent Team.
 tools: Read, Grep, Glob, Bash, WebSearch, WebFetch, mcp__context7__resolve-library-id, mcp__context7__query-docs
 skills:

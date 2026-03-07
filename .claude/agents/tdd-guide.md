@@ -1,5 +1,6 @@
 ---
 name: tdd-guide
+model: opus[1m]
 description: Test-Driven Development and ATDD specialist. Use PROACTIVELY when writing new features, investigating bugs, or refactoring code. Enforces test-first approach including reproducing bugs in tests before fixing. Supports both Playwright and Cypress with Cucumber for BDD.
 tools: Read, Write, Edit, Bash, Grep, Glob
 skills:

@@ -1,5 +1,6 @@
 ---
 name: slack-assistant
+model: sonnet[1m]
 description: Executes Slack tasks such as checking DMs and mentions, replying to messages, and posting updates. Use when the user wants to interact with Slack through Claude.
 tools: Bash, Read, Write, mcp__slack__conversations_history, mcp__slack__conversations_replies, mcp__slack__conversations_add_message, mcp__slack__conversations_search_messages, mcp__slack__conversations_mark, mcp__slack__channels_list, mcp__slack__reactions_add, mcp__slack__reactions_remove, mcp__slack__users_search, mcp__slack__usergroups_list, mcp__slack__usergroups_me
 skills:

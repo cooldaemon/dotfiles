@@ -1,5 +1,6 @@
 ---
 name: database-reviewer
+model: opus
 description: MySQL/Aurora database specialist for query optimization, schema design, and data consistency. Use PROACTIVELY when writing SQL, creating migrations, or designing database architecture.
 tools: Read, Write, Edit, Bash, Grep, Glob
 skills:

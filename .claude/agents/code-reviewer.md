@@ -1,5 +1,6 @@
 ---
 name: code-reviewer
+model: opus
 description: Expert code review specialist. Proactively reviews code for integrity, readability, comments, and best practices. Use immediately after writing or modifying code. Reviews only - does not modify code.
 tools: Read, Grep, Glob, Bash
 skills:

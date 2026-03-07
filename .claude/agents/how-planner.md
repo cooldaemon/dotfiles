@@ -1,5 +1,6 @@
 ---
 name: how-planner
+model: opus
 description: Tech Lead for implementation planning. Creates how.md with EARS system behavior based on an existing ux.md. Operates as Planner (Blue/White Hat) in PCOS Agent Team.
 tools: Read, Grep, Glob, Bash
 skills:

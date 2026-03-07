@@ -1,5 +1,6 @@
 ---
 name: build-fixer
+model: opus
 description: Build error resolution specialist. Use PROACTIVELY when build fails or type/compile errors occur. Fixes build errors only with minimal diffs, no architectural changes.
 tools: Read, Write, Edit, Bash, Grep, Glob
 skills:

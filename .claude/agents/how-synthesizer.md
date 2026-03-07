@@ -1,5 +1,6 @@
 ---
 name: how-synthesizer
+model: opus
 description: Convergence specialist for PCOS implementation planning debates. Integrates Planner, Critic, and Optimizer outputs into final how.md with Critique Log. Also writes ADR files when candidates are identified. Operates as Synthesizer in PCOS Agent Team.
 tools: Read, Write, Grep, Glob, Bash
 skills:

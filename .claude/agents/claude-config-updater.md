@@ -1,5 +1,6 @@
 ---
 name: claude-config-updater
+model: opus[1m]
 description: Executes implementation plans by creating, modifying, and deleting files across the codebase. Use when implementing plans from docs/plans/ that involve config-only changes (commands, agents, skills, documentation). Not for executable code -- use tdd-guide for that.
 tools: Read, Write, Edit, Bash, Grep, Glob
 skills:

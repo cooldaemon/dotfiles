@@ -1,5 +1,6 @@
 ---
 name: performance-reviewer
+model: opus
 description: Performance analysis specialist for algorithmic complexity, memory leaks, rendering performance, bundle size, and caching strategy. Use PROACTIVELY after writing or modifying code.
 tools: Read, Grep, Glob, Bash
 ---

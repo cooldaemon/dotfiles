@@ -1,5 +1,6 @@
 ---
 name: ux-synthesizer
+model: opus
 description: Convergence specialist for PCOS UX planning debates. Integrates Planner, Critic, and Optimizer outputs into final UX plan with Critique Log. Operates as Synthesizer in PCOS Agent Team.
 tools: Read, Write, Grep, Glob, Bash
 skills:

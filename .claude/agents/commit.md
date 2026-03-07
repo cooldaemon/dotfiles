@@ -1,5 +1,6 @@
 ---
 name: commit
+model: sonnet
 description: Performs git commit with semantic messages and pre-commit validation
 tools: Bash, Read, Grep, Glob
 skills:

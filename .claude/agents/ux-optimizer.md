@@ -1,5 +1,6 @@
 ---
 name: ux-optimizer
+model: opus
 description: Improvement specialist for UX plans. Proposes better user flows, accessibility enhancements, and interaction alternatives. Operates as Optimizer (Green Hat) in PCOS Agent Team.
 tools: Read, Grep, Glob, Bash, WebSearch, WebFetch
 skills:

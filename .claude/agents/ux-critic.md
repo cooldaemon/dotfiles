@@ -1,5 +1,6 @@
 ---
 name: ux-critic
+model: opus
 description: Problem finder for UX plans. Challenges plans for missing scenarios, usability issues, accessibility gaps, and user story quality. Operates as Critic (Black Hat) in PCOS Agent Team.
 tools: Read, Grep, Glob, Bash, WebSearch, WebFetch
 skills:

@@ -1,5 +1,6 @@
 ---
 name: claude-config-reviewer
+model: opus
 description: Reviews Claude Code configuration files (.claude/) for quality, consistency, and architectural compliance. Use after /update-claude-config to verify commands, agents, skills, and documentation changes. Review only - does not modify files.
 tools: Read, Write, Grep, Glob, Bash
 skills:

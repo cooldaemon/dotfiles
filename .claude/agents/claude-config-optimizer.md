@@ -1,5 +1,6 @@
 ---
 name: claude-config-optimizer
+model: opus
 description: Improvement specialist for Claude Code configuration plans. Proposes alternatives, breaks deadlocks between Planner and Critic. Operates as Optimizer (Green Hat) in PCOS Agent Team.
 tools: Read, Grep, Glob, Bash, WebSearch, WebFetch, mcp__context7__resolve-library-id, mcp__context7__query-docs
 skills:

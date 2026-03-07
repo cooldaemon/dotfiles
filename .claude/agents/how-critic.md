@@ -1,5 +1,6 @@
 ---
 name: how-critic
+model: opus
 description: Problem finder for implementation plans. Challenges for missing EARS coverage, architectural risks, integration issues, and incomplete ADR identification. Operates as Critic (Black Hat) in PCOS Agent Team.
 tools: Read, Grep, Glob, Bash, WebSearch, WebFetch, mcp__context7__resolve-library-id, mcp__context7__query-docs
 skills:

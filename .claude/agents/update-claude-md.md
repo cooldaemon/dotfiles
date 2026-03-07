@@ -1,5 +1,6 @@
 ---
 name: update-claude-md
+model: opus
 description: Updates or creates project CLAUDE.md file with important session insights and conventions
 tools: Read, Write, Edit, Grep, Glob
 skills:

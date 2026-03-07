@@ -1,5 +1,6 @@
 ---
 name: sre-reviewer
+model: opus
 description: SRE and operational reliability reviewer for observability, resilience, health checks, and resource limits. Use PROACTIVELY after writing or modifying code.
 tools: Read, Grep, Glob, Bash
 ---
