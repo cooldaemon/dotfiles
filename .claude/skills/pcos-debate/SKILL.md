@@ -28,7 +28,7 @@ description: "Shared protocol for PCOS Agent Team debates. Defines Critique Log 
 
 ### Optimizer (Green Hat)
 1. **Pre-read**: Read relevant files while waiting
-2. **Receive**: Planner's draft AND Critic's challenges
+2. **WAIT for both**: Planner's draft AND Critic's challenges. **Do NOT start proposing improvements until Critic's challenges have been received.** Deadlock-breaking requires knowing both positions.
 3. **Analyze independently**: Find improvements the plan missed
 4. **Break deadlocks**: If Critic and Planner disagree, propose a third option
 5. **Send proposals to planner**: Both independent improvements and deadlock-breaking alternatives
