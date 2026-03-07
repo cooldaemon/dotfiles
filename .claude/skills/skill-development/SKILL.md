@@ -100,7 +100,7 @@ Include:
 ### DO Include
 
 - **Policies/directions**: What to do, what approach to take
-- **Anti-patterns**: What to avoid
+- **Anti-patterns**: What to avoid — but ONLY if they pass the Litmus Test above. If Claude would avoid the pattern without reading the skill, do not include it.
 - **Domain knowledge**: Information requiring lookup
 - **Output formats**: Expected structure when not obvious
 - **Review categories**: Platform-agnostic area names that anchor coverage (see Review Categories Pattern below)
@@ -223,7 +223,7 @@ See `references/troubleshooting.md` for common issues.
 - [ ] Description includes WHAT and WHEN
 - [ ] No XML tags anywhere
 - [ ] Under 500 lines
-- [ ] Anti-patterns included
+- [ ] Anti-patterns included only if they pass the Litmus Test (Claude wouldn't know without the skill)
 - [ ] Library-specific: verify with context7 if APIs may have changed. Differences from Claude's knowledge → write in SKILL.md
 
 ### Before Release
