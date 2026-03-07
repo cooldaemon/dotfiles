@@ -39,6 +39,13 @@ find . -name "CLAUDE.md" -type f 2>/dev/null | head -10
 - Sections that need updating
 - Avoid duplicating existing content
 
+## 2.5. Evaluate Content Placement
+
+Before writing content, check whether it belongs inline or in an external file. Apply the "Content Placement by Frequency" principle from the `claude-md-authoring` skill:
+
+- High-frequency content: keep inline
+- Rarely-needed content (one-time setup, infrequent procedures): extract to external file with summary reference in CLAUDE.md
+
 ## 3. Update or Create CLAUDE.md
 
 Use the templates and best practices from the `claude-md-authoring` skill.

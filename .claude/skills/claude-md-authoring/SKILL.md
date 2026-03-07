@@ -353,6 +353,18 @@ For extensive documentation:
 - Consider subdirectory CLAUDE.md files for isolated components
 - Use skills with `paths:` field for complex, scoped logic
 
+# Content Placement by Frequency
+
+When deciding what belongs directly in CLAUDE.md versus an external file:
+
+| Content Type | Placement | Example |
+|--------------|-----------|---------|
+| High-frequency (used most sessions) | Inline in CLAUDE.md | Commands, architecture, workflow |
+| Low-frequency (used occasionally) | @import or inline | Testing gotchas, environment notes |
+| Rarely-needed (one-time setup) | External file with summary reference | MCP setup guides, onboarding steps |
+
+**Principle**: CLAUDE.md should prioritize content that is useful in the majority of sessions. Rarely-needed content (one-time setup, infrequent procedures) should be extracted to external files and replaced with a one-liner summary that tells Claude WHEN to offer the guide and WHERE to find it.
+
 # Anti-Patterns
 
 **Do NOT:**
@@ -363,6 +375,7 @@ For extensive documentation:
 - Duplicate root CLAUDE.md content in subdirectories
 - Create subdirectory CLAUDE.md for trivial or single-use information
 - Mix component-specific and project-wide content in same file
+- Keep one-time setup procedures inline when they could be extracted with a summary reference
 - Include general programming knowledge (Claude already knows this)
 - Write tutorials on basic syntax
 - Copy documentation that exists elsewhere (use @import instead)
@@ -382,4 +395,5 @@ For extensive documentation:
 - Include "why" behind non-obvious decisions
 - Cross-reference related sections
 - Use code blocks with syntax highlighting
+- Extract rarely-needed content (one-time setup, infrequent procedures) to external files with summary references
 - Verify no duplicate information exists across CLAUDE.md files

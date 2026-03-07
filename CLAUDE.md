@@ -84,77 +84,12 @@ Quality defense layers (all run within a single `/tdd` invocation per US):
 2. **coding-style checklist** (self-check) — Code Quality Checklist in the skill
 3. **code-reviewer CRITICAL** (reactive) — auto-runs after US completion, catches anything that slipped through
 
-## Slack MCP Setup
+## MCP Setup Guides
 
-When `make mcp-update` skips Slack (token not set), guide the user through these steps:
+When `make mcp-update` skips a service due to missing credentials, refer to the appropriate setup guide:
 
-### 1. Create Slack App
-
-1. Go to https://api.slack.com/apps → "Create New App" → "From scratch"
-2. Go to **App Manifest** (JSON tab) and set `oauth_config.scopes.user` to:
-
-```json
-          "user": [
-              "channels:history",
-              "channels:read",
-              "channels:write",
-              "chat:write",
-              "groups:history",
-              "groups:read",
-              "groups:write",
-              "im:history",
-              "im:read",
-              "im:write",
-              "mpim:history",
-              "mpim:read",
-              "mpim:write",
-              "reactions:read",
-              "reactions:write",
-              "search:read",
-              "users:read",
-              "usergroups:read"
-          ]
-```
-
-4. Save Changes → Install to Workspace (admin approval may be required)
-5. Copy **User OAuth Token** (`xoxp-...`) from OAuth & Permissions page
-
-### 2. Register MCP Server
-
-```bash
-export SLACK_MCP_XOXP_TOKEN="xoxp-..."
-make mcp-update
-```
-
-Token is stored in Claude Code's MCP config after registration. The environment variable is only needed during `make mcp-update`.
-
-## Confluence MCP Setup
-
-When `make mcp-update` skips Confluence (credentials not set), guide the user through these steps:
-
-### 1. Create API Token
-
-1. Go to https://id.atlassian.com/manage-profile/security/api-tokens
-2. Click "Create API token" (classic, not scoped — scoped tokens do not work with Confluence REST API)
-3. Set a label (e.g., "For Claude Code")
-4. Copy the generated token
-
-### 2. Register MCP Server
-
-```bash
-export CONFLUENCE_URL="https://your-company.atlassian.net/wiki"
-export CONFLUENCE_USERNAME="your.email@company.com"
-export CONFLUENCE_API_TOKEN="your_api_token"
-make mcp-update
-```
-
-Credentials are stored in Claude Code's MCP config after registration. The environment variables are only needed during `make mcp-update`.
-
-### Notes
-
-- **Write operations**: Page create/update/delete and comment add/reply are enabled but require user confirmation each time (not auto-allowed)
-- **Confluence Cloud only**: Server/Data Center deployments are not supported by this configuration
-- **Toolsets**: Only `confluence_pages` and `confluence_comments` toolsets are enabled (no Jira tools)
+- **Slack**: One-time app creation and token setup. See `docs/setup/slack-mcp.md`.
+- **Confluence**: API token creation and registration. See `docs/setup/confluence-mcp.md`.
 
 ## Editing This Repository
 
