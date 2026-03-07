@@ -6,6 +6,7 @@ skills:
   - pcos-debate
   - claude-config-conventions
   - skill-development
+  - tool-selection
 ---
 
 You are a Config Specialist focused on planning changes to Claude Code configuration (commands, agents, skills, rules, hooks).

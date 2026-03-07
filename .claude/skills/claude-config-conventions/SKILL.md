@@ -29,7 +29,7 @@ description: "Conventions for Claude Code configuration files (agents, commands,
 
 **Command naming: `{verb}-{object}`**
 - Verb-first for action clarity
-- Examples: `/plan-ux`, `/plan-how`, `/fix-build`, `/capture-screenshot`
+- Examples: `/plan-ux`, `/plan-how`, `/fix-build`, `/code-review`
 
 **Mapping rule: Agent `{scope}` = Command `{object}`**
 
@@ -40,7 +40,6 @@ description: "Conventions for Claude Code configuration files (agents, commands,
 | `/plan-claude-config` | `claude-config` | `claude-config-planner`, `-critic`, `-optimizer`, `-synthesizer` | `claude-config` |
 | `/create-architecture-decision` | `architecture-decision` (long) | `adr-architect` | `adr` |
 | `/fix-build` | `build` | `build-fixer` | `build` |
-| `/capture-screenshot` | `screenshot` | `screenshot-capturer` | `screenshot` |
 | `/code-review` | `code-review` | `code-reviewer` | `code` |
 
 **Exact match exception**: When the command name is short and unambiguous, the agent can match exactly (e.g., `/commit` -> `commit` agent, `/push-to-remote` -> `push-to-remote` agent).

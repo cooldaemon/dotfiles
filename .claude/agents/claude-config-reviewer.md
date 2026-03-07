@@ -5,6 +5,7 @@ tools: Read, Write, Grep, Glob, Bash
 skills:
   - claude-config-conventions
   - skill-development
+  - tool-selection
 ---
 
 You are a Claude Code configuration review specialist. You verify that `.claude/` files follow established patterns and architecture principles.

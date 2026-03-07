@@ -29,13 +29,13 @@ Direct Ansible: `ansible-playbook -i localhost, -c local ansible/playbook.yml --
 ### Ansible Roles
 | Role | Purpose |
 |------|---------|
-| homebrew | CLI tools (fish, gpg, gawk, peco) |
+| homebrew | CLI tools (fish, gpg, gawk, peco, peekaboo) |
 | homebrew_cask | GUI apps (Docker, Dropbox, Google Drive, Zed, Karabiner, Session Manager Plugin) |
 | mise | Languages (Node.js 20.18.2, Python 3.13.5, Ruby 3.3.4, Go 1.23.4), global npm |
 | fish | Oh My Fish + peco plugin |
 | dotfiles | Symlinks for config files and `.claude/` |
 | claude_code | Claude Code native installer (auto-updates, removes legacy npm version) |
-| claude_mcp | MCP servers (playwright, context7, peekaboo, slack, confluence) |
+| claude_mcp | MCP servers (playwright, context7, slack, confluence) |
 
 Each role is tagged for individual execution (e.g., `--tags homebrew`, `--tags claude`)
 

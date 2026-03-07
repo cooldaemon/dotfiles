@@ -7,6 +7,5 @@ go = "1.23.4"
 
 # npm global packages
 "npm:@playwright/mcp" = "latest"
-"npm:@steipete/peekaboo-mcp" = "latest"
 "npm:@upstash/context7-mcp" = "latest"
 "npm:aws-cdk" = "latest"
