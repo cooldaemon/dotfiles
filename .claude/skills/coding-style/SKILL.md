@@ -438,7 +438,7 @@ const validated = schema.parse(input)
 ALWAYS use structured logging on server-side code:
 - Use machine-parseable format (JSON, logfmt, etc.)
 - Include: timestamp, level, message, requestId
-- Never log sensitive data (passwords, tokens, PII)
+- Never log sensitive data (passwords, tokens, PII) -- see security-patterns skill for attack vectors
 
 ## Comment Review (Before Completion)
 

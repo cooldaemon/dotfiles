@@ -13,5 +13,6 @@ If security issue found during any work:
 - No hardcoded secrets (API keys, passwords, tokens)
 - All user inputs validated
 - Error messages don't leak sensitive data
+- No code that reads secrets (.env, config) and outputs/logs their values
 
 For comprehensive security patterns, the `security-patterns` skill is loaded by reviewers automatically.

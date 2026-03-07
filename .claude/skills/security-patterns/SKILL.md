@@ -10,6 +10,21 @@ description: Security vulnerability patterns and prevention. Use when writing co
 ### Hardcoded Secrets (CRITICAL)
 Never hardcode secrets (API keys, passwords, tokens). Always use environment variables or secret management systems.
 
+### Sensitive Data Logging (CRITICAL)
+Never log, print, or output secrets to stdout/stderr. Code that reads secrets from .env, config files, or environment variables must never pass those values to print(), console.log(), logger calls, or string formatting that reaches output.
+
+**Attack pattern**: Malicious code disguised as fixes that reads `.env` or config and prints key-value pairs, leaking secrets through CI/CD logs or log aggregation systems.
+
+**Detection signals**:
+- `dotenv_values()`, `load_dotenv()`, `process.env` combined with print/log/console output
+- Loops iterating over environment or config dictionaries with output statements
+- "Debug" or "diagnostic" code that dumps configuration values
+- Code iterating over all env vars or config entries without filtering sensitive keys
+
+**Prevention**:
+- Never iterate over all environment variables without an explicit allowlist
+- Treat `.env` files as sensitive -- code that reads them should never output their contents
+
 ### SQL Injection (CRITICAL)
 Always use parameterized queries. Never use string concatenation with user input in database queries.
 
