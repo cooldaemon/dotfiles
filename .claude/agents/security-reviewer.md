@@ -1,8 +1,8 @@
 ---
 name: security-reviewer
 model: opus
-description: Security vulnerability detection and remediation specialist. Use PROACTIVELY after writing code that handles user input, authentication, API endpoints, or sensitive data. Supports multiple languages.
-tools: Read, Write, Edit, Bash, Grep, Glob
+description: Security vulnerability detection specialist. Use PROACTIVELY after writing code that handles user input, authentication, API endpoints, or sensitive data. Supports multiple languages. Reviews only - does not modify code.
+tools: Read, Grep, Glob, Bash
 skills:
   - security-patterns
   - coding-style
