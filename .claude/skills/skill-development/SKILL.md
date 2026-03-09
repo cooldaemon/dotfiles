@@ -12,6 +12,8 @@ Define 2-3 concrete use cases before writing:
 2. What multi-step workflows does this require?
 3. What domain knowledge should be embedded?
 
+> **Scale awareness**: This repo has 30+ active skills. Every new skill adds ~100 tokens of description scanning to every prompt. Before creating a new skill, check if an existing skill can be extended instead.
+
 ### Skill Categories
 
 | Category | Use Case | Key Techniques |
@@ -19,6 +21,19 @@ Define 2-3 concrete use cases before writing:
 | Document & Asset Creation | Consistent output (docs, code, designs) | Templates, style guides, quality checklists |
 | Workflow Automation | Multi-step processes | Step ordering, validation gates, iterative loops |
 | MCP Enhancement | Workflow guidance for tools | Coordinates MCP calls, embeds domain expertise |
+
+See `references/workflow-patterns.md` for 5 common skill patterns.
+
+### Skill Durability
+
+Skills also differ in how long they remain useful:
+
+| Class | Definition | Examples | Maintenance |
+|-------|-----------|----------|-------------|
+| Encoded Preference | Encodes team/org workflow decisions | coding-style, git-workflow, api-design-patterns | Durable — update when team decisions change |
+| Capability Uplift | Compensates for model limitations | Specific API patterns, workaround techniques | Ephemeral — deprecate when base model improves |
+
+Most skills in this repo are **Encoded Preference** (global conventions). See [Skill Lifecycle](#skill-lifecycle) for when to deprecate Capability Uplift skills.
 
 ## Folder Structure
 
@@ -88,6 +103,18 @@ Include:
 - Trigger phrases/scenarios (what users actually say)
 - File types if relevant
 - Negative triggers when needed (Do NOT use for...)
+
+### Description Analysis
+
+With 30+ skills loaded, false positives (skill triggers when it shouldn't) waste context, and false negatives (skill doesn't trigger when needed) lose value. Analyze descriptions systematically:
+
+**False Positive Check**: List 5 prompts from adjacent domains. Does your skill trigger? If yes, add negative triggers.
+
+**False Negative Check**: List 5 paraphrased prompts for your skill. Would the description match? If not, add trigger phrases.
+
+**Overlap Check**: Search existing skill descriptions for keyword collisions. If two skills trigger on the same prompt, either:
+- Narrow one with negative triggers
+- Merge if they cover the same domain
 
 ## Content Guidelines
 
@@ -208,6 +235,26 @@ Should NOT trigger on:
 
 See `references/troubleshooting.md` for common issues.
 
+### Structured Evals
+
+For systematic skill quality measurement, see `references/eval-patterns.md`.
+
+## Skill Lifecycle
+
+### When to Deprecate
+
+Review skills when:
+- A new model release may have learned the skill's techniques natively
+- The skill's pass rate in evals drops below the no-skill baseline
+- Team conventions change, making the skill's policies outdated
+
+### Deprecation Process
+
+1. Run the skill's eval prompts WITHOUT the skill loaded
+2. Compare output quality against WITH-skill results
+3. If no-skill output is equivalent or better: delete the skill folder
+4. Update any agents that referenced it in `skills:` frontmatter
+
 ## Checklist
 
 ### Before Creating
@@ -232,8 +279,7 @@ See `references/troubleshooting.md` for common issues.
 - [ ] Verified doesn't trigger on unrelated topics
 - [ ] Functional tests pass
 
-## References
-
-- `references/yaml-reference.md` - Complete YAML field documentation
-- `references/workflow-patterns.md` - 5 common skill patterns
-- `references/troubleshooting.md` - Common issues and solutions
+### Ongoing Maintenance
+- [ ] Classified as Encoded Preference or Capability Uplift
+- [ ] Description analyzed for false positives/negatives against adjacent skills
+- [ ] Capability Uplift skills: reassessed after model updates

@@ -1,6 +1,6 @@
 ---
 name: testing-principles
-description: Core testing principles for any language. Use when writing tests, reviewing test code, or discussing testing strategy.
+description: Core testing principles for any language. Use when writing tests or reviewing test code without a language-specific testing skill loaded.
 ---
 
 # Testing Principles

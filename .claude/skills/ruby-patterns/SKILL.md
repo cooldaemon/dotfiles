@@ -1,6 +1,6 @@
 ---
 name: ruby-patterns
-description: Ruby development patterns including package manager detection (Bundler), project structure, and idiomatic Ruby practices.
+description: Ruby development patterns including package manager detection (Bundler), project structure, and idiomatic Ruby practices. Use when writing, reviewing, or debugging Ruby code.
 ---
 
 # Ruby Development Patterns
