@@ -16,8 +16,9 @@ Run multiple specialized reviewers in parallel for comprehensive code analysis.
 | **sre-reviewer** | Observability, resilience, health checks, resource limits |
 | **database-reviewer** | SQL queries, ORM usage, schema design |
 | **dead-code-reviewer** | Unused code, imports, dependencies |
+| **test-quality-reviewer** | Test coverage, uncovered paths, test-to-code ratio |
 
-All six reviewers run **always** - ORM code changes affect generated SQL, any code change can have performance or operational implications.
+All seven reviewers run **always** - ORM code changes affect generated SQL, any code change can have performance or operational implications.
 
 ## Execution
 
@@ -54,20 +55,20 @@ total_issues: N
 
 ## Summary
 - **Files Reviewed:** N
-- **Total Issues:** N (Critical: X, High: Y, Medium: Z)
+- **Total Issues:** N (must: X, imo: Y, nits: Z)
 - **Verdict:** APPROVE | APPROVE WITH WARNINGS | REQUEST CHANGES
 - **Status:** PENDING
 
 ## Issues
 
-### Critical
+### must
 - [ ] [CR-001] Issue description - `file:line`
 - [ ] [SR-001] Issue description - `file:line`
 
-### High
+### imo
 - [ ] [CR-002] Issue description - `file:line`
 
-### Medium
+### nits
 - [ ] [DR-001] Issue description - `file:line`
 
 ## Code Review (code-reviewer)
@@ -88,6 +89,9 @@ total_issues: N
 ## Dead Code Review (dead-code-reviewer)
 [Full output from dead-code-reviewer agent]
 
+## Test Quality Review (test-quality-reviewer)
+[Full output from test-quality-reviewer agent]
+
 ## Resolution Log
 | Issue ID | Resolved | Commit | Notes |
 |----------|----------|--------|-------|
@@ -100,6 +104,7 @@ total_issues: N
 - `SRE-NNN`: SRE review issues
 - `DR-NNN`: Database review issues
 - `DC-NNN`: Dead code issues
+- `TQ-NNN`: Test quality issues
 
 ### Zero Issues Case
 If no issues are found, do NOT create a report file. Simply display "No issues found" in the conversation.

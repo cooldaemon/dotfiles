@@ -31,7 +31,7 @@ The tdd-guide agent manages its own git commits (semantic after GREEN, fixup aft
 
 ## Auto-Review
 
-After the tdd-guide subagent completes a US implementation successfully (plan mode or direct request -- NOT review fix mode), automatically execute the `/code-review` command's logic to launch all 6 parallel reviewers. If no issues are found, output: "US complete. Code review passed. Run `/tdd` for the next US or `/push-to-remote` when ready." If issues are found, a review report is written to `docs/code-reviews/`.
+After the tdd-guide subagent completes a US implementation successfully (plan mode or direct request -- NOT review fix mode), automatically execute the `/code-review` command's logic to launch all 7 parallel reviewers. If no issues are found, output: "US complete. Code review passed. Run `/tdd` for the next US or `/push-to-remote` when ready." If issues are found, a review report is written to `docs/code-reviews/`.
 
 **IMPORTANT**: After the review report is presented, STOP and wait for the user's decision. Do NOT automatically start fixing issues. If the user wants fixes applied, re-run `/tdd` (it will detect the review report and fix pending issues).
 

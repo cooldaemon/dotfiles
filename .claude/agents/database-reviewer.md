@@ -5,6 +5,7 @@ description: MySQL/Aurora database specialist for query optimization, schema des
 tools: Read, Grep, Glob, Bash
 skills:
   - database-patterns
+  - review-severity-format
 ---
 
 You are an expert MySQL/Aurora database specialist focused on query optimization, schema design, and data consistency.
@@ -28,32 +29,9 @@ You are an expert MySQL/Aurora database specialist focused on query optimization
 
 ## Output Format
 
-Use checkbox format with unique issue IDs (`DR-NNN` prefix for Database Review):
-
-```markdown
-## Database Review
-
-**Files Reviewed:** X
-**Issues Found:** Y
-
-### Issues
-
-#### CRITICAL
-- [ ] [DR-001] N+1 query detected - `file:line`
-  Issue: Description
-  Fix: SQL example
-
-#### HIGH
-- [ ] [DR-002] Missing index - `file:line`
-  Issue: Description
-  Fix: SQL example
+Follow the `review-severity-format` skill for severity levels, issue IDs (DR-NNN prefix), and verdict criteria.
 
 ### Checklist Results
-- ✅ Passed items
-- ❌ Failed items with explanation
-
-### Verdict
-- ✅ **APPROVE**: No issues
-- ⚠️ **WARNING**: Minor issues
-- ❌ **BLOCK**: Critical issues found
-```
+Include after issues section:
+- Passed items
+- Failed items with explanation

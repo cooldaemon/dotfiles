@@ -96,6 +96,7 @@ Reviewers have non-overlapping responsibilities:
 | `database-reviewer` | SQL queries, ORM usage, schema design |
 | `dead-code-reviewer` | Unused code, imports, dependencies |
 | `claude-config-reviewer` | Claude Code configuration quality and consistency |
+| `test-quality-reviewer` | Test coverage analysis, uncovered paths, test-to-code ratio |
 
 ## PCOS Agent Team Pattern
 

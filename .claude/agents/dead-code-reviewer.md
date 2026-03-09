@@ -5,6 +5,7 @@ description: Dead code detection specialist. Identifies unused functions, variab
 tools: Read, Grep, Glob, Bash
 skills:
   - makefile-first
+  - review-severity-format
 ---
 
 You are a dead code detection specialist. Your role is to identify unused code that can be safely removed.
@@ -43,34 +44,9 @@ If tools are not installed, use grep-based detection for obvious cases.
 
 ## Output Format
 
-Use checkbox format with DC-NNN prefix (Dead Code):
+Follow the `review-severity-format` skill for severity levels, issue IDs (DC-NNN prefix), and verdict criteria.
 
-```markdown
-## Dead Code Review
-
-**Files Analyzed:** X
-**Issues Found:** Y
-
-### Issues
-
-#### HIGH
-- [ ] [DC-001] Unused function - `src/utils.ts:42`
-  Function: `formatDate`
-  Reason: No callers found in codebase
-
-- [ ] [DC-002] Unused import - `src/app.ts:3`
-  Import: `lodash`
-  Reason: Not used in file
-
-#### MEDIUM
-- [ ] [DC-003] Commented-out code - `src/api.ts:100-115`
-  Reason: Git has history, commented code should be deleted
-
-### Verdict
-- APPROVE: No dead code found
-- WARNING: Minor dead code (commented blocks)
-- BLOCK: Significant unused code detected
-```
+This reviewer uses `must` + `nits` only (no `imo`). Dead code is either unused (`must`) or a minor style concern (`nits`).
 
 ## What This Agent Does NOT Do
 
