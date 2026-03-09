@@ -46,18 +46,13 @@ Each role is tagged for individual execution (e.g., `--tags homebrew`, `--tags c
 
 ## Standard Workflow
 
-### Code Changes
+Task routing (which entry command to use) is defined in `.claude/rules/workflow.md`.
+
+### Workflow Sequences
+
 ```
 /plan-ux → /plan-how → /create-architecture-decision (if ADR candidates) → /tdd (US-level, git fixup, auto-review) → /tdd (fixes, if review issues) → /push-to-remote
-```
-
-### Config Changes
-```
 /plan-claude-config (PCOS debate) → /update-claude-config (auto-reviews, git commit) → /update-claude-config (git fixup, if review issues) → /push-to-remote
-```
-
-### Bug Investigation
-```
 /investigate → (branch to /plan-ux, /plan-how, or /tdd based on findings)
 ```
 
