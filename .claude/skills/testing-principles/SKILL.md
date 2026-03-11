@@ -1,6 +1,7 @@
 ---
 name: testing-principles
 description: Core testing principles for any language. Use when writing tests or reviewing test code without a language-specific testing skill loaded.
+durability: encoded-preference
 ---
 
 # Testing Principles

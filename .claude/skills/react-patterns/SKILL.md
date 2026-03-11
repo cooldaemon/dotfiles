@@ -1,6 +1,7 @@
 ---
 name: react-patterns
 description: React and Next.js development policies. Use when writing React components, hooks, or performance optimization.
+durability: encoded-preference
 ---
 
 # React/Next.js Patterns

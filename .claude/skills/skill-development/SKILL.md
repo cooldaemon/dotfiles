@@ -1,6 +1,7 @@
 ---
 name: skill-development
 description: Guidelines for creating Claude Code skills. Use when creating new skills, reviewing skill structure, or improving existing skills. Based on Anthropic's official skill development guide.
+durability: encoded-preference
 ---
 
 # Skill Development Guidelines

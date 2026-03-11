@@ -1,6 +1,7 @@
 ---
 name: database-patterns
 description: Database patterns including MySQL/Aurora optimization, index design, caching principles, and NoSQL guidelines. Use when working with databases, writing SQL, creating migrations, or designing schemas.
+durability: encoded-preference
 ---
 
 # Database Patterns

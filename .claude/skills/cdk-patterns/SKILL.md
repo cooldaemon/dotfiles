@@ -1,6 +1,7 @@
 ---
 name: cdk-patterns
 description: AWS CDK patterns for TypeScript. Use when working with CDK infrastructure code. JavaScript is prohibited for CDK.
+durability: encoded-preference
 ---
 
 # AWS CDK Patterns (TypeScript)

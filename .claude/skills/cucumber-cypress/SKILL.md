@@ -1,6 +1,7 @@
 ---
 name: cucumber-cypress
 description: Cucumber BDD with Cypress policies. Use when writing Gherkin scenarios with Cypress step definitions.
+durability: encoded-preference
 ---
 
 # Cucumber + Cypress Policies

@@ -1,6 +1,7 @@
 ---
 name: typescript-testing
 description: Jest and Vitest testing policies for TypeScript/JavaScript. Use when writing or reviewing TS/JS tests.
+durability: encoded-preference
 ---
 
 # TypeScript/JavaScript Testing Policies
@@ -74,11 +75,6 @@ await expect(fetchData()).rejects.toThrow('Network error')
 ## Commands
 
 **See `makefile-first` skill** for command execution policy.
-
-```bash
-jest --coverage
-vitest --coverage
-```
 
 ## Vitest Bench
 

@@ -1,6 +1,7 @@
 ---
 name: golang-testing
 description: Go testing patterns and policies. Use when writing Go tests, following TDD, or reviewing test code.
+durability: encoded-preference
 ---
 
 # Go Testing Patterns
@@ -136,16 +137,6 @@ func (m *MockUserStore) GetUser(id string) (*User, error) {
 ## Commands
 
 **See `makefile-first` skill** for command execution policy.
-
-```bash
-go test ./...                           # Run all
-go test -v ./...                        # Verbose
-go test -run TestAdd ./...              # Specific test
-go test -race ./...                     # Race detection
-go test -cover -coverprofile=c.out ./...  # Coverage
-go test -bench=. -benchmem ./...        # Benchmarks
-go test -fuzz=FuzzParse -fuzztime=30s   # Fuzzing
-```
 
 ## Anti-Patterns
 

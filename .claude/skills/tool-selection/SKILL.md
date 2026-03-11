@@ -1,6 +1,7 @@
 ---
 name: tool-selection
 description: "CLI-first tool selection policy for Claude Code. Use when choosing between CLI tools and MCP servers, designing new agents, or reviewing agent tool configurations."
+durability: encoded-preference
 ---
 
 # Tool Selection Policy

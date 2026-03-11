@@ -1,6 +1,7 @@
 ---
 name: python-testing
 description: pytest testing policies for Python projects. Use when writing or reviewing Python tests.
+durability: encoded-preference
 ---
 
 # Python Testing Policies
@@ -87,16 +88,6 @@ fail_under = 80
 ## Commands
 
 **See `makefile-first` skill** for command execution policy.
-
-```bash
-pytest                                    # Run all
-pytest -v                                 # Verbose
-pytest -k "user and not slow"             # Pattern match
-pytest -m "not integration"               # Skip markers
-pytest -x                                 # Stop on first failure
-pytest --lf                               # Last failed only
-pytest --cov=mypackage --cov-fail-under=80  # Coverage
-```
 
 ## Anti-Patterns
 

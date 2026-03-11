@@ -1,6 +1,7 @@
 ---
 name: golang-patterns
 description: Idiomatic Go patterns and policies. Use when writing, reviewing, or refactoring Go code.
+durability: encoded-preference
 ---
 
 # Go Development Patterns
@@ -143,11 +144,3 @@ server := NewServer(":8080", WithTimeout(60*time.Second))
 ## Commands
 
 **See `makefile-first` skill** for command execution policy.
-
-```bash
-go build ./...
-go test -race ./...
-go vet ./...
-golangci-lint run
-gofmt -w .
-```

@@ -1,6 +1,7 @@
 ---
 name: git-workflow
 description: Git workflow patterns including commit messages, rebase strategy, and pre-commit hooks. Use when committing, creating PRs, or managing git history.
+durability: encoded-preference
 ---
 
 # Git Workflow Patterns
@@ -106,24 +107,6 @@ Use `git pull --rebase` to maintain linear history:
 - Before pushing local commits
 - When local branch is behind remote
 
-### How Rebase Works
-
-1. Fetches remote changes
-2. Temporarily removes your local commits
-3. Applies remote commits to your branch
-4. Re-applies your local commits on top
-5. Creates linear history without merge commits
-
-### Conflict Resolution
-
-When conflicts occur:
-1. `git status` to identify conflicted files
-2. Resolve each conflict (ours/theirs/manual)
-3. Remove conflict markers (`<<<<<<<`, `=======`, `>>>>>>>`)
-4. `git add` resolved files
-5. `git rebase --continue`
-6. Or `git rebase --abort` to give up
-
 ## Safety Checks
 
 Before git operations:
@@ -131,28 +114,6 @@ Before git operations:
 - **Remote tracking**: Ensure branch tracks a remote
 - **Network connectivity**: Verify connection to remote
 - **Branch protection**: Check if branch has push restrictions
-
-## Error Handling Patterns
-
-**No remote tracking:**
-```bash
-git branch --set-upstream-to=origin/branch-name
-```
-
-**Uncommitted changes:**
-```bash
-# Option 1: Stash changes
-git stash push -m "Temporary stash for rebase"
-# ... perform rebase ...
-git stash pop
-
-# Option 2: Commit changes first
-```
-
-**Network issues:**
-- Retry with clear error messages
-- Check remote URL with `git remote -v`
-- Verify credentials if authentication fails
 
 ## Pull Request Workflow
 

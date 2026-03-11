@@ -1,6 +1,7 @@
 ---
 name: typescript-patterns
 description: TypeScript and JavaScript development patterns including package manager detection (npm, pnpm, bun, yarn), project structure, and Node.js backend/tooling.
+durability: encoded-preference
 ---
 
 # TypeScript/JavaScript Patterns
@@ -75,22 +76,6 @@ const [users, markets, stats] = await Promise.all([
 const users = await fetchUsers()
 const markets = await fetchMarkets()
 const stats = await fetchStats()
-```
-
-### Error Handling
-```typescript
-async function fetchData(url: string) {
-  try {
-    const response = await fetch(url)
-    if (!response.ok) {
-      throw new Error(`HTTP ${response.status}: ${response.statusText}`)
-    }
-    return await response.json()
-  } catch (error) {
-    console.error('Fetch failed:', error)
-    throw new Error('Failed to fetch data')
-  }
-}
 ```
 
 ## Type Safety

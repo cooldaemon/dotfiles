@@ -1,6 +1,7 @@
 ---
 name: coding-style
 description: Coding style principles including immutability, guard clauses, and single responsibility. Use when writing, modifying, or refactoring source code. Do NOT use for documentation-only changes or config file edits.
+durability: encoded-preference
 ---
 
 # Coding Style
@@ -14,6 +15,25 @@ description: Coding style principles including immutability, guard clauses, and 
 ### DRY Across Iteration Boundaries
 
 DRY applies across ALL code in the project, including code committed in earlier User Stories or iterations. Previously-committed code with passing tests is not frozen -- it is a refactoring target when duplication is detected.
+
+## Code Quality Checklist
+
+Before marking work complete:
+- [ ] Code is readable and well-named
+- [ ] Functions are small (<50 lines)
+- [ ] Files are focused (<800 lines)
+- [ ] No deep nesting (>4 levels)
+- [ ] Guard clauses used for early returns
+- [ ] Single responsibility per function
+- [ ] Data + functions preferred over classes
+- [ ] Proper error handling
+- [ ] No console.log statements
+- [ ] No magic numbers (use named constants)
+- [ ] No dummy/test data in production code (hardcoded values to pass tests, stub returns, placeholder strings)
+- [ ] No mutation (immutable patterns used)
+- [ ] No comments with arbitrary IDs (SR-001, CR-042, etc.)
+- [ ] No WHAT comments remain (actively deleted, not just avoided)
+- [ ] Remaining comments explain WHY (non-obvious reasoning only)
 
 ## Immutability (CRITICAL)
 
@@ -187,6 +207,8 @@ Examples of WHAT comments to DELETE:
 # Initialize the counter              <- DELETE (counter = 0 is clear)
 ```
 
+**Quick Test**: Cover the comment. Is the code still understandable? If yes, DELETE the comment.
+
 **Mandatory Action: DELETE WHAT Comments**
 
 WHEN you encounter or write a WHAT comment:
@@ -218,157 +240,16 @@ NEVER leave a WHAT comment "for now" or "for clarity" - this is the #1 source of
 
 ## Refactoring Patterns
 
-Apply these patterns during TDD REFACTOR phase to improve code quality.
+Apply these patterns during TDD REFACTOR phase. See `references/refactoring-patterns.md` for detailed examples:
 
-### Extract Helper Functions
-
-Break complex logic into well-named helpers:
-
-```python
-# BEFORE
-def calculate_price(items):
-    total = sum(item.price * item.quantity for item in items)
-    tax = total * 0.08 if total > 100 else total * 0.05
-    shipping = 10 if total < 50 else 0
-    return total + tax + shipping
-
-# AFTER
-def calculate_price(items):
-    subtotal = calculate_subtotal(items)
-    tax = calculate_tax(subtotal)
-    shipping = calculate_shipping(subtotal)
-    return subtotal + tax + shipping
-
-def calculate_subtotal(items):
-    return sum(item.price * item.quantity for item in items)
-
-def calculate_tax(subtotal):
-    return subtotal * 0.08 if subtotal > 100 else subtotal * 0.05
-
-def calculate_shipping(subtotal):
-    return 10 if subtotal < 50 else 0
-```
-
-### Explaining Variables & Constants
-
-Replace magic values and complex expressions with named variables/constants:
-
-```javascript
-// BEFORE
-if (user.age >= 18 && user.age <= 65 && user.credits > 1000) {
-  applyDiscount(order.total * 0.15);
-}
-
-// AFTER
-const MINIMUM_AGE = 18;
-const MAXIMUM_AGE = 65;
-const MINIMUM_CREDITS = 1000;
-const DISCOUNT_RATE = 0.15;
-
-const isEligibleAge = user.age >= MINIMUM_AGE && user.age <= MAXIMUM_AGE;
-const hasEnoughCredits = user.credits > MINIMUM_CREDITS;
-const isEligibleForDiscount = isEligibleAge && hasEnoughCredits;
-
-if (isEligibleForDiscount) {
-  const discountAmount = order.total * DISCOUNT_RATE;
-  applyDiscount(discountAmount);
-}
-```
-
-### Chunk Statements
-
-Group related code with blank lines:
-
-```python
-# BEFORE
-user = get_user(user_id)
-validate_user(user)
-order = create_order()
-order.user = user
-items = get_cart_items(user)
-for item in items:
-    order.add_item(item)
-calculate_totals(order)
-save_order(order)
-
-# AFTER
-user = get_user(user_id)
-validate_user(user)
-
-order = create_order()
-order.user = user
-
-items = get_cart_items(user)
-for item in items:
-    order.add_item(item)
-
-calculate_totals(order)
-save_order(order)
-```
-
-### Normalize Symmetries
-
-Make similar code look similar:
-
-```javascript
-// BEFORE
-if (type === 'admin') {
-  user.role = 'administrator';
-  user.permissions = getAllPermissions();
-} else if (type === 'mod') {
-  user.permissions = getModeratorPermissions();
-  user.role = 'moderator';  // Different order!
-}
-
-// AFTER
-if (type === 'admin') {
-  user.role = 'administrator';
-  user.permissions = getAllPermissions();
-} else if (type === 'mod') {
-  user.role = 'moderator';
-  user.permissions = getModeratorPermissions();
-}
-```
-
-### Dead Code Removal
-
-Remove unused code aggressively:
-- Unused functions, variables, and imports
-- Commented-out code (git has history)
-- Unreachable code paths
-- Obsolete TODOs and FIXMEs
-
-### One Pile
-
-Consolidate related code:
-- Move helper functions near their usage
-- Group related constants together
-- Combine scattered validation logic
-
-### Separation of Concerns
-
-- Separate business logic from presentation
-- Keep I/O operations distinct from processing
-- Isolate external dependencies
-- Extract configuration from implementation
-
-### Explicit Parameters
-
-Make dependencies clear:
-
-```javascript
-// BEFORE (hidden dependencies)
-function calculateTotal() {
-  const items = globalCart.items;  // Hidden global
-  const taxRate = config.taxRate;  // Hidden config
-  return items.reduce((sum, item) => sum + item.price, 0) * (1 + taxRate);
-}
-
-// AFTER (explicit parameters)
-function calculateTotal(items, taxRate) {
-  return items.reduce((sum, item) => sum + item.price, 0) * (1 + taxRate);
-}
-```
+- **Extract Helper Functions** -- Break complex logic into well-named helpers
+- **Explaining Variables & Constants** -- Replace magic values with named variables/constants
+- **Chunk Statements** -- Group related code with blank lines
+- **Normalize Symmetries** -- Make similar code look similar
+- **Dead Code Removal** -- Remove unused functions, variables, imports, commented-out code
+- **One Pile** -- Consolidate related code near its usage
+- **Separation of Concerns** -- Separate business logic from presentation and I/O
+- **Explicit Parameters** -- Make dependencies clear through function parameters
 
 ## Refactoring Safety Rules
 
@@ -439,34 +320,4 @@ ALWAYS use structured logging on server-side code:
 - Use machine-parseable format (JSON, logfmt, etc.)
 - Include: timestamp, level, message, requestId
 - Never log sensitive data (passwords, tokens, PII) -- see security-patterns skill for attack vectors
-
-## Comment Review (Before Completion)
-
-Before completing ANY code change, scan for WHAT comments:
-
-1. **Search for verb-starting comments**: Comments starting with Check, Validate, Get, Set, Handle, Process, etc.
-2. **For each found**: Ask "Does this describe WHAT or WHY?"
-3. **If WHAT**: DELETE and apply alternative (extract function, explaining variable, or nothing)
-4. **If WHY**: Keep, but verify it explains non-obvious reasoning
-
-**Quick Test**: Cover the comment. Is the code still understandable? If yes, DELETE the comment.
-
-## Code Quality Checklist
-
-Before marking work complete:
-- [ ] Code is readable and well-named
-- [ ] Functions are small (<50 lines)
-- [ ] Files are focused (<800 lines)
-- [ ] No deep nesting (>4 levels)
-- [ ] Guard clauses used for early returns
-- [ ] Single responsibility per function
-- [ ] Data + functions preferred over classes
-- [ ] Proper error handling
-- [ ] No console.log statements
-- [ ] No magic numbers (use named constants)
-- [ ] No dummy/test data in production code (hardcoded values to pass tests, stub returns, placeholder strings)
-- [ ] No mutation (immutable patterns used)
-- [ ] No comments with arbitrary IDs (SR-001, CR-042, etc.)
-- [ ] No WHAT comments remain (actively deleted, not just avoided)
-- [ ] Remaining comments explain WHY (non-obvious reasoning only)
 

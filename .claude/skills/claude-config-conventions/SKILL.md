@@ -1,6 +1,7 @@
 ---
 name: claude-config-conventions
 description: "Conventions for Claude Code configuration files (agents, commands, rules, skills). Use when creating, reviewing, or modifying .claude/ configuration. Provides architecture principles, content placement rules, and agent responsibility boundaries."
+durability: encoded-preference
 ---
 
 # Claude Config Conventions

@@ -1,6 +1,7 @@
 ---
 name: security-patterns
 description: Security vulnerability patterns and prevention. Use when writing code that handles user input, authentication, API endpoints, or sensitive data.
+durability: encoded-preference
 ---
 
 # Security Patterns

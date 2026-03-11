@@ -1,6 +1,7 @@
 ---
 name: verification-loop
 description: Pre-PR verification checklist. Use after completing features, before creating PRs, or after refactoring.
+durability: encoded-preference
 ---
 
 # Verification Loop

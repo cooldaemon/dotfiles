@@ -30,6 +30,7 @@ name: skill-name
 description: [required description]
 license: MIT
 compatibility: Requires Python 3.10+, network access for API calls
+durability: encoded-preference  # or capability-uplift
 metadata:
   author: Company Name
   version: 1.0.0
@@ -50,6 +51,13 @@ metadata:
   - "Requires Node.js 18+"
   - "Claude.ai only (uses code execution)"
   - "Needs network access for external APIs"
+
+### durability
+- **Values**: `encoded-preference` | `capability-uplift`
+- **Use case**: Lifecycle management -- determines when to review/deprecate
+- **`encoded-preference`**: Encodes team/org workflow decisions. Durable -- update when team decisions change.
+- **`capability-uplift`**: Compensates for model limitations. Ephemeral -- deprecate when base model improves.
+- See "Skill Durability" and "Skill Lifecycle" sections in SKILL.md for details.
 
 ### metadata
 - **Format**: Any custom key-value pairs

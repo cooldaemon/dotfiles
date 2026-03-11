@@ -1,6 +1,7 @@
 ---
 name: review-severity-format
 description: "Shared severity levels, issue ID format, and verdict criteria for all code reviewers. Provides a single source of truth for review output consistency."
+durability: encoded-preference
 ---
 
 # Review Severity Format

@@ -1,6 +1,7 @@
 ---
 name: pcos-debate
 description: "Shared protocol for PCOS Agent Team debates. Defines Critique Log format, Challenge/Proposal formats, debate flow mechanics, and standard constraints. Used by all PCOS teammate agents (Planner, Critic, Optimizer, Synthesizer)."
+durability: encoded-preference
 ---
 
 # PCOS Debate Protocol
