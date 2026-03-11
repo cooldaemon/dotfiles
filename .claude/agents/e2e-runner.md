@@ -7,7 +7,6 @@ skills:
   - testing-principles
   - cucumber-playwright
   - cucumber-cypress
-  - coding-style
   - makefile-first
 ---
 

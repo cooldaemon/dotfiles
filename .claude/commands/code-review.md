@@ -22,7 +22,7 @@ All seven reviewers run **always** - ORM code changes affect generated SQL, any 
 
 ## Execution
 
-1. **Detect changed files**: Run `git diff --name-only HEAD`
+1. **Detect changed files**: Run `git diff --name-only origin/master...HEAD`
 2. **Launch all reviewers in parallel** using Task tool
 3. **Aggregate results**: Combine outputs into unified report
 4. **Persist report**: Write to `docs/code-reviews/YYYY-MM-DD-HHMMSS.md`
