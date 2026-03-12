@@ -11,6 +11,7 @@ durability: encoded-preference
 - **KISS** (Keep It Simple) - Simplest solution that works
 - **DRY** (Don't Repeat Yourself) - Extract common logic into functions
 - **YAGNI** (You Aren't Gonna Need It) - Don't build features before needed
+- **Boy Scout Rule** - Leave code better than you found it; refactor bad design in code you touch
 
 ### DRY Across Iteration Boundaries
 

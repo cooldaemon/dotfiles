@@ -15,3 +15,9 @@ Exception: trivial single-line fixes (typos, version bumps) can skip the plannin
 ## One Plan, One Concern
 
 Each plan addresses a single independent concern. When the user requests multiple unrelated changes in one message, split them into separate plan invocations. Two changes are "independent" if they can be approved, rejected, or implemented without affecting each other.
+
+## Before New Features
+
+Before routing a new feature request to `/plan-ux`:
+- Verify the user need is explicit — ease of implementation is not justification
+- Consider whether improving existing functionality already solves the need
