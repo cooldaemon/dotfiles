@@ -48,9 +48,7 @@ const count = defineModel<number>('count', { default: 0 })
 
 ### Prefer ref over reactive
 
-- `ref`: Always know reactive state via `.value`
-- Easier to destructure and pass around
-- Use `reactive` only for complex nested objects
+**Always use `ref` for single values.** Use `reactive` only for tightly-coupled object hierarchies where `.value` is unwieldy.
 
 ### Provide/Inject - Always Use InjectionKey
 

@@ -27,9 +27,7 @@ Avoid duplication - write appropriate tests at each layer:
 
 ## Test-Driven Development
 
-**Principle**: Always write tests before implementation code.
-
-For the TDD workflow (RED-GREEN-REFACTOR cycle), use `/tdd` command.
+**Always write tests before implementation.** See `/tdd` command for the full RED-GREEN-REFACTOR workflow.
 
 ## Cross-US Test Safety Net
 
@@ -41,16 +39,12 @@ When implementing multiple User Stories sequentially, tests from earlier USs ser
 
 ## Characterization Tests (Legacy Code)
 
-When refactoring needs to touch existing code that has NO tests (legacy or pre-TDD code), write characterization tests first to capture current behavior before making changes.
-
-**Purpose**: Create a safety net for code that predates TDD. The reverse of normal TDD -- code exists first, test comes after -- but the goal is the same: ensure changes do not break existing behavior.
+**Characterization tests capture what code actually does, not what it should do.** Write them before refactoring any untested legacy code.
 
 **When to use**: REFACTOR phase needs to modify code that:
 - Was written before the project adopted TDD
 - Has no existing test coverage
 - Would be risky to change without verification
-
-**Reference**: Michael Feathers, "Working Effectively with Legacy Code" -- characterization tests document what the code actually does, not what it should do.
 
 ### Anti-Patterns
 
@@ -97,16 +91,7 @@ await page.click('[data-testid="submit-button"]')
 
 ### Prefer Integration Tests Over Excessive Mocking
 
-```typescript
-// BAD: Mock everything -- tests pass but real system fails
-jest.mock('./database')
-jest.mock('./cache')
-jest.mock('./queue')
-// Test only proves mocks work, not actual behavior
-
-// GOOD: Use real dependencies where feasible
-// Reserve mocks for external services and non-deterministic behavior
-```
+Reserve mocks for external services and non-deterministic behavior. Prefer real dependencies where feasible.
 
 ### Keep Tests Independent
 

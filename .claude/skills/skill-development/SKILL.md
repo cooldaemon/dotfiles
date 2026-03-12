@@ -34,7 +34,7 @@ Skills also differ in how long they remain useful:
 | Encoded Preference | Encodes team/org workflow decisions | coding-style, git-workflow, api-design-patterns | Durable — update when team decisions change |
 | Capability Uplift | Compensates for model limitations | Specific API patterns, workaround techniques | Ephemeral — deprecate when base model improves |
 
-Most skills in this repo are **Encoded Preference** (global conventions). See [Skill Lifecycle](#skill-lifecycle) for when to deprecate Capability Uplift skills.
+Most skills in this repo are **Encoded Preference** (global conventions). See [Skill Lifecycle](#skill-lifecycle) for when to deprecate Capability Uplift skills. See `references/workflow-patterns.md` for the Encoded Preference vs Capability Uplift distinction in detail.
 
 ## Folder Structure
 
@@ -142,35 +142,15 @@ With 30+ skills loaded, false positives (skill triggers when it shouldn't) waste
 - **Scope mismatch**: Platform-specific content in a skill whose agent targets all platforms (e.g., React checklist in a general performance-reviewer). Platform-specific content is correct when the skill's scope matches its agent's scope
 - **Context-dependent severity thresholds**: The same pattern (e.g., O(n^2)) can be CRITICAL or harmless depending on data size and context -- do not hardcode severity in cross-platform skills
 
-### Example
+### Calibration Examples
 
-```markdown
-# BAD: Explaining what Claude knows
-## How to use pytest
-Run `pytest` to execute tests. Use `-v` for verbose.
-
-# BAD: Platform-specific content in a cross-platform skill
-## React Performance Rules  (in a general "performance-patterns" skill)
-- No inline objects in JSX props
-- Wrap callbacks in useCallback
-
-# GOOD: Platform-specific content in a platform-scoped skill
-## React Performance Rules  (in a "react-patterns" skill)
-- No inline objects in JSX props
-- Wrap callbacks in useCallback
-
-# GOOD: Policy only
-## Testing Policy
-- Use pytest with fixtures in conftest.py
-- Prefer parametrize over duplicate tests
-- Coverage target: 80% for business logic
-
-# GOOD: Review categories (not checklist items)
-## Review Categories
-- Algorithmic complexity
-- Memory management
-- Rendering performance
-```
+| Pattern | Verdict | Why |
+|---------|---------|-----|
+| "Run pytest for tests. Use -v for verbose." | Remove | Standard command Claude knows |
+| "React rules in a general perf skill" | Remove | Scope mismatch with agent target |
+| "React rules in react-patterns skill" | Keep | Scope matches agent scope |
+| "Use pytest with fixtures in conftest.py" | Keep | Policy direction, not tutorial |
+| Review categories (area names, no items) | Keep | Platform-agnostic anchors |
 
 ### Review Categories Pattern
 
@@ -208,23 +188,7 @@ Skills load in three levels to save context:
 
 ## Testing Your Skill
 
-### Trigger Tests
-
-Should trigger on:
-- Obvious requests
-- Paraphrased requests
-
-Should NOT trigger on:
-- Unrelated topics
-- Similar but different domains
-
-**Debug**: Ask Claude "When would you use [skill-name]?" - it quotes the description.
-
-### Functional Tests
-
-- Valid outputs generated
-- Expected workflow followed
-- Error handling works
+See `references/troubleshooting.md` for common issues (trigger failures, instructions not followed).
 
 ### Iteration Signals
 

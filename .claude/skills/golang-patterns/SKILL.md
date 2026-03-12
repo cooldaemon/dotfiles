@@ -61,7 +61,7 @@ type UserStore interface {
 
 ### Small, Focused Interfaces
 
-Prefer single-method interfaces. Compose as needed.
+Prefer single-method interfaces — enables composition and testing flexibility. Compose as needed.
 
 ## Concurrency Policies
 

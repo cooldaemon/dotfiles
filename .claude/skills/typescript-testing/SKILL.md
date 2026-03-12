@@ -25,11 +25,12 @@ describe('UserService', () => {
 
 ## Mocking Policies
 
-### Clear Mocks After Each Test
+### Mock Cleanup (REQUIRED)
 
 ```typescript
 afterEach(() => {
   jest.clearAllMocks()  // Vitest: vi.clearAllMocks()
+  jest.restoreAllMocks() // Vitest: vi.restoreAllMocks()
 })
 ```
 
@@ -41,14 +42,6 @@ const spy = jest.spyOn(service, 'save')
 
 // AVOID: Full module mock when not needed
 jest.mock('./service')
-```
-
-### Restore Spies
-
-```typescript
-afterEach(() => {
-  spy.mockRestore()
-})
 ```
 
 ## Async Testing
@@ -71,10 +64,6 @@ await expect(fetchData()).rejects.toThrow('Network error')
 | Lines | 80%+ |
 | Branches | 80%+ |
 | Functions | 80%+ |
-
-## Commands
-
-**See `makefile-first` skill** for command execution policy.
 
 ## Vitest Bench
 
@@ -100,15 +89,3 @@ bench('operation', () => { /* code */ }, {
 })
 ```
 
-## Anti-Patterns
-
-| Anti-Pattern | Correct Approach |
-|--------------|------------------|
-| Missing mock cleanup | Use `clearAllMocks()` in afterEach |
-| Flaky async tests | Use proper async/await |
-
-## Best Practices
-
-- One assertion focus per test
-- Clear test names describing behavior
-- Use beforeEach/afterEach for setup/cleanup

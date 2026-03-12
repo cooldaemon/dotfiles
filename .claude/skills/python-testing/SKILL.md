@@ -85,10 +85,6 @@ def test_add(a, b, expected): assert add(a, b) == expected
 fail_under = 80
 ```
 
-## Commands
-
-**See `makefile-first` skill** for command execution policy.
-
 ## Anti-Patterns
 
 | Anti-Pattern | Correct Approach |
@@ -96,12 +92,3 @@ fail_under = 80
 | `time.sleep()` in tests | Use mocks or async waiting |
 | Shared mutable state | Isolated fixtures per test |
 | Ignoring flaky tests | Fix or remove immediately |
-| Duplicate test functions | Use parametrize |
-
-## Best Practices
-
-- One assertion per test (or related assertions)
-- Use fixtures for setup/teardown
-- Use parametrize for multiple cases
-- Keep tests independent
-- Descriptive test names

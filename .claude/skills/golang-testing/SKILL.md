@@ -134,10 +134,6 @@ func (m *MockUserStore) GetUser(id string) (*User, error) {
 | General code | 80%+ |
 | Generated code | Exclude |
 
-## Commands
-
-**See `makefile-first` skill** for command execution policy.
-
 ## Anti-Patterns
 
 | Anti-Pattern | Correct Approach |
@@ -148,9 +144,3 @@ func (m *MockUserStore) GetUser(id string) (*User, error) {
 | Skip error path testing | Always test error cases |
 | Missing `t.Helper()` | Always add to helper functions |
 
-## Best Practices
-
-- Use table-driven tests
-- Use `t.Parallel()` for independent tests
-- Meaningful test names describing scenario
-- Clean up with `t.Cleanup()`

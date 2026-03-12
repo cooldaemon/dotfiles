@@ -47,7 +47,7 @@ if (!context) throw new Error('Must be used within Provider')
 | `useCallback` | Functions passed to memoized children |
 | `React.memo` | Pure components with frequent parent re-renders |
 
-**Note**: React Compiler will auto-memoize. Use manual memoization only when precise control needed.
+**Default: Let React Compiler handle memoization.** Manual `useMemo`/`useCallback`/`React.memo` only when precise control over re-render boundaries is needed.
 
 ### Code Splitting - Use for Heavy Components
 
@@ -93,6 +93,8 @@ const hintId = useId()
 ## Component Design Policies
 
 ### Prefer Composition
+
+Composition over configuration — components should be assembled, not configured via props.
 
 ```typescript
 // GOOD

@@ -18,26 +18,13 @@ Before creating or updating content, determine which CLAUDE.md file should be th
 
 ## Working Directory Detection
 
-Analyze the session to identify the primary working area:
+Analyze the session to identify the primary working area using these signals:
+- **File modification analysis**: Which directory has the most changes?
+- **Command execution context**: Where were build/test commands run?
+- **User focus indicators**: Explicit statements, file paths, problem domains
+- **Scope analysis**: Multi-package → root; single component → subdirectory; architectural → root
 
-1. **File Modification Analysis**
-   - Count files modified per directory
-   - Identify the directory with the most changes
-   - Track nested component work (e.g., `packages/api/src/controllers/`)
-
-2. **Command Execution Context**
-   - Where were build/test commands run?
-   - Were commands specific to a subdirectory?
-
-3. **User Focus Indicators**
-   - Explicit user statements ("update the API package")
-   - File paths in discussions
-   - Problem domains mentioned
-
-4. **Scope Analysis**
-   - Changes span multiple packages → likely root CLAUDE.md
-   - Changes isolated to one component → likely subdirectory CLAUDE.md
-   - Architectural decision affects all → root CLAUDE.md
+See `references/targeting-examples.md` for detailed examples of target file selection.
 
 ## Content Classification Criteria
 
@@ -184,39 +171,6 @@ For detailed documentation on auto-loaded files, CLAUDE.md vs .claude/ directory
 # CLAUDE.md Template Structure
 
 See `references/template.md` for the full CLAUDE.md starter template.
-
-# Writing Best Practices
-
-## Content Guidelines
-
-**Be Specific:**
-- Include exact commands, file paths, version numbers
-- Use concrete examples, not abstract descriptions
-- Specify configurations and settings
-
-**Be Concise:**
-- Clear, direct language without unnecessary detail
-- One topic per section
-- Avoid redundant explanations
-
-**Be Practical:**
-- Focus on actionable information
-- Include "how-to" not just "what"
-- Provide context for decisions
-
-**Be Current:**
-- Update outdated information immediately
-- Remove obsolete sections
-- Mark deprecated features clearly
-
-## Formatting Rules
-
-- Use proper Markdown formatting
-- Include code blocks with language hints
-- Use consistent heading hierarchy (## for main sections, ### for subsections)
-- Add comments to complex commands
-- Use bullet points for lists
-- Keep line length reasonable (80-100 chars for readability)
 
 ## Section Priority
 

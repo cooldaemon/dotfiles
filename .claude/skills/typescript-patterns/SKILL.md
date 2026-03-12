@@ -22,44 +22,7 @@ Patterns for TypeScript and JavaScript development (Node.js, tooling).
 
 **NEVER use `npm install` directly when a non-npm lock file exists.**
 
-### New Project Setup
-
-When scaffolding a new TypeScript project, always initialize with a package manager:
-
-```bash
-# Default (npm is always available with Node.js)
-npm init -y && npx tsc --init
-
-# If pnpm is available and preferred
-pnpm init && pnpm add -D typescript && pnpm exec tsc --init
-
-# If bun is available and preferred
-bun init
-```
-
 **Follow the existing project's lock file. Never mix package managers.**
-
-## Naming Conventions
-
-### Variables
-```typescript
-// Descriptive names
-const marketSearchQuery = 'election'
-const isUserAuthenticated = true
-const totalRevenue = 1000
-
-// Avoid: unclear names
-const q = 'election'
-const flag = true
-```
-
-### Functions
-```typescript
-// Verb-noun pattern
-async function fetchMarketData(marketId: string) { }
-function calculateSimilarity(a: number[], b: number[]) { }
-function isValidEmail(email: string): boolean { }
-```
 
 ## Async/Await Patterns
 
@@ -90,9 +53,6 @@ interface Market {
 }
 
 function getMarket(id: string): Promise<Market> { }
-
-// BAD: Using 'any'
-function getMarket(id: any): Promise<any> { }
 ```
 
 ## Module Organization
