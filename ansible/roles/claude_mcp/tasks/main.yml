@@ -36,7 +36,7 @@
   when:
     - claude_installed.rc == 0
     - mcp_list.rc == 0
-    - "'playwright:' not in mcp_list.stdout"
+    - "'playwright:' not in mcp_list.stdout or (playwright_reconfig_result is defined and playwright_reconfig_result is changed)"
   register: playwright_result
   changed_when: playwright_result.rc == 0
 
