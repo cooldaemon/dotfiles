@@ -11,12 +11,12 @@ durability: encoded-preference
 ### Planner (Blue/White Hat)
 1. **Draft**: Analyze relevant files, create plan
 2. **Share draft**: Send complete draft to **critic** and **optimizer**
-3. **Receive feedback**: Critic sends challenges (problems), Optimizer sends proposals (improvements)
+3. **Receive feedback**: Critic sends challenges (problems), then Optimizer sends proposals (improvements, incorporating Critic's input)
 4. **Respond to each item**:
    - **Accept**: Modify the plan and explain the change
    - **Reject**: Provide clear reasoning
    - **Defer**: Note for user to decide
-5. **Send final plan to synthesizer**: After responding to feedback, send the complete final plan
+5. **Send revised plan to all**: After responding to feedback, send the revised plan to **critic**, **optimizer**, AND **synthesizer**
 
 ### Critic (Black Hat)
 1. **Pre-read**: Read relevant files while waiting for planner's draft

@@ -26,8 +26,8 @@ Create a UX plan by orchestrating a PCOS Agent Team. Four teammates (Planner, Cr
 6. **Debate flow**:
    - Planner reads UI files, creates draft, sends to Critic and Optimizer
    - Critic sends challenges to Planner (copies Optimizer)
-   - Optimizer sends improvement proposals to Planner
-   - Planner responds to both, sends final version to Synthesizer
+   - Optimizer waits for Critic's challenges, then sends proposals to Planner incorporating Critic's input
+   - Planner responds to both, sends revised version to Critic, Optimizer, AND Synthesizer
    - Critic and Optimizer send final assessments to Synthesizer
    - Synthesizer converges, resolves disagreements, writes plan file, sends Critique Log to team-lead
 7. **Present to user**: Show the plan summary and critique highlights

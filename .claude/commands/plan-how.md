@@ -28,8 +28,8 @@ Create an implementation plan by orchestrating a PCOS Agent Team. Four teammates
 6. **Debate flow**:
    - Planner reads codebase, creates draft, sends to Critic and Optimizer
    - Critic sends challenges to Planner (copies Optimizer)
-   - Optimizer sends improvement proposals and ADR candidate suggestions to Planner
-   - Planner responds to both, sends final version to Synthesizer
+   - Optimizer waits for Critic's challenges, then sends proposals (including ADR candidate suggestions) to Planner incorporating Critic's input
+   - Planner responds to both, sends revised version to Critic, Optimizer, AND Synthesizer
    - Critic and Optimizer send final assessments to Synthesizer
    - Synthesizer converges, resolves disagreements, writes how.md (and ADR files if identified), sends Critique Log to team-lead
 7. **Present to user**: Show the plan summary and critique highlights

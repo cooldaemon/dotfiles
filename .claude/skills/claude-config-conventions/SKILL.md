@@ -129,10 +129,11 @@ All PCOS-enabled commands include a complexity gate: simple requests bypass the 
 
 **Debate flow:**
 1. Planner drafts plan and shares with Critic and Optimizer
-2. Critic sends challenges, Optimizer sends proposals (both to Planner)
-3. Planner accepts/rejects/defers each item
-4. Synthesizer converges debate, writes output files, and sends Critique Log to team lead
-5. Team lead presents plan to user
+2. Critic sends challenges, then Optimizer sends proposals incorporating Critic's input (both to Planner)
+3. Planner accepts/rejects/defers each item, sends revised version to Critic, Optimizer, AND Synthesizer
+4. Critic and Optimizer send final assessments to Synthesizer
+5. Synthesizer converges debate, writes output files, and sends Critique Log to team lead
+6. Team lead presents plan to user
 
 **Pre-implementation vs post-implementation review:**
 - **PCOS Critic** (pre-implementation): Reviews the *plan* during PCOS debate, before any files are created or modified. Catches architectural issues early. Exists in all PCOS teams (ux-critic, how-critic, claude-config-critic).
