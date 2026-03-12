@@ -32,6 +32,14 @@ Prefer CLI tools over MCP servers when a CLI equivalent exists. CLI tools are mo
 - Test report generation
 - CI/CD pipeline testing
 
+## Playwright MCP Output Management
+
+The `.playwright-mcp/` directory in the project root is gitignored. All Playwright MCP artifacts belong there.
+
+- **Screenshots**: Use `.playwright-mcp/` prefix in the filename parameter (e.g., `.playwright-mcp/screenshot.png`). Without a filename, screenshots go to `.playwright-mcp/` automatically via `--output-dir`. With a filename, the path is resolved relative to cwd, so the prefix is required
+- **Cleanup**: Delete `.playwright-mcp/` when Playwright MCP work is complete for the session
+- **Never commit**: `.playwright-mcp/` is gitignored
+
 ## MCP Graceful Degradation
 
 If an MCP server is unavailable, do not fail the workflow. Fall back to CLI alternatives or skip the MCP-dependent step with a note to the user.

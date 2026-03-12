@@ -21,8 +21,18 @@
   register: peekaboo_remove_result
   changed_when: peekaboo_remove_result.rc == 0
 
+- name: Reconfigure Playwright MCP server (add --output-dir)
+  command: claude mcp remove playwright -s user
+  when:
+    - claude_installed.rc == 0
+    - mcp_list.rc == 0
+    - "'playwright:' in mcp_list.stdout"
+    - "'output-dir' not in mcp_list.stdout"
+  register: playwright_reconfig_result
+  changed_when: playwright_reconfig_result.rc == 0
+
 - name: Configure Playwright MCP server
-  command: claude mcp add playwright -s user -- npx @playwright/mcp@latest
+  command: claude mcp add playwright -s user -- npx @playwright/mcp@latest --output-dir .playwright-mcp
   when:
     - claude_installed.rc == 0
     - mcp_list.rc == 0

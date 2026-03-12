@@ -14,6 +14,7 @@
 .config/zed/prompts/
 .config/zed/themes/
 .claude/settings.local.json
+.playwright-mcp/
 docs/plans/
 docs/code-reviews/
 docs/config-reviews/
