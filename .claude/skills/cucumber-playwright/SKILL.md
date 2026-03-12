@@ -1,6 +1,6 @@
 ---
 name: cucumber-playwright
-description: Cucumber BDD with Playwright policies. Use when writing Gherkin scenarios with Playwright step definitions.
+description: Cucumber BDD with Playwright policies. Use when writing Gherkin scenarios with Playwright step definitions. Do NOT use for Cypress-based BDD -- use cucumber-cypress instead. Do NOT use for non-BDD Playwright tests.
 durability: encoded-preference
 ---
 

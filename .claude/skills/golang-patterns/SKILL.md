@@ -1,6 +1,6 @@
 ---
 name: golang-patterns
-description: Idiomatic Go patterns and policies. Use when writing, reviewing, or refactoring Go code.
+description: Idiomatic Go patterns and policies. Use when writing, reviewing, or refactoring Go application code. Do NOT use for test code -- use golang-testing instead.
 durability: encoded-preference
 ---
 

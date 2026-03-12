@@ -1,6 +1,6 @@
 ---
 name: makefile-first
-description: Makefile-first policy for build, test, lint, format, and verification commands. Use when running any project commands or executing tests.
+description: Makefile-first policy for build, test, lint, format, and verification commands. Use when running any project commands or executing tests. Do NOT use when the project has no Makefile -- check for a Makefile before applying this policy.
 durability: encoded-preference
 ---
 

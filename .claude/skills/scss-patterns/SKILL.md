@@ -1,6 +1,6 @@
 ---
 name: scss-patterns
-description: SCSS architecture and CSS variable policies. Use when writing SCSS stylesheets, CSS custom properties, or design system tokens.
+description: SCSS architecture and CSS variable policies. Use when writing SCSS stylesheets, CSS custom properties, or design system tokens. Do NOT use for plain CSS without SCSS or for CSS-in-JS solutions (styled-components, Emotion).
 durability: encoded-preference
 ---
 

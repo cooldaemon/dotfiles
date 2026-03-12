@@ -1,6 +1,6 @@
 ---
 name: cucumber-cypress
-description: Cucumber BDD with Cypress policies. Use when writing Gherkin scenarios with Cypress step definitions.
+description: Cucumber BDD with Cypress policies. Use when writing Gherkin scenarios with Cypress step definitions. Do NOT use for Playwright-based BDD -- use cucumber-playwright instead. Do NOT use for non-BDD Cypress tests.
 durability: encoded-preference
 ---
 

@@ -1,6 +1,6 @@
 ---
 name: js-library-distribution
-description: Patterns for developing distributable JavaScript/TypeScript libraries. Use when building npm packages, SDK libraries, publishing a library, writing a package for others, or any code that runs in customer environments.
+description: Patterns for developing distributable JavaScript/TypeScript libraries. Use when building npm packages, SDK libraries, publishing a library, writing a package for others, or any code that runs in customer environments. Do NOT use for application code that is not distributed as a package -- use typescript-patterns or the relevant language skill instead.
 durability: encoded-preference
 ---
 

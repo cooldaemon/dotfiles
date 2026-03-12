@@ -1,6 +1,6 @@
 ---
 name: verification-loop
-description: Pre-PR verification checklist. Use after completing features, before creating PRs, or after refactoring.
+description: Pre-PR verification checklist. Use after completing features, before creating PRs, or after refactoring. Do NOT use for writing code, designing features, or making architectural decisions -- this is for running verification checks only.
 durability: encoded-preference
 ---
 
