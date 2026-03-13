@@ -85,6 +85,10 @@ def test_add(a, b, expected): assert add(a, b) == expected
 fail_under = 80
 ```
 
+## Commands
+
+**See `makefile-first` skill** for command execution policy.
+
 ## Anti-Patterns
 
 | Anti-Pattern | Correct Approach |

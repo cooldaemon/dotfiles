@@ -134,6 +134,10 @@ func (m *MockUserStore) GetUser(id string) (*User, error) {
 | General code | 80%+ |
 | Generated code | Exclude |
 
+## Commands
+
+**See `makefile-first` skill** for command execution policy.
+
 ## Anti-Patterns
 
 | Anti-Pattern | Correct Approach |

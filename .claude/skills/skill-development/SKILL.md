@@ -142,6 +142,16 @@ With 30+ skills loaded, false positives (skill triggers when it shouldn't) waste
 - **Scope mismatch**: Platform-specific content in a skill whose agent targets all platforms (e.g., React checklist in a general performance-reviewer). Platform-specific content is correct when the skill's scope matches its agent's scope
 - **Context-dependent severity thresholds**: The same pattern (e.g., O(n^2)) can be CRITICAL or harmless depending on data size and context -- do not hardcode severity in cross-platform skills
 
+### Simplification Safety Checklist
+
+When removing content from skills, verify:
+
+- [ ] **WRONG/CORRECT code contrasts**: Keep for style-consistency skills (coding-style, etc.) — without concrete examples, judgment drifts across runs
+- [ ] **Cross-skill references**: "See `makefile-first`" or "See `/tdd`" sections connect skill dependencies — removing them breaks agent routing
+- [ ] **Reference file targets**: If text says "See references/X.md", verify X.md actually contains the promised content
+- [ ] **Agent dependencies**: Check `skills:` frontmatter in all agents that load this skill — don't remove content they depend on
+- [ ] **Coverage targets**: Language-specific metrics encode genuinely different policies — do not consolidate even if they look similar
+
 ### Calibration Examples
 
 | Pattern | Verdict | Why |

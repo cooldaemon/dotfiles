@@ -65,6 +65,10 @@ await expect(fetchData()).rejects.toThrow('Network error')
 | Branches | 80%+ |
 | Functions | 80%+ |
 
+## Commands
+
+**See `makefile-first` skill** for command execution policy.
+
 ## Vitest Bench
 
 ```bash
