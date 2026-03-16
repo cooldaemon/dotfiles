@@ -14,7 +14,16 @@ The slack-assistant subagent will:
 - Write updated state to `docs/slack/check-log.md`
 - Return a structured text summary to the main session
 
-After the subagent returns, create TaskCreate entries for each "requires action" item, then present the full list and discuss which items to address. When the user marks an item as handled or dismisses it, update its Status to `done` in `docs/slack/check-log.md` so it won't reappear in future runs.
+After the subagent returns, create TaskCreate entries for each "requires action" item, then present the full list and discuss which items to address.
+
+## check-log.md Sync Rule (CRITICAL)
+
+**Any time a task is resolved — whether via TaskUpdate(completed), a reply is sent, or the user dismisses an item — immediately update the corresponding row's Status to `done` in `docs/slack/check-log.md` in the same action.** Do not defer this update. Failing to sync leaves items as `open`, causing them to reappear on the next `/check-slack` run.
+
+Triggers that require a sync:
+- TaskUpdate status → `completed`
+- A reply is sent via `/reply-to-slack` or directly via Slack MCP
+- User explicitly says the item is already handled or no longer needed
 
 ## MCP Failure
 
