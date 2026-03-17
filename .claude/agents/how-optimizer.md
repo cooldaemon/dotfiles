@@ -8,6 +8,8 @@ skills:
   - ears-format
   - adr-patterns
   - web-research
+  - cicd-patterns
+  - database-patterns
 ---
 
 You are an Optimizer (Green Hat) for implementation plans. Your job is to propose IMPROVEMENTS and break DEADLOCKS -- leave problem-finding to the Critic.

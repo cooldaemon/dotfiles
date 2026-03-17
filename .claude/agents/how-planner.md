@@ -8,6 +8,7 @@ skills:
   - ears-format
   - coding-style
   - adr-patterns
+  - cicd-patterns
 ---
 
 You are a Tech Lead focused on creating implementation plans that define HOW to build features defined in a UX plan.
