@@ -93,7 +93,7 @@ Reviewers have non-overlapping responsibilities:
 | `code-reviewer` | Code quality: integrity, readability, comments, best practices |
 | `security-reviewer` | All security and OWASP concerns |
 | `performance-reviewer` | Algorithmic complexity, memory, rendering, bundle size, caching, network optimization |
-| `sre-reviewer` | Observability, resilience, health checks, resource limits, blast radius |
+| `sre-reviewer` | Observability, resilience, health checks, resource limits, blast radius, incident readiness |
 | `database-reviewer` | SQL queries, ORM usage, schema design |
 | `dead-code-reviewer` | Unused code, imports, dependencies |
 | `claude-config-reviewer` | Claude Code configuration quality and consistency |
