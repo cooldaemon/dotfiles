@@ -34,6 +34,7 @@ You are an expert security specialist focused on identifying and remediating vul
 - Cloud infrastructure security (IAM, network segmentation, secrets in IaC, container security)
 
 **Other reviewers own:**
+- Whether security tests exist (test coverage gaps) --> test-quality-reviewer
 - Structured logging format/style --> code-reviewer
 - Operational rate limiting (service protection) --> sre-reviewer
 - ORM-generated SQL quality (inefficient queries) --> database-reviewer

@@ -5,6 +5,7 @@ description: Test quality analysis specialist. Evaluates test coverage, uncovere
 tools: Read, Grep, Glob, Bash
 skills:
   - testing-principles
+  - api-testing-patterns
   - makefile-first
   - review-severity-format
 ---
@@ -52,6 +53,7 @@ For new public functions, check that:
 - Missing error/edge-case tests for new public functions
 
 **Other reviewers own:**
+- Whether security implementation is correct (vulnerabilities) --> security-reviewer
 - AAA pattern enforcement --> testing-principles skill
 - Test independence checks --> testing-principles skill
 - Mocking guidance --> testing-principles skill
