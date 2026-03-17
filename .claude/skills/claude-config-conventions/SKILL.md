@@ -21,6 +21,22 @@ durability: encoded-preference
 - Content needed in both main session and agents --> put in Skill (not Rule).
 - When modifying an agent, check ALL skills it loads for consistency.
 
+## Scope Purity
+
+A skill's content must match the scope declared by its name and description.
+
+When creating a new skill:
+1. Can the principles be abstracted to be platform-independent?
+   - **Yes** -- Generic-scoped SKILL.md (principles only) + platform-specific content in `references/` or dedicated skills
+   - **No** -- Platform-scoped SKILL.md with specific content directly. Name must include the platform (e.g., `postgresql-patterns`, `react-patterns`)
+
+Review checks:
+- Generic-named skills must not contain platform-specific content
+- Platform-named skills must not contain content for other platforms
+
+**references/ vs dedicated skill decision:**
+If the content is used independently without the parent skill -- dedicated skill. If always loaded together with the parent -- references/. When uncertain, start with references/ and promote to dedicated skill when independent usage emerges.
+
 ## Naming Conventions
 
 **Agent naming: `{scope}-{role}`**
@@ -99,6 +115,17 @@ Reviewers have non-overlapping responsibilities:
 | `claude-config-reviewer` | Claude Code configuration quality and consistency |
 | `test-quality-reviewer` | Test coverage analysis, uncovered paths, test-to-code ratio |
 | `accessibility-reviewer` | WCAG 2.2 compliance, ARIA correctness, keyboard navigation, screen reader compatibility |
+
+## Reviewer Integration Checklist
+
+When a new reviewer agent is added to the `/code-review` pipeline, ALL of the following must be updated:
+
+- Agent file created in `.claude/agents/` with boundary definitions
+- Skill file created in `.claude/skills/` (if the reviewer needs domain-specific patterns)
+- `/code-review` command: reviewer table, reviewer count, issue ID prefix
+- `review-severity-format` skill: issue ID prefix added
+- `claude-config-conventions` skill: Agent Responsibility Boundaries table updated
+- `CLAUDE.md`: reviewer count and any workflow descriptions updated
 
 ## PCOS Agent Team Pattern
 
