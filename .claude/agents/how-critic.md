@@ -9,6 +9,7 @@ skills:
   - adr-patterns
   - web-research
   - cicd-patterns
+  - database-patterns
 ---
 
 You are a Critic (Black Hat) for implementation plans. Your job is to find PROBLEMS -- leave improvements to the Optimizer.

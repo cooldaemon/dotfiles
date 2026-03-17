@@ -1,6 +1,6 @@
 ---
 name: database-patterns
-description: Database patterns including MySQL/Aurora optimization, index design, caching principles, and NoSQL guidelines. Use when working with databases, writing SQL, creating migrations, or designing schemas.
+description: "Database patterns including MySQL/Aurora optimization, EXPLAIN ANALYZE interpretation, index design, zero-downtime migrations, caching principles, and NoSQL guidelines. Use when working with databases, writing SQL, creating migrations, or designing schemas. Do NOT use for PostgreSQL-specific features (index types, JSONB, PgBouncer) -- use postgresql-patterns instead."
 durability: encoded-preference
 ---
 
@@ -159,6 +159,64 @@ INSERT INTO events (user_id, action) VALUES
   (3, 'click');
 ```
 
+## EXPLAIN ANALYZE
+
+Always run EXPLAIN with actual execution to get real times, not estimates:
+
+**MySQL/Aurora:**
+```sql
+EXPLAIN ANALYZE SELECT ...;
+```
+
+**PostgreSQL:**
+```sql
+EXPLAIN (ANALYZE, BUFFERS, FORMAT TEXT) SELECT ...;
+```
+
+**Key indicators:**
+
+| Indicator | Good | Investigate |
+|-----------|------|-------------|
+| Scan type | Index Scan, Index Only Scan | Seq Scan on large tables |
+| Rows | Actual close to estimated | Actual >> estimated (stale statistics) |
+| Loops | 1 (or low) | High loop count in nested loops |
+| Buffers shared hit | High ratio | High shared read (cache miss) |
+| Sort method | quicksort / Memory | external merge (disk sort) |
+
+**Action flow**: Find the node with highest exclusive time -> Check estimated vs actual rows -> Check scan type -> Add indexes or restructure -> Re-run EXPLAIN ANALYZE to confirm.
+
+## Zero-Downtime Migration Patterns
+
+### Add Column Safely
+
+```sql
+-- Safe: Add nullable column (no table rewrite, no lock)
+ALTER TABLE orders ADD COLUMN tracking_number VARCHAR(100);
+```
+
+### Rename Column Safely (Expand-and-Contract)
+
+1. **Expand**: Add new column, backfill data, update application to write both
+2. **Migrate**: Update application to read from new column
+3. **Contract**: Drop old column after verification period
+
+### Drop Column Safely
+
+1. Stop application code from reading/writing the column
+2. Deploy and verify
+3. Drop the column in a separate migration
+
+### Non-Blocking Index Creation
+
+Creating indexes on large tables locks writes by default. Use non-blocking alternatives:
+
+- **PostgreSQL**: `CREATE INDEX CONCURRENTLY`
+- **MySQL/Aurora**: `ALTER TABLE ... ADD INDEX` with `ALGORITHM=INPLACE, LOCK=NONE`
+
+**Caveat**: `CREATE INDEX CONCURRENTLY` cannot run inside a transaction and may leave an INVALID index on failure. Check and retry if needed.
+
+For PostgreSQL-specific index types and patterns, see postgresql-patterns skill.
+
 ## Concurrency & Locking
 
 ### Keep Transactions Short
@@ -247,5 +305,9 @@ GRANT SELECT, INSERT, UPDATE ON mydb.orders TO 'app_writer'@'%';
 - [ ] utf8mb4 charset used
 - [ ] No N+1 query patterns
 - [ ] Transactions kept short
+- [ ] EXPLAIN ANALYZE run on new or modified queries
+- [ ] Migrations are non-blocking (CONCURRENTLY or ALGORITHM=INPLACE)
+- [ ] Column additions are nullable or have DEFAULT
+- [ ] Column renames use expand-and-contract pattern
 
 **Remember**: Data consistency is the top priority. Avoid distributed transactions and eventual consistency whenever possible.
