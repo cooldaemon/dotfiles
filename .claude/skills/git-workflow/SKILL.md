@@ -174,10 +174,3 @@ Each fixup is absorbed into the commit whose message it matches, regardless of i
 
 **Rule**: Never use `git push --force`. Always use `git push --force-with-lease`.
 
-## Parallel Work
-
-Prefer `git worktree` over `git stash` for parallel work.
-
-## Regression Hunting
-
-Use `git bisect run <test-command>` for automated regression hunting.

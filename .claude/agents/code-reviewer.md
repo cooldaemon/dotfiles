@@ -42,7 +42,7 @@ You are a senior code reviewer ensuring high standards of code quality.
 - Hardcoded dummy/test data in production code (placeholder values, stub returns, TODO implementations)
 - Code that reads secrets (.env, config, env vars) and outputs/logs their values
 - Data loss or corruption risks (destructive operations without confirmation, missing transaction boundaries, silent data truncation)
-- Race conditions (shared mutable state without synchronization, TOCTOU bugs, concurrent collection modification)
+- Race conditions as general concurrency bugs (shared mutable state without synchronization, TOCTOU bugs, concurrent collection modification). Security-exploitable race conditions in auth/financial flows --> security-reviewer
 - Breaking API contracts (removing or renaming public API without deprecation path)
 
 ### Code Quality (must)
