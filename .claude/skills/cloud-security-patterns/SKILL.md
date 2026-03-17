@@ -42,7 +42,7 @@ Cloud infrastructure security principles. For application code security (OWASP, 
 
 ## IaC Security Scanning
 
-The following are IaC-specific scanning concerns:
+For pipeline integration of security scanning (SAST, secrets detection, dependency scanning), see cicd-patterns skill. The following are IaC-specific scanning concerns:
 
 - Terraform/CDK/CloudFormation templates scanned for misconfigurations before apply
 - Security group rules reviewed for overly permissive access (0.0.0.0/0)
