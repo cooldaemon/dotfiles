@@ -29,6 +29,39 @@ docs/adr/
 └── ...
 ```
 
+## Decision Principles
+
+- **No architecture astronautics** -- Every abstraction must justify its complexity. If you cannot explain why a layer exists to a new team member in one sentence, remove it.
+- **Trade-offs over best practices** -- Name what you are giving up, not just what you are gaining. Every ADR "Consequences" section must have both Positive and Negative entries.
+- **Domain first, technology second** -- Understand the business problem before picking tools or frameworks.
+- **Reversibility as criterion** -- Prefer decisions that are easy to change over ones that are "optimal" right now. When two options are close, choose the more reversible one. Note reversibility explicitly in the ADR.
+
+## DDD Considerations
+
+Evaluate options against bounded context boundaries, aggregate consistency, and domain event flows.
+
+## Context Mapping
+
+When ADRs involve integration between contexts, identify the context mapping pattern (Shared Kernel, Customer/Supplier, Conformist, Anti-Corruption Layer, Open Host Service, Separate Ways) in the ADR.
+
+## Architecture Pattern Decision Matrix
+
+When an ADR evaluates architectural patterns, use this matrix as a starting point for trade-off analysis:
+
+| Pattern | Use When | Avoid When | Key Trade-off |
+|---------|----------|------------|---------------|
+| Modular Monolith | Small team, unclear domain boundaries, early-stage | Independent scaling or deployment needed per module | Simplicity vs deployment flexibility |
+| Microservices | Clear domain boundaries, team autonomy needed, independent scaling | Small team, early-stage product, unclear boundaries | Autonomy vs operational complexity |
+| Event-Driven | Loose coupling, async workflows, audit trail needed | Strong consistency required, simple request-response | Decoupling vs eventual consistency complexity |
+| CQRS | Read/write asymmetry, complex query requirements | Simple CRUD domains, small data volume | Query optimization vs system complexity |
+
+This matrix belongs in the "Considered Options" section of an ADR. Customize rows and trade-offs for the specific project context.
+
+## Communication
+
+- Use the C4 model (Context, Containers, Components, Code) to communicate architecture at the right level of abstraction in ADR diagrams or descriptions.
+- Always present at least two options with explicit trade-offs in the "Considered Options" section.
+
 ## ADR Template
 
 ```markdown
@@ -57,6 +90,9 @@ Chosen option: "[Option X]", because [justification].
 ### Negative
 * [Drawback 1]
 * [Drawback 2]
+
+### Reversibility
+[How easy is it to change this decision later? What would reversal cost?]
 ```
 
 ## Naming Convention

@@ -45,6 +45,7 @@ For each design decision, document:
 - **Pros**: Benefits and advantages
 - **Cons**: Drawbacks and limitations
 - **Alternatives**: Other options considered
+- **Reversibility**: How easy is it to change this decision later
 - **Decision**: Final choice and rationale
 
 ## Principles to Respect
@@ -68,7 +69,7 @@ For each design decision, document:
 1. **Analyze** - Review current state and requirements
 2. **Design** - Create proposal with trade-off analysis
 3. **Decide** - Choose option with clear rationale
-4. **Document** - Create ADR if significant decision (see adr-patterns skill)
+4. **Document** - Create ADR if significant decision (see adr-patterns skill for template, decision principles, DDD considerations, and architecture pattern matrix)
 5. **Implement** - Proceed with approved design
 
 ## how.md Integration
