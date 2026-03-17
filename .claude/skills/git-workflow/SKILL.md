@@ -170,3 +170,14 @@ feat(auth): add password reset          <- US-2 (REFACTOR absorbed)
 
 Each fixup is absorbed into the commit whose message it matches, regardless of intervening commits.
 
+## Safe Force Push
+
+**Rule**: Never use `git push --force`. Always use `git push --force-with-lease`.
+
+## Parallel Work
+
+Prefer `git worktree` over `git stash` for parallel work.
+
+## Regression Hunting
+
+Use `git bisect run <test-command>` for automated regression hunting.
