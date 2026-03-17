@@ -63,6 +63,7 @@ Use anti-CSRF tokens for state-changing requests. Verify Origin/Referer headers.
 trufflehog filesystem . --json   # Secrets detection
 gitleaks detect --source .       # Secrets in git history
 semgrep --config auto .          # Pattern-based scanning
+trivy fs .                       # Dependency and container vulnerability scanning
 ```
 
 ### TypeScript/JavaScript
@@ -107,6 +108,18 @@ shellcheck *.sh
 8. **Insecure Deserialization** - User input deserialized safely?
 9. **Vulnerable Components** - Dependencies up to date?
 10. **Insufficient Logging** - Security events logged?
+
+## STRIDE Threat Modeling
+
+Apply STRIDE at each trust boundary (user-to-API, service-to-service, service-to-database): Spoofing, Tampering, Repudiation, Information Disclosure, DoS, Elevation of Privilege.
+
+## Security Headers
+
+Verify on HTTP responses: CSP, HSTS, X-Frame-Options, X-Content-Type-Options, Permissions-Policy, Referrer-Policy. Suppress server version headers (`Server:`, `X-Powered-By:`).
+
+## CI/CD Security Scanning
+
+For pipeline-stage security scanning (SAST, secrets detection, dependency/container scanning), see cicd-patterns skill.
 
 ## HTTP Exceptions (Do NOT Flag as Insecure)
 
