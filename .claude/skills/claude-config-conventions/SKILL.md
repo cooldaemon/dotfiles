@@ -98,6 +98,7 @@ Reviewers have non-overlapping responsibilities:
 | `dead-code-reviewer` | Unused code, imports, dependencies |
 | `claude-config-reviewer` | Claude Code configuration quality and consistency |
 | `test-quality-reviewer` | Test coverage analysis, uncovered paths, test-to-code ratio |
+| `accessibility-reviewer` | WCAG 2.2 compliance, ARIA correctness, keyboard navigation, screen reader compatibility |
 
 ## PCOS Agent Team Pattern
 

@@ -17,8 +17,9 @@ Run multiple specialized reviewers in parallel for comprehensive code analysis.
 | **database-reviewer** | SQL queries, ORM usage, schema design |
 | **dead-code-reviewer** | Unused code, imports, dependencies |
 | **test-quality-reviewer** | Test coverage, uncovered paths, test-to-code ratio |
+| **accessibility-reviewer** | WCAG 2.2 compliance, ARIA correctness, keyboard navigation |
 
-All seven reviewers run **always** - ORM code changes affect generated SQL, any code change can have performance or operational implications.
+All eight reviewers run **always** - ORM code changes affect generated SQL, any code change can have performance or operational implications.
 
 ## Execution
 
@@ -92,6 +93,9 @@ total_issues: N
 ## Test Quality Review (test-quality-reviewer)
 [Full output from test-quality-reviewer agent]
 
+## Accessibility Review (accessibility-reviewer)
+[Full output from accessibility-reviewer agent]
+
 ## Resolution Log
 | Issue ID | Resolved | Commit | Notes |
 |----------|----------|--------|-------|
@@ -105,6 +109,7 @@ total_issues: N
 - `DR-NNN`: Database review issues
 - `DC-NNN`: Dead code issues
 - `TQ-NNN`: Test quality issues
+- `AR-NNN`: Accessibility review issues
 
 ### Zero Issues Case
 If no issues are found, do NOT create a report file. Simply display "No issues found" in the conversation.

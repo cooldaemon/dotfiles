@@ -28,6 +28,7 @@ You are a senior code reviewer ensuring high standards of code quality.
 - SQL queries, ORM usage, schema design, N+1 --> database-reviewer
 - Unused code, imports, dependencies --> dead-code-reviewer
 - Test coverage, uncovered paths, test-to-code ratio --> test-quality-reviewer
+- WCAG compliance, ARIA correctness, keyboard navigation, screen reader compatibility --> accessibility-reviewer
 
 ## When Invoked
 

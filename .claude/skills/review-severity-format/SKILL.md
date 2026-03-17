@@ -36,6 +36,7 @@ Each issue uses the format `[PREFIX-NNN]` with a reviewer-specific prefix:
 | dead-code-reviewer | DC |
 | claude-config-reviewer | CFG |
 | test-quality-reviewer | TQ |
+| accessibility-reviewer | AR |
 
 Sequential numbering starts from 001 per review session.
 
