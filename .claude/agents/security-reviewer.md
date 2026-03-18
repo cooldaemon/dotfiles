@@ -2,10 +2,9 @@
 name: security-reviewer
 model: opus
 description: Security vulnerability detection specialist. Use PROACTIVELY after writing code that handles user input, authentication, API endpoints, or sensitive data. Supports multiple languages. Reviews only - does not modify code.
-tools: Read, Grep, Glob, Bash
+tools: Read, Grep, Glob, Bash, Skill
 skills:
   - security-patterns
-  - cloud-security-patterns
   - review-severity-format
 ---
 
@@ -58,6 +57,11 @@ Follow the `review-severity-format` skill for severity levels, issue IDs (SR-NNN
 - [ ] Queries parameterized
 - [ ] Passwords properly hashed
 - [ ] Dependencies up to date
+
+## On-Demand Skills
+
+Load these skills when the task involves their domain:
+- `/cloud-security-patterns` -- Terraform, CDK, CloudFormation, Kubernetes, or cloud infrastructure configuration
 
 ## What This Agent Does NOT Do
 

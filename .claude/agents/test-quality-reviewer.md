@@ -2,10 +2,9 @@
 name: test-quality-reviewer
 model: opus
 description: Test quality analysis specialist. Evaluates test coverage, uncovered code paths, and test-to-code ratio using coverage tools. Reviews only - does not modify code.
-tools: Read, Grep, Glob, Bash
+tools: Read, Grep, Glob, Bash, Skill
 skills:
   - testing-principles
-  - api-testing-patterns
   - makefile-first
   - review-severity-format
 ---
