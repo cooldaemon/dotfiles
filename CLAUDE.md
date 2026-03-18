@@ -46,38 +46,15 @@ Each role is tagged for individual execution (e.g., `--tags homebrew`, `--tags c
 
 ## Standard Workflow
 
-Task routing (which entry command to use) is defined in `.claude/rules/workflow.md`.
-
-### Workflow Sequences
+Task routing is auto-loaded from `.claude/rules/workflow.md`. Workflow sequences:
 
 ```
-/plan-ux → /plan-how → /create-architecture-decision (if ADR candidates) → /tdd (US-level, git fixup, auto-review) → /tdd (fixes, if review issues) → /push-to-remote
-/plan-claude-config (PCOS debate) → /update-claude-config (auto-reviews, git commit) → /update-claude-config (git fixup, if review issues) → /push-to-remote
-/investigate → (branch to /plan-ux, /plan-how, or /tdd based on findings)
+Code:   /plan-ux → /plan-how → /create-architecture-decision (if ADR candidates) → /tdd → /push-to-remote
+Config: /plan-claude-config → /update-claude-config → /push-to-remote
+Bug:    /investigate → (branches to /plan-ux, /plan-how, or /tdd)
 ```
 
-### Two-Phase Planning (Code)
-
-| Phase | Command | Agent Team (PCOS) | Output |
-|-------|---------|-------------------|--------|
-| Phase 1: WHAT | `/plan-ux` | ux-planner, ux-critic, ux-optimizer, ux-synthesizer | `docs/plans/NNNN-{feature-name}/ux.md` |
-| Phase 2: HOW | `/plan-how` | how-planner, how-critic, how-optimizer, how-synthesizer | `docs/plans/NNNN-{feature-name}/how.md` |
-| Phase 2.5: ADR | `/create-architecture-decision` | adr-architect | `docs/adr/NNNN-title.md` (if candidates) |
-
-All PCOS-enabled commands include a complexity gate: simple requests bypass team debate.
-
-Multiple USs can be developed and reviewed before a single `/push-to-remote`.
-
-### TDD: US-by-US with Three-Layer Defense
-
-```
-For each US: RED → GREEN (dummies OK) → git commit → REFACTOR (eliminate ALL dummies) → git fixup
-```
-
-Quality defense layers (all run within a single `/tdd` invocation per US):
-1. **REFACTOR** (proactive) — tdd-guide eliminates dummies, applies coding-style
-2. **coding-style checklist** (self-check) — Code Quality Checklist in the skill
-3. **code-reviewer CRITICAL** (reactive) — auto-runs after US completion, catches anything that slipped through
+Plans output to `docs/plans/NNNN-{feature-name}/`. Multiple USs can be developed before a single `/push-to-remote`.
 
 ## MCP Setup Guides
 
