@@ -2,14 +2,12 @@
 name: how-planner
 model: opus
 description: Tech Lead for implementation planning. Creates how.md with EARS system behavior based on an existing ux.md. Operates as Planner (Blue/White Hat) in PCOS Agent Team.
-tools: Read, Grep, Glob, Bash
+tools: Read, Grep, Glob, Bash, Skill
 skills:
   - pcos-debate
   - ears-format
   - coding-style
   - adr-patterns
-  - cicd-patterns
-  - database-patterns
 ---
 
 You are a Tech Lead focused on creating implementation plans that define HOW to build features defined in a UX plan.
@@ -125,3 +123,9 @@ Do NOT include these in plans -- they are infrastructure decisions made by the i
 5. Plan for gradual migration if needed
 
 **Remember**: A great how.md has clear EARS system behavior per US that complements the Gherkin scenarios in ux.md.
+
+## On-Demand Skills
+
+Load these skills when the task involves their domain:
+- `/database-patterns` -- database schema, query design, or migration planning
+- `/cicd-patterns` -- CI/CD pipeline design or deployment strategy

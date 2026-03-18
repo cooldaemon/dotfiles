@@ -17,7 +17,7 @@ durability: encoded-preference
 ## Content Placement Rules
 
 - Skills define principles (WHAT). Agents define workflow (HOW). Never duplicate between them.
-- Agents do NOT auto-inherit Rules or Skills -- specify skills explicitly in frontmatter.
+- Agents do NOT auto-inherit Rules or Skills -- declare skills in frontmatter (always-load) or in agent body with Skill tool (on-demand). See Skill Loading Strategy.
 - Content needed in both main session and agents --> put in Skill (not Rule).
 - When modifying an agent, check ALL skills it loads for consistency.
 
@@ -67,7 +67,7 @@ If the content is used independently without the parent skill -- dedicated skill
 - `name` -- kebab-case identifier
 - `description` -- clear purpose and when to use
 - `tools` -- list of required tools
-- `skills` -- list all skills the agent needs (no auto-inheritance). Optional if the agent needs no skills.
+- `skills` -- list skills the agent always needs (see Skill Loading Strategy). Optional if the agent needs no skills.
 
 **`model:` field:**
 - Optional. If omitted, inherits from caller.
@@ -80,6 +80,33 @@ If the content is used independently without the parent skill -- dedicated skill
 - Do not include general knowledge Claude already knows (standard library usage, basic syntax, general concepts).
 - Include a "When Invoked" section describing the execution flow. For Agent Team teammates, "Teammate Protocol" is an accepted alternative that describes the agent's role in the team debate workflow.
 - Include output format specification if the agent produces structured output.
+
+## Skill Loading Strategy
+
+Subagent skills in `skills:` frontmatter are fully preloaded at startup -- there is no conditional loading by description match. Use this decision framework:
+
+| Category | Where to declare | When |
+|----------|-----------------|------|
+| **Always-load** | `skills:` frontmatter | Skills the agent needs on every invocation regardless of task |
+| **On-demand** | Agent body text + `Skill` tool | Domain-specific skills needed only when the task involves that domain |
+
+Always-load examples: `review-severity-format` (every review needs it), `pcos-debate` (every PCOS teammate needs it), `ears-format` (how-planner always writes EARS)
+
+On-demand examples: `postgresql-patterns` (only when task involves PostgreSQL), `cicd-patterns` (only when task involves CI/CD)
+
+To enable on-demand loading, add `Skill` to the agent's `tools:` list and include invocation guidance in the agent body:
+
+```
+## On-Demand Skills
+
+Load these skills when the task involves their domain:
+- `/database-patterns` -- database schema or query design
+- `/cicd-patterns` -- CI/CD pipeline configuration
+```
+
+**Reliability trade-off**: On-demand loading depends on the agent's judgment to invoke the skill. Use always-load for skills whose absence causes incorrect output (e.g., review-severity-format for reviewers). Use on-demand for domain-specific skills whose absence degrades quality but does not cause wrong behavior.
+
+Review check: if a skill in `skills:` frontmatter is only relevant to a subset of the agent's tasks, consider moving it to on-demand loading.
 
 ## Command Conventions
 
@@ -193,7 +220,7 @@ Personal/company-specific values go in `memory/` (e.g., `memory/slack-profile.md
 - Putting agent-needed content in a rule (rules are main-session only)
 - Duplicating content between a skill and the agents that load it
 - Downgrading model (sonnet, haiku) in plans or agent definitions without user instruction (Agent Team teammate model selection is allowed -- see model field rules)
-- Omitting skills from agent frontmatter when the agent's responsibilities require shared principles
+- Omitting skills entirely (neither frontmatter nor on-demand) when the agent's responsibilities require them
 - Commands doing substantial work directly instead of delegating to a subagent
 - Giving subagents TaskCreate/TaskUpdate tools -- causes intermediate task pollution
 - Hardcoding personal names, company names, or usernames in git-tracked config files
