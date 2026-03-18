@@ -84,6 +84,7 @@ durability: encoded-preference
 
     **Challenge [N]**: [Category] - [One-line summary]
     Problem: [Specific description]
+    Assumes: [Unstated assumption the plan relies on -- omit if none]
     Evidence: [File path, line numbers, convention reference]
     Suggestion: [Concrete fix]
     Severity: CRITICAL | HIGH | MEDIUM
