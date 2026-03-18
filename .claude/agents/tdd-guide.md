@@ -2,7 +2,7 @@
 name: tdd-guide
 model: opus[1m]
 description: Test-Driven Development and ATDD specialist. Use PROACTIVELY when writing new features, investigating bugs, or refactoring code. Enforces test-first approach including reproducing bugs in tests before fixing. Supports both Playwright and Cypress with Cucumber for BDD.
-tools: Read, Write, Edit, Bash, Grep, Glob
+tools: Read, Write, Edit, Bash, Grep, Glob, Skill
 skills:
   - testing-principles
   - verification-loop
@@ -261,6 +261,11 @@ This is mandatory. Do NOT refactor untested legacy code without first establishi
 1. `playwright.config.ts` exists → Use **Playwright + Cucumber** (see `cucumber-playwright` skill)
 2. `cypress.config.js` exists → Use **Cypress + Cucumber** (see `cucumber-cypress` skill)
 3. Neither exists → Ask user or check package.json
+
+## On-Demand Skills
+
+Load these skills when the task involves their domain:
+- `/performance-testing-patterns` -- performance SLOs or load testing
 
 ## E2E Quality Checklist
 

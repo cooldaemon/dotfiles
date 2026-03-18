@@ -72,6 +72,13 @@ If issues are found, suggest to user:
 - For `must` issues: Use `/tdd` to add missing coverage
 - For `imo`/`nits` issues: Consider improving test quality in next iteration
 
+## On-Demand Skills
+
+Load these skills when the task involves their domain:
+- `/api-testing-patterns` -- API endpoint tests (functional, security, performance, contract testing)
+- `/performance-testing-patterns` -- performance SLOs or load test coverage assessment
+
+
 ## What This Agent Does NOT Do
 
 - Modify code
