@@ -49,5 +49,6 @@ See the pcos-debate skill for the full debate flow, Proposal format, and constra
 
 Load these skills when the task involves their domain:
 - `/database-patterns` -- database schema, query design, or migration planning
+- `/mysql-aurora-patterns` -- MySQL/Aurora-specific features (InnoDB, utf8mb4, RDS Proxy, Aurora failover)
 - `/cicd-patterns` -- CI/CD pipeline design or deployment strategy
 - `/performance-testing-patterns` -- performance testing methodology, load/stress testing, performance SLOs

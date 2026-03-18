@@ -1,12 +1,12 @@
 ---
 name: database-patterns
-description: "Database patterns including MySQL/Aurora optimization, EXPLAIN ANALYZE interpretation, index design, zero-downtime migrations, caching principles, and NoSQL guidelines. Use when working with databases, writing SQL, creating migrations, or designing schemas. Do NOT use for PostgreSQL-specific features (index types, JSONB, PgBouncer) -- use postgresql-patterns instead."
+description: "Generic database patterns including index design, EXPLAIN ANALYZE interpretation, zero-downtime migrations, caching principles, schema design fundamentals, and NoSQL guidelines. Use when working with databases, writing SQL, creating migrations, or designing schemas. Do NOT use for MySQL/Aurora-specific features (utf8mb4, InnoDB, RDS Proxy) -- use mysql-aurora-patterns. Do NOT use for PostgreSQL-specific features (GiST, GIN, JSONB, PgBouncer) -- use postgresql-patterns."
 durability: encoded-preference
 ---
 
 # Database Patterns
 
-Database design and optimization patterns for MySQL/Aurora with caching and NoSQL guidelines.
+Generic database design and optimization patterns.
 
 ## Core Principles
 
@@ -25,7 +25,7 @@ Two-Phase Commit is complex and increases deadlock risk.
 ### 3. Sharding ID Strategy
 
 For horizontal sharding, use **UUID v4**:
-- AUTO_INCREMENT can conflict in distributed environments
+- Auto-increment sequences can conflict in distributed environments
 - UUID v4 is unpredictable and distributes evenly
 
 ### 4. External Store Consistency
@@ -35,17 +35,17 @@ For horizontal sharding, use **UUID v4**:
 RDBMS should function correctly even without Redis/Memcached cache.
 
 **Caching is Often a Bad Habit:**
-- ❌ Caching hides poor query design and missing indexes
-- ❌ Caching breaks data consistency (stale data, race conditions)
-- ❌ Caching adds complexity (invalidation is hard)
-- ❌ Caching delays proper MySQL tuning
+- Caching hides poor query design and missing indexes
+- Caching breaks data consistency (stale data, race conditions)
+- Caching adds complexity (invalidation is hard)
+- Caching delays proper database tuning
 
 **Before Adding Cache, Ask:**
 1. Have you analyzed slow queries with EXPLAIN?
 2. Have you added proper indexes?
 3. Have you optimized schema design?
 4. Have you considered connection pooling?
-5. Have you tuned MySQL/Aurora parameters?
+5. Have you tuned database parameters?
 
 **Cache is Justified ONLY When:**
 - All RDBMS optimizations are exhausted
@@ -54,10 +54,10 @@ RDBMS should function correctly even without Redis/Memcached cache.
 - You have cache invalidation strategy documented
 
 **MongoDB Usage Guidelines:**
-- ✅ Read-only master data (no updates in production)
-- ✅ Logs that don't require transactions
-- ❌ Frequently updated data
-- ❌ Data requiring consistency with RDBMS
+- Read-only master data (no updates in production)
+- Logs that don't require transactions
+- Not for frequently updated data
+- Not for data requiring consistency with RDBMS
 
 **Eventual Consistency is Hard:**
 Eventual consistency is more difficult than it appears.
@@ -69,7 +69,7 @@ Prefer RDBMS transactions for consistency whenever possible.
 
 ```sql
 CREATE TABLE orders (
-  id BIGINT AUTO_INCREMENT PRIMARY KEY,
+  id BIGINT PRIMARY KEY,
   customer_id BIGINT,
   FOREIGN KEY (customer_id) REFERENCES customers(id),
   INDEX idx_customer_id (customer_id)
@@ -104,20 +104,20 @@ SELECT email, name FROM users WHERE email = 'user@example.com';
 
 ```sql
 CREATE TABLE users (
-  id BIGINT AUTO_INCREMENT PRIMARY KEY,
+  id BIGINT PRIMARY KEY,
   email VARCHAR(255) NOT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  is_active TINYINT(1) DEFAULT 1,
+  is_active BOOLEAN DEFAULT TRUE,
   balance DECIMAL(10,2)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+);
 ```
 
 **Key Points:**
 - **BIGINT** for IDs (not INT)
 - **DECIMAL** for money (not FLOAT/DOUBLE)
 - **TIMESTAMP** for time
-- **utf8mb4** charset (full Unicode)
-- **InnoDB** engine (transactions, foreign keys)
+
+For MySQL conventions (InnoDB, utf8mb4), see mysql-aurora-patterns. For PostgreSQL types (JSONB, arrays), see postgresql-patterns.
 
 ### Naming Conventions
 
@@ -215,7 +215,7 @@ Creating indexes on large tables locks writes by default. Use non-blocking alter
 
 **Caveat**: `CREATE INDEX CONCURRENTLY` cannot run inside a transaction and may leave an INVALID index on failure. Check and retry if needed.
 
-For PostgreSQL-specific index types and patterns, see postgresql-patterns skill.
+For PostgreSQL-specific index types and patterns, see postgresql-patterns skill. For MySQL-specific DDL options, see mysql-aurora-patterns.
 
 ## Concurrency & Locking
 
@@ -248,32 +248,13 @@ UPDATE accounts SET balance = balance + 100 WHERE id = 2;
 COMMIT;
 ```
 
-## Aurora Specific
-
-### Read Replicas
-
-- Use reader endpoint for read-heavy queries
-- Use writer endpoint for writes only
-
-### Connection Management
-
-- Use connection pooling (RDS Proxy recommended)
-- Keep transactions short for failover resilience
-- Implement retry logic for failover scenarios
-
 ## Security
 
 ### Least Privilege
 
-```sql
--- GOOD: Minimal permissions
-CREATE USER 'app_readonly'@'%' IDENTIFIED BY 'password';
-GRANT SELECT ON mydb.products TO 'app_readonly'@'%';
+Grant only the minimum permissions required for each application role. Separate read-only and read-write users.
 
-CREATE USER 'app_writer'@'%' IDENTIFIED BY 'password';
-GRANT SELECT, INSERT, UPDATE ON mydb.orders TO 'app_writer'@'%';
--- No DELETE permission unless needed
-```
+For MySQL GRANT syntax, see mysql-aurora-patterns. For PostgreSQL role management, see postgresql-patterns.
 
 ## Anti-Patterns
 
@@ -292,7 +273,6 @@ GRANT SELECT, INSERT, UPDATE ON mydb.orders TO 'app_writer'@'%';
 ### Schema Anti-Patterns
 - `INT` for IDs (use `BIGINT`)
 - `FLOAT` for money (use `DECIMAL`)
-- Missing `utf8mb4` charset
 
 ## Review Checklist
 
@@ -301,12 +281,11 @@ GRANT SELECT, INSERT, UPDATE ON mydb.orders TO 'app_writer'@'%';
 - [ ] System works without cache
 - [ ] All WHERE/JOIN columns indexed
 - [ ] Composite indexes in correct column order
-- [ ] Proper data types (BIGINT, DECIMAL, TIMESTAMP)
-- [ ] utf8mb4 charset used
+- [ ] Proper data types (BIGINT for IDs, DECIMAL for money, TIMESTAMP for time)
 - [ ] No N+1 query patterns
 - [ ] Transactions kept short
 - [ ] EXPLAIN ANALYZE run on new or modified queries
-- [ ] Migrations are non-blocking (CONCURRENTLY or ALGORITHM=INPLACE)
+- [ ] Migrations are non-blocking
 - [ ] Column additions are nullable or have DEFAULT
 - [ ] Column renames use expand-and-contract pattern
 
