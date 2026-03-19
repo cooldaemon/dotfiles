@@ -8,18 +8,29 @@ Run multiple specialized reviewers in parallel for comprehensive code analysis.
 
 ## Reviewers
 
+### Always Run (never skip)
+
+These reviewers address universal concerns that apply to any code change regardless of domain:
+
 | Reviewer | Focus |
 |----------|-------|
 | **code-reviewer** | Integrity, readability, comments, best practices |
 | **security-reviewer** | Security vulnerabilities, OWASP Top 10 |
 | **performance-reviewer** | Algorithmic complexity, memory, rendering, bundle size, caching, network optimization |
 | **sre-reviewer** | Observability, resilience, health checks, resource limits, incident readiness |
-| **database-reviewer** | SQL queries, ORM usage, schema design |
 | **dead-code-reviewer** | Unused code, imports, dependencies |
 | **test-quality-reviewer** | Test coverage, uncovered paths, test-to-code ratio |
-| **accessibility-reviewer** | WCAG 2.2 compliance, ARIA correctness, keyboard navigation |
 
-All eight reviewers run **always** - ORM code changes affect generated SQL, any code change can have performance or operational implications.
+### Conditionally Skippable
+
+These reviewers may be skipped ONLY when the diff clearly contains none of their target artifacts:
+
+| Reviewer | Focus | Skip ONLY when |
+|----------|-------|----------------|
+| **database-reviewer** | SQL queries, ORM usage, schema design | Diff contains no SQL, ORM, migration, or schema changes |
+| **accessibility-reviewer** | WCAG 2.2 compliance, ARIA correctness, keyboard navigation | Diff contains no UI component, template, or markup changes |
+
+When a reviewer is skipped, it must still appear in the report with: **Skipped: [reason]** (e.g., "Skipped: no SQL, ORM, or schema changes in diff").
 
 ## Execution
 
@@ -116,7 +127,7 @@ If no issues are found, do NOT create a report file. Simply display "No issues f
 
 ## Important
 
-- All reviewers run in **parallel** for efficiency
+- "Always Run" reviewers run in **parallel** unconditionally; "Conditionally Skippable" reviewers also run unless their skip criteria are met
 - Reviewers **do not modify code** - they only report issues
 - Report file enables `/tdd` to systematically address issues
 
