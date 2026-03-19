@@ -3,6 +3,7 @@
 .config/grammarly-languageserver
 .config/gcloud/
 .config/gh/
+.config/gws/
 .config/git/
 .config/mise/
 .config/nix/
