@@ -63,6 +63,10 @@ When `make mcp-update` skips a service due to missing credentials, refer to the 
 - **Slack**: One-time app creation and token setup. See `docs/setup/slack-mcp.md`.
 - **Confluence**: API token creation and registration. See `docs/setup/confluence-mcp.md`.
 
+## Git Policy
+
+- This repository operates on `master` only. Do NOT create branches without explicit user permission.
+
 ## Editing This Repository
 
 - Make changes in source files, then run `make dotfiles-update` (or `make update`)
