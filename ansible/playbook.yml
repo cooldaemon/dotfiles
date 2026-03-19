@@ -17,5 +17,7 @@
       tags: claude
     - role: claude_mcp
       tags: mcp
+    - role: gws_skills
+      tags: gws
     - role: gpg
       tags: gpg

@@ -15,8 +15,12 @@
 .config/zed/prompts/
 .config/zed/themes/
 .claude/settings.local.json
+.claude/skills/gws-*
+.claude/skills/persona-*
+.claude/skills/recipe-*
 .playwright-mcp/
 docs/plans/
+docs/skills.md
 docs/code-reviews/
 docs/config-reviews/
 docs/slack/

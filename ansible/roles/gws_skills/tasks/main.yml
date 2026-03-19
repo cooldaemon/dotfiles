@@ -1,0 +1,21 @@
+- name: Check if gws is installed
+  command: which gws
+  register: gws_installed
+  changed_when: false
+  failed_when: false
+
+- name: Remove old gws skills
+  shell: rm -rf ~/.claude/skills/gws-* ~/.claude/skills/persona-* ~/.claude/skills/recipe-*
+  when: gws_installed.rc == 0
+
+- name: Remove old gws skills index
+  file:
+    path: "{{ playbook_dir }}/../docs/skills.md"
+    state: absent
+  when: gws_installed.rc == 0
+
+- name: Generate gws skills
+  command: gws generate-skills --output-dir .claude/skills/
+  args:
+    chdir: "{{ playbook_dir }}/.."
+  when: gws_installed.rc == 0
