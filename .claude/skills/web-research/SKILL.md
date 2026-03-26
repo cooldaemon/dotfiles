@@ -1,6 +1,6 @@
 ---
 name: web-research
-description: "Guidelines for using web search and documentation lookup tools (WebSearch, WebFetch, context7 MCP). Use when agents need to verify technical claims, check library APIs, or research current tool capabilities."
+description: "Use when agents need to verify technical claims, check library APIs, or research current tool capabilities."
 durability: encoded-preference
 ---
 

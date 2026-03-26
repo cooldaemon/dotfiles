@@ -1,6 +1,6 @@
 ---
 name: incident-response-patterns
-description: "Production incident response patterns: severity classification (SEV1-4), incident roles, SLO/SLI framework, error budget policy, and blameless culture principles. Use when designing incident response processes, writing runbooks, defining SLOs, creating post-mortems, or reviewing incident readiness. Do NOT use for code bug investigation (use bug-investigation instead)."
+description: "Use when designing incident response processes, writing runbooks, defining SLOs, creating post-mortems, or reviewing incident readiness. Do NOT use for code bug investigation (use bug-investigation instead)."
 durability: encoded-preference
 ---
 

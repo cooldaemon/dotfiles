@@ -1,6 +1,6 @@
 ---
 name: claude-md-authoring
-description: Guidelines for creating and maintaining CLAUDE.md files. Use when creating, updating, or reviewing CLAUDE.md documentation. Includes target file determination, templates, auto-load behavior, monorepo patterns, and best practices.
+description: Use when creating, updating, or reviewing CLAUDE.md documentation.
 durability: encoded-preference
 ---
 

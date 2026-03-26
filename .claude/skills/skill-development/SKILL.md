@@ -1,6 +1,6 @@
 ---
 name: skill-development
-description: Guidelines for creating Claude Code skills. Use when creating new skills, reviewing skill structure, or improving existing skills. Based on Anthropic's official skill development guide.
+description: Use when creating new skills, reviewing skill structure, or improving existing skills.
 durability: encoded-preference
 ---
 
@@ -83,26 +83,29 @@ See `references/yaml-reference.md` for complete field documentation.
 
 ## Description Field (CRITICAL)
 
-Structure: `[What it does] + [When to use it] + [Key capabilities]`
+Structure: `Use when [trigger conditions]. [Negative triggers if needed.]`
+
+The description controls when Claude loads the skill. Write ONLY trigger conditions — do NOT explain what the skill contains (that is redundant with the skill body).
+
+### Anti-Patterns (What-first) — DO NOT USE
 
 ```yaml
-# BAD: Too vague
-description: "Creates documents"
+description: "RESTful API design patterns including URL structure. Use when designing APIs."
+description: "Security vulnerability patterns and prevention. Use when handling user input."
+description: "Python testing policies for pytest. Use when writing Python tests."
+```
 
-# BAD: Missing triggers
-description: "Sophisticated multi-page documentation systems"
+### Correct (Trigger-first)
 
-# GOOD: Complete formula
-description: "Creates Word documents with tracked changes for legal review. Use when user asks for contracts, legal documents, or revision-tracked content."
-
-# GOOD: With negative trigger
-description: "Advanced data analysis for CSV files. Use for statistical modeling, regression. Do NOT use for simple data exploration."
+```yaml
+description: "Use when designing new API endpoints or reviewing API architecture."
+description: "Use when writing code that handles user input, authentication, or sensitive data."
+description: "Use when writing or reviewing Python tests with pytest."
 ```
 
 Include:
-- What the skill does
-- Trigger phrases/scenarios (what users actually say)
-- File types if relevant
+- Trigger conditions — what user requests or code contexts should load this skill
+- File types/patterns if relevant to triggering
 - Negative triggers when needed (Do NOT use for...)
 
 ### Description Analysis

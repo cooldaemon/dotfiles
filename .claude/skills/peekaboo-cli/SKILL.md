@@ -1,6 +1,6 @@
 ---
 name: peekaboo-cli
-description: "Peekaboo CLI for macOS screenshot capture and screen analysis. Use when capturing screenshots, analyzing application windows, or listing running applications."
+description: "Use when capturing screenshots, analyzing application windows, or listing running applications."
 durability: encoded-preference
 ---
 

@@ -1,6 +1,6 @@
 ---
 name: database-patterns
-description: "Generic database patterns including index design, EXPLAIN ANALYZE interpretation, zero-downtime migrations, caching principles, schema design fundamentals, and NoSQL guidelines. Use when working with databases, writing SQL, creating migrations, or designing schemas. Do NOT use for MySQL/Aurora-specific features (utf8mb4, InnoDB, RDS Proxy) -- use mysql-aurora-patterns. Do NOT use for PostgreSQL-specific features (GiST, GIN, JSONB, PgBouncer) -- use postgresql-patterns."
+description: "Use when working with databases, writing SQL, creating migrations, or designing schemas. Do NOT use for MySQL/Aurora-specific features (utf8mb4, InnoDB, RDS Proxy) -- use mysql-aurora-patterns. Do NOT use for PostgreSQL-specific features (GiST, GIN, JSONB, PgBouncer) -- use postgresql-patterns."
 durability: encoded-preference
 ---
 

@@ -1,6 +1,6 @@
 ---
 name: review-severity-format
-description: "Shared severity levels, issue ID format, and verdict criteria for all code reviewers. Use when performing code reviews or generating review reports. Do NOT use when writing or modifying code -- this is for review output formatting only."
+description: "Use when performing code reviews or generating review reports. Do NOT use when writing or modifying code -- this is for review output formatting only."
 durability: encoded-preference
 ---
 

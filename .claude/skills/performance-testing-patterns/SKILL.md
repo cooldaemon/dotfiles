@@ -1,6 +1,6 @@
 ---
 name: performance-testing-patterns
-description: "Performance testing methodology: load/stress/endurance testing, Core Web Vitals targets, system-level performance budgets, and statistical analysis. Use when writing performance tests, assessing performance test coverage, or designing systems with performance SLOs. Do NOT use for code-level performance review (algorithmic complexity, memory leaks) -- that is performance-reviewer's domain. Do NOT use for API endpoint-level thresholds -- that is api-testing-patterns' domain."
+description: "Use when writing performance tests, assessing performance test coverage, or designing systems with performance SLOs. Do NOT use for code-level performance review (algorithmic complexity, memory leaks) -- that is performance-reviewer's domain. Do NOT use for API endpoint-level thresholds -- that is api-testing-patterns' domain."
 durability: encoded-preference
 ---
 

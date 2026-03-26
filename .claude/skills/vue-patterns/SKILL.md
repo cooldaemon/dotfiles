@@ -1,6 +1,6 @@
 ---
 name: vue-patterns
-description: Vue 3 Composition API and scoped style policies. Use when writing Vue components, composables, or using :deep() selector. Do NOT use for React/Next.js code -- use react-patterns instead.
+description: Use when writing Vue components, composables, or using :deep() selector. Do NOT use for React/Next.js code -- use react-patterns instead.
 durability: encoded-preference
 ---
 

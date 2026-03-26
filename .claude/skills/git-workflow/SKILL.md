@@ -1,6 +1,6 @@
 ---
 name: git-workflow
-description: Git workflow patterns including commit messages, rebase strategy, and pre-commit hooks. Use when committing, creating PRs, or managing git history. Do NOT use for code style or testing concerns -- use coding-style or testing-principles instead.
+description: Use when committing, creating PRs, or managing git history. Do NOT use for code style or testing concerns -- use coding-style or testing-principles instead.
 durability: encoded-preference
 ---
 

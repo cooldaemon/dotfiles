@@ -1,6 +1,6 @@
 ---
 name: coding-style
-description: Coding style principles including immutability, guard clauses, and single responsibility. Use when writing, modifying, or refactoring source code. Do NOT use for documentation-only changes or config file edits.
+description: Use when writing, modifying, or refactoring source code. Do NOT use for documentation-only changes or config file edits.
 durability: encoded-preference
 ---
 

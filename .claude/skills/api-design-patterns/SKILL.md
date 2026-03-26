@@ -1,6 +1,6 @@
 ---
 name: api-design-patterns
-description: RESTful API design patterns including URL structure, HTTP methods, and idempotency. Use when designing new API endpoints or reviewing API architecture. For existing projects, follow the project's established conventions instead.
+description: Use when designing new API endpoints or reviewing API architecture. For existing projects, follow the project's established conventions instead.
 durability: encoded-preference
 ---
 

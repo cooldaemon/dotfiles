@@ -1,6 +1,6 @@
 ---
 name: cicd-patterns
-description: "CI/CD pipeline patterns for GitHub Actions including deployment strategies and pipeline security. Use when designing pipelines, deployment strategies, or writing workflow YAML. Do NOT use for Infrastructure as Code (Terraform, CDK, CloudFormation) -- use cdk-patterns instead. Do NOT use for Git Flow or multi-branch release workflows."
+description: "Use when designing pipelines, deployment strategies, or writing workflow YAML. Do NOT use for Infrastructure as Code (Terraform, CDK, CloudFormation) -- use cdk-patterns instead. Do NOT use for Git Flow or multi-branch release workflows."
 durability: encoded-preference
 ---
 

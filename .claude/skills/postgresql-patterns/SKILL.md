@@ -1,6 +1,6 @@
 ---
 name: postgresql-patterns
-description: PostgreSQL-specific database patterns including advanced index types (GiST, GIN, BRIN, partial), native data types (JSONB, arrays, enums, ranges), PgBouncer pooling, and VACUUM tuning. Use when working with PostgreSQL databases, writing PostgreSQL-specific SQL, or optimizing PostgreSQL performance. Do NOT use for MySQL/Aurora -- use database-patterns and mysql-aurora-patterns instead.
+description: Use when working with PostgreSQL databases, writing PostgreSQL-specific SQL, or optimizing PostgreSQL performance. Do NOT use for MySQL/Aurora -- use database-patterns and mysql-aurora-patterns instead.
 durability: encoded-preference
 ---
 

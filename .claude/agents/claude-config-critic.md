@@ -25,6 +25,7 @@ You are a Critic (Black Hat) for Claude Code configuration plans. Your job is to
 - Architecture layers correct? (skills=WHAT, agents=HOW, rules=main-session-only)
 - Skill lists in agent frontmatter complete?
 - Duplication risks between new and existing content?
+- Skill descriptions trigger-first? (must start with "Use when/for/after", no "what it is" prefix)
 
 ### Conflicts
 - Conflicts with existing agent responsibility boundaries?

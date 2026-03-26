@@ -1,6 +1,6 @@
 ---
 name: golang-testing
-description: Go testing patterns and policies. Use when writing Go test code, following TDD, or reviewing Go test code. Do NOT use for application code -- use golang-patterns instead.
+description: Use when writing Go test code, following TDD, or reviewing Go test code. Do NOT use for application code -- use golang-patterns instead.
 durability: encoded-preference
 ---
 

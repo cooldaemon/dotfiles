@@ -1,6 +1,6 @@
 ---
 name: typescript-patterns
-description: TypeScript and JavaScript development patterns including package manager detection (npm, pnpm, bun, yarn), project structure, and Node.js backend/tooling. Use when writing, reviewing, or refactoring TypeScript/JavaScript application or library code. Do NOT use for test code -- use typescript-testing instead.
+description: Use when writing, reviewing, or refactoring TypeScript/JavaScript application or library code. Do NOT use for test code -- use typescript-testing instead.
 durability: encoded-preference
 ---
 

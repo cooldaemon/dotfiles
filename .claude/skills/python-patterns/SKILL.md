@@ -1,6 +1,6 @@
 ---
 name: python-patterns
-description: Python development patterns including package manager detection (uv, poetry, pip), project structure, and idiomatic Python practices. Use when writing, reviewing, or debugging Python application code. Do NOT use for test code -- use python-testing instead.
+description: Use when writing, reviewing, or debugging Python application code. Do NOT use for test code -- use python-testing instead.
 durability: encoded-preference
 ---
 

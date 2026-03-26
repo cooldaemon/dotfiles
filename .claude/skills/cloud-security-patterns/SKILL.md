@@ -1,6 +1,6 @@
 ---
 name: cloud-security-patterns
-description: Cloud infrastructure security patterns for IaC and cloud services. Use when writing or reviewing Terraform, CDK, CloudFormation, Kubernetes manifests, or cloud infrastructure configuration. Do NOT use for application code security -- use security-patterns instead.
+description: Use when writing or reviewing Terraform, CDK, CloudFormation, Kubernetes manifests, or cloud infrastructure configuration. Do NOT use for application code security -- use security-patterns instead.
 durability: encoded-preference
 ---
 

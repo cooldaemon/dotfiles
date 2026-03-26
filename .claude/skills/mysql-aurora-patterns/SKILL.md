@@ -1,6 +1,6 @@
 ---
 name: mysql-aurora-patterns
-description: "MySQL and Aurora-specific database patterns including InnoDB conventions, utf8mb4 charset, Aurora read replicas, RDS Proxy, and failover retry logic. Use when working with MySQL or Aurora databases. Do NOT use for PostgreSQL -- use postgresql-patterns instead. Do NOT use for generic database principles -- use database-patterns instead."
+description: "Use when working with MySQL or Aurora databases. Do NOT use for PostgreSQL -- use postgresql-patterns instead. Do NOT use for generic database principles -- use database-patterns instead."
 durability: encoded-preference
 ---
 

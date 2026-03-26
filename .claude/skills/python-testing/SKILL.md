@@ -1,6 +1,6 @@
 ---
 name: python-testing
-description: pytest testing policies for Python projects. Use when writing or reviewing Python test code. Do NOT use for application code -- use python-patterns instead.
+description: Use when writing or reviewing Python test code. Do NOT use for application code -- use python-patterns instead.
 durability: encoded-preference
 ---
 

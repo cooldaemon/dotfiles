@@ -1,6 +1,6 @@
 ---
 name: claude-config-conventions
-description: "Conventions for Claude Code configuration files (agents, commands, rules, skills). Use when creating, reviewing, or modifying .claude/ configuration. Do NOT use for general application configuration (webpack, tsconfig, etc.) -- this is for Claude Code's own .claude/ directory only."
+description: "Use when creating, reviewing, or modifying .claude/ configuration. Do NOT use for general application configuration (webpack, tsconfig, etc.)."
 durability: encoded-preference
 ---
 

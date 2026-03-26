@@ -1,6 +1,6 @@
 ---
 name: slack-communication
-description: "Policies for Slack communication via MCP tools. Use when interacting with Slack channels, threads, DMs, or composing Slack messages. Provides bilingual communication rules, AI disclosure requirements, and message composition guidelines."
+description: "Use when interacting with Slack channels, threads, DMs, or composing Slack messages."
 durability: encoded-preference
 ---
 

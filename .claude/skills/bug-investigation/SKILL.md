@@ -1,6 +1,6 @@
 ---
 name: bug-investigation
-description: Test-first bug investigation workflow. Use when user reports a bug, error, unexpected behavior, mentions "something is broken", "doesn't work", or "regression". Enforces writing reproducing tests BEFORE code changes.
+description: Use when user reports a bug, error, unexpected behavior, mentions "something is broken", "doesn't work", or "regression".
 durability: encoded-preference
 ---
 

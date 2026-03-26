@@ -1,6 +1,6 @@
 ---
 name: react-patterns
-description: React and Next.js development policies. Use when writing React components, hooks, or performance optimization. Do NOT use for Vue.js code -- use vue-patterns instead.
+description: Use when writing React components, hooks, or performance optimization. Do NOT use for Vue.js code -- use vue-patterns instead.
 durability: encoded-preference
 ---
 

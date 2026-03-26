@@ -1,6 +1,6 @@
 ---
 name: typescript-testing
-description: Jest and Vitest testing policies for TypeScript/JavaScript. Use when writing or reviewing TS/JS test code. Do NOT use for application code -- use typescript-patterns instead.
+description: Use when writing or reviewing TS/JS test code. Do NOT use for application code -- use typescript-patterns instead.
 durability: encoded-preference
 ---
 

@@ -1,6 +1,6 @@
 ---
 name: accessibility-patterns
-description: "Accessibility patterns including WCAG 2.2 compliance, ARIA correctness, keyboard navigation, and screen reader compatibility. Use when writing or reviewing UI code with interactive elements, forms, or dynamic content."
+description: "Use when writing or reviewing UI code with interactive elements, forms, or dynamic content."
 durability: encoded-preference
 ---
 

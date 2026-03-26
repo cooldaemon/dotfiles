@@ -1,6 +1,6 @@
 ---
 name: adr-patterns
-description: Architecture Decision Records patterns including templates, naming conventions, and lifecycle management. Use when documenting significant architectural decisions.
+description: Use when documenting significant architectural decisions.
 durability: encoded-preference
 ---
 

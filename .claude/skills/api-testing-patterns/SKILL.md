@@ -1,6 +1,6 @@
 ---
 name: api-testing-patterns
-description: API-specific testing patterns covering functional, security, performance, contract, and integration dimensions. Use when writing API tests, reviewing API test coverage, or assessing API test quality. Do NOT use for API design decisions -- use api-design-patterns instead. Do NOT use for general testing principles -- use testing-principles instead.
+description: Use when writing API tests, reviewing API test coverage, or assessing API test quality. Do NOT use for API design decisions -- use api-design-patterns instead. Do NOT use for general testing principles -- use testing-principles instead.
 durability: encoded-preference
 ---
 
