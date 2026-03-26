@@ -1,6 +1,6 @@
 ---
 name: tdd-context
-description: "Use when executing TDD workflows that need plan discovery, review integration, or language detection. Always loaded by tdd-guide; do NOT use standalone."
+description: "Use when executing TDD workflows that need plan discovery, review integration, or language detection. Always loaded by tdd-guide and tdd-team; do NOT use standalone."
 durability: encoded-preference
 ---
 
