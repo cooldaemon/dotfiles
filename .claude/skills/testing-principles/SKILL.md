@@ -6,24 +6,21 @@ durability: encoded-preference
 
 # Testing Principles
 
-## Test Pyramid (No Overlap Strategy)
+## Test Level Selection (No Overlap Strategy)
 
-Avoid duplication - write appropriate tests at each layer:
+Choose the **highest level** that covers the behavior. Avoid duplication across layers.
 
-1. **E2E Tests** (ATDD approach, critical flows)
-   - Critical user flows (main success + key error scenarios)
-   - Use Gherkin (.feature files) with Given-When-Then format
-   - Use Scenario Outline + Examples table for multiple cases
-   - Write scenarios BEFORE implementation (ATDD)
+| Level | When to use | Imports |
+|-------|-------------|---------|
+| **E2E** (Gherkin + Playwright/Cypress) | UI-driven behavior, critical user flows. Use Gherkin with Given-When-Then, Scenario Outline + Examples for multiple cases. Write scenarios BEFORE implementation (ATDD). | None (browser interaction) |
+| **Integration** (HTTP/CLI/public API) | System behavior without UI: API endpoints, database operations, edge cases not covered by E2E, component interactions. | Public entry points only (routes, CLI, exported API) |
+| **Unit (behavioral)** | Pure function contracts NOT already covered by higher-level tests. Utility functions, complex calculations. | Public module exports |
 
-2. **Integration Tests** (majority of tests)
-   - API endpoints, database operations
-   - Edge cases and boundary conditions not covered by E2E
-   - Component interactions
+### Unit Test Rules
 
-3. **Unit Tests** (as needed)
-   - Pure logic not coverable by Integration tests
-   - Utility functions, complex calculations
+Unit tests MUST test function **contracts** (input -> output), NEVER **structure** (call patterns, internal state). If a behavioral test already passes through the code path, do NOT add a unit test for the same path.
+
+See "Behavioral Tests vs Structural Tests" section for red flags and guidance.
 
 ## Test-Driven Development
 
@@ -65,6 +62,27 @@ Every test should follow Arrange-Act-Assert:
 ```
 
 Keep tests focused: one behavior per test.
+
+## Behavioral Tests vs Structural Tests (CRITICAL)
+
+Write **behavioral tests** that verify WHAT the system does, not HOW it does it internally. This is essential for TDD because the REFACTOR phase changes internal structure -- structural tests break on every refactoring even when behavior is preserved.
+
+**Behavioral test** (survives refactoring):
+- Tests input/output contracts through public boundaries (UI, HTTP API, CLI, library exports)
+- Breaks only when actual behavior changes
+
+**Structural test** (breaks on refactoring):
+- Tests call order, internal state, or implementation details
+- Breaks when code is reorganized even if behavior is unchanged
+- Forces simultaneous test+code changes, defeating the TDD safety net
+
+**Red flags that a test is structural:**
+- Asserts that method A calls method B
+- Mocks internal dependencies to verify call patterns
+- Test name describes HOW ("uses cache for repeated lookups") not WHAT ("returns same result for same input")
+- Test breaks on refactor while behavior stays the same
+
+**Rule:** If you feel the need to mock internal dependencies, step up to integration level instead. Reserve mocks for external services and non-deterministic behavior only.
 
 ## Common Testing Mistakes
 

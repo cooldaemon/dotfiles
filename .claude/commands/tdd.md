@@ -2,6 +2,16 @@
 description: "Enforce test-driven development workflow using a subagent"
 ---
 
+## Mode Detection
+
+Before launching tdd-guide, determine the execution mode:
+
+1. Check for code review report with pending items: `grep -l '\- \[ \]' docs/code-reviews/*.md 2>/dev/null`
+2. If match found: **review fix mode**
+3. No match (no report, or all items resolved): **new feature / direct request mode**
+
+Remember this mode -- it determines post-completion behavior.
+
 I'll use the tdd-guide subagent to enforce test-driven development methodology.
 
 ## Usage
@@ -34,6 +44,15 @@ The tdd-guide agent manages its own git commits (semantic after GREEN, fixup aft
 After the tdd-guide subagent completes a US implementation successfully (plan mode or direct request -- NOT review fix mode), automatically execute the `/code-review` command's logic to launch all 7 parallel reviewers. If no issues are found, output: "US complete. Code review passed. Run `/tdd` for the next US or `/push-to-remote` when ready." If issues are found, a review report is written to `docs/code-reviews/`.
 
 **IMPORTANT**: After the review report is presented, STOP and wait for the user's decision. Do NOT automatically start fixing issues. If the user wants fixes applied, re-run `/tdd` (it will detect the review report and fix pending issues).
+
+## Report Completion Check
+
+After tdd-guide returns in **review fix mode**, check the report:
+
+1. Read the report file, count remaining `- [ ]` items
+2. **Some remain**: Output "Fixed [N] issues. [M] issues remain." STOP.
+3. **All resolved**: Update frontmatter `status: RESOLVED`, then ask user: "All review issues resolved. Delete the report?"
+4. If user confirms: delete report file, confirm "Report deleted: [filename]"
 
 ## Next Commands
 After TDD cycle with auto-review:
