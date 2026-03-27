@@ -23,7 +23,7 @@ After the review is presented, suggest the appropriate next command based on the
 | Called after | Next command |
 |-------------|-------------|
 | `/plan-ux` | `/plan-how` - Create implementation plan |
-| `/plan-how` | `/tdd` - Implement with test-driven development |
+| `/plan-how` | `/tdd` or `/tdd-team` (experimental) - Implement with test-driven development |
 | `/plan-claude-config` | `/update-claude-config` - Execute the plan |
 
 If issues were found, suggest addressing them first, then re-running `/review-plan`.

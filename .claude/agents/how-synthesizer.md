@@ -41,7 +41,7 @@ Send the following to **team-lead**:
 2. If ADRs written: "ADR(s) saved to `docs/adr/NNNN-title.md`"
 3. Plan summary (US titles and key EARS decisions)
 4. Critique Log (see pcos-debate skill for format)
-5. Suggest: "Run `/tdd` to start implementation"
+5. Suggest: "Run `/tdd` or `/tdd-team` (experimental) to start implementation"
 
 ## Rules
 

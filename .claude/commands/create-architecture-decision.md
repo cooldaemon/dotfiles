@@ -31,4 +31,4 @@ Invoke with a plan number or feature name to process candidates from a specific 
 
 ## Next Commands
 After creating ADRs from a plan:
-- `/tdd` - Implement with test-driven development
+- `/tdd` or `/tdd-team` (experimental) - Implement with test-driven development

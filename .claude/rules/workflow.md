@@ -11,7 +11,7 @@ When the user requests a change, route to the correct starting command instead o
 | Bug investigation | `/investigate` | Bug reports, unexpected behavior |
 
 Full workflow sequences (including optional steps):
-- Code: `/plan-ux` → `/review-plan` (optional) → `/explore` (optional) → `/plan-how` → `/review-plan` (optional) → `/tdd` → `/push-to-remote`
+- Code: `/plan-ux` → `/review-plan` (optional) → `/explore` (optional) → `/plan-how` → `/review-plan` (optional) → `/tdd` or `/tdd-team` (experimental) → `/push-to-remote`
 
 Exception: trivial single-line fixes (typos, version bumps) can skip the planning workflow.
 

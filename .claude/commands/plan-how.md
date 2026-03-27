@@ -51,4 +51,4 @@ Provide all teammates with:
 ## Next Commands
 After user approves how.md:
 - `/review-plan` (optional) - Cross-cutting review for assumptions, engineering calibration, coherence
-- `/tdd` - Implement with test-driven development
+- `/tdd` or `/tdd-team` (experimental) - Implement with test-driven development

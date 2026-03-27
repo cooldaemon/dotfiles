@@ -49,9 +49,9 @@ Each role is tagged for individual execution (e.g., `--tags homebrew`, `--tags c
 Task routing is auto-loaded from `.claude/rules/workflow.md`. Workflow sequences:
 
 ```
-Code:   /plan-ux → /review-plan (optional) → /explore (optional) → /plan-how → /review-plan (optional) → /tdd → /push-to-remote
+Code:   /plan-ux → /review-plan (optional) → /explore (optional) → /plan-how → /review-plan (optional) → /tdd or /tdd-team (experimental) → /push-to-remote
 Config: /plan-claude-config → /review-plan (optional) → /update-claude-config → /push-to-remote
-Bug:    /investigate → (branches to /plan-ux, /plan-how, or /tdd)
+Bug:    /investigate → (branches to /plan-ux, /plan-how, or /tdd or /tdd-team)
 ```
 
 Plans output to `docs/plans/NNNN-{feature-name}/`. Multiple USs can be developed before a single `/push-to-remote`.

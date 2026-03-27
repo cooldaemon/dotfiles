@@ -33,7 +33,7 @@ Based on findings, the appropriate next command will be recommended:
 |---------|-------------|
 | UX/flow needs to change | `/plan-ux` |
 | Architecture/system design decision needed | `/plan-how` |
-| Bug reproduced, fix is straightforward | `/tdd` |
+| Bug reproduced, fix is straightforward | `/tdd` or `/tdd-team` (experimental) |
 | Bug reproduced AND UX change needed | `/plan-ux` |
 | Production incident -- needs post-mortem | Use `incident-response-patterns` post-mortem template |
 | Production incident -- needs SLO/alerting changes | `/plan-how` |
