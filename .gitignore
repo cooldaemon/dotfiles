@@ -19,6 +19,7 @@
 .claude/skills/persona-*
 .claude/skills/recipe-*
 .playwright-mcp/
+docs/learn/
 docs/plans/
 docs/skills.md
 docs/code-reviews/
