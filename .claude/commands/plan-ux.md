@@ -46,4 +46,5 @@ Provide all teammates with:
 ## Next Commands
 After user approves ux.md:
 - `/review-plan` (optional) - Cross-cutting review for assumptions, engineering calibration, coherence
+- `/explore` - Explore target codebase (optional, recommended for unfamiliar codebases)
 - `/plan-how` - Create implementation plan (Phase 2: HOW)

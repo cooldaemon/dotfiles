@@ -15,6 +15,7 @@ Create an implementation plan by orchestrating a PCOS Agent Team. Four teammates
 ## Execution Flow
 
 1. **Read ux.md**: Find and read `docs/plans/NNNN-{feature-name}/ux.md`
+1b. **Read explore.md (if present)**: Check for `docs/plans/NNNN-{feature-name}/explore.md`. If it exists, read it and include as additional context.
 2. **Assess complexity**: Determine if simple or complex (see Complexity Gate above)
 3. **If simple**: Delegate to `how-planner` subagent directly. Provide ux.md content. Then write `how.md` to the same feature directory.
 4. **If complex**: Create Agent Team (`pcos-how-plan`) with four teammates:
@@ -41,6 +42,7 @@ Provide all teammates with:
 - The feature name and request context
 - The full ux.md content prefixed with `## UX Plan (ux.md)`
 - Any specific constraints or preferences mentioned by the user
+- The full explore.md content prefixed with `## Codebase Exploration (explore.md)` (if present)
 
 ## Prerequisites
 - UX plan exists at `docs/plans/NNNN-{feature-name}/ux.md` (created via `/plan-ux`)
