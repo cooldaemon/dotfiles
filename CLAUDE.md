@@ -49,8 +49,8 @@ Each role is tagged for individual execution (e.g., `--tags homebrew`, `--tags c
 Task routing is auto-loaded from `.claude/rules/workflow.md`. Workflow sequences:
 
 ```
-Code:   /plan-ux → /plan-how → /create-architecture-decision (if ADR candidates) → /tdd → /push-to-remote
-Config: /plan-claude-config → /update-claude-config → /push-to-remote
+Code:   /plan-ux → /plan-how → /create-architecture-decision (if ADR candidates) → /review-plan (optional) → /tdd → /push-to-remote
+Config: /plan-claude-config → /review-plan (optional) → /update-claude-config → /push-to-remote
 Bug:    /investigate → (branches to /plan-ux, /plan-how, or /tdd)
 ```
 

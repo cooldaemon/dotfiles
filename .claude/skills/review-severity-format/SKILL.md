@@ -37,6 +37,7 @@ Each issue uses the format `[PREFIX-NNN]` with a reviewer-specific prefix:
 | claude-config-reviewer | CFG |
 | test-quality-reviewer | TQ |
 | accessibility-reviewer | AR |
+| plan-reviewer | PL |
 
 Sequential numbering starts from 001 per review session.
 
