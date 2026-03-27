@@ -16,6 +16,10 @@ Exception: trivial single-line fixes (typos, version bumps) can skip the plannin
 
 Each plan addresses a single independent concern. When the user requests multiple unrelated changes in one message, split them into separate plan invocations. Two changes are "independent" if they can be approved, rejected, or implemented without affecting each other.
 
+## Optional Plan Review
+
+After any `/plan-xxx` command completes, `/review-plan` can be used to check cross-cutting concerns (unstated assumptions, engineering calibration, cross-plan coherence, scope proportionality). This is independent of the PCOS domain critics that run during planning.
+
 ## Before New Features
 
 Before routing a new feature request to `/plan-ux`:

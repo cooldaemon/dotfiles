@@ -45,4 +45,5 @@ Provide all teammates with:
 
 ## Next Commands
 After user approves the plan:
+- `/review-plan` (optional) - Cross-cutting review for assumptions, engineering calibration, coherence
 - `/update-claude-config` - Execute the plan

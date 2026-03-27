@@ -17,7 +17,15 @@ The plan-reviewer will:
 - A plan exists in `docs/plans/` (from `/plan-ux`, `/plan-how`, or `/plan-claude-config`)
 
 ## Next Commands
-After review:
-- Address findings, then re-run `/review-plan` to verify
-- `/tdd` - Proceed to implementation if review passes
-- `/update-claude-config` - Proceed if this is a config plan
+
+After the review is presented, suggest the appropriate next command based on the current workflow context:
+
+| Called after | Next command |
+|-------------|-------------|
+| `/plan-ux` | `/plan-how` - Create implementation plan |
+| `/plan-how` | `/tdd` - Implement with test-driven development |
+| `/plan-claude-config` | `/update-claude-config` - Execute the plan |
+
+If issues were found, suggest addressing them first, then re-running `/review-plan`.
+
+Always show the suggested next command explicitly so the user knows where they are in the workflow.
